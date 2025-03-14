@@ -44,7 +44,7 @@ Web 浏览器的作用是读取 HTML 文档，并以网页的形式显示出它�
 
 # 2.标签
 
-## 2.1文字
+## 2.1.文字
 
 ### 注释< !-- -->
 
@@ -313,7 +313,7 @@ Web 浏览器的作用是读取 HTML 文档，并以网页的形式显示出它�
   - **disabled**：如果设置为 `disabled`，按钮将不可点击。
   - **form**：指定按钮要关联的表单的 `id`（在按钮不在表单内时很有用）
 
-## 2.2符号
+## 2.2.符号
 
 ### 水平线< hr>
 
@@ -364,7 +364,7 @@ Web 浏览器的作用是读取 HTML 文档，并以网页的形式显示出它�
 | < abbr>       | 缩写。                                                |
 | < center>     | 剧中。                                                |
 
-## 2.3多媒体
+## 2.3.多媒体
 
 ### 图像< img>
 
@@ -446,6 +446,160 @@ SVG 是一种使用 XML 描述 2D 图形的语言。
 </svg>
 ```
 
+SVG（Scalable Vector Graphics）是一种基于XML的矢量图形格式，用于在网页上展示图形和图像。它的最大特点是可缩放，能够在不同大小的屏幕上保持高质量。通过SVG，你可以绘制各种形状、文本、路径、渐变、动画等。
+
+### SVG 基本结构
+
+一个基本的 SVG 文件结构如下所示：
+
+```xml
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 这里是图形元素 -->
+</svg>
+```
+
+- `width` 和 `height` 属性指定了 SVG 画布的宽度和高度。
+- `xmlns` 是一个命名空间属性，指示这是一个 SVG 文件。
+
+#### 常用的 SVG 元素
+
+1. **矩形（）**
+
+   用于绘制矩形，支持圆角、填充颜色等属性。
+
+   ```xml
+   <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+     <rect x="10" y="10" width="100" height="50" fill="blue" />
+   </svg>
+   ```
+
+   - `x`, `y`：矩形的左上角坐标。
+   - `width`, `height`：矩形的宽度和高度。
+   - `fill`：矩形的填充颜色。
+
+2. **圆形（）**
+
+   用于绘制圆形，通过圆心坐标和半径定义。
+
+   ```xml
+   <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+     <circle cx="100" cy="100" r="50" fill="green" />
+   </svg>
+   ```
+
+   - `cx`, `cy`：圆心的坐标。
+   - `r`：圆的半径。
+   - `fill`：圆的填充颜色。
+
+3. **椭圆（）**
+
+   用于绘制椭圆，通过圆心坐标、水平半径和垂直半径定义。
+
+   ```xml
+   <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+     <ellipse cx="100" cy="100" rx="80" ry="40" fill="red" />
+   </svg>
+   ```
+
+   - `cx`, `cy`：椭圆的圆心坐标。
+   - `rx`, `ry`：水平和垂直半径。
+
+4. **线段（）**
+
+   用于绘制一条从指定坐标到指定坐标的直线。
+
+   ```xml
+   <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+     <line x1="10" y1="10" x2="100" y2="100" stroke="black" stroke-width="2" />
+   </svg>
+   ```
+
+   - `x1`, `y1`：线段的起点坐标。
+   - `x2`, `y2`：线段的终点坐标。
+   - `stroke`：线条的颜色。
+   - `stroke-width`：线条的宽度。
+
+5. **多边形（）**
+
+   用于绘制任意形状的多边形，通过指定多个点坐标。
+
+   ```xml
+   <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+     <polygon points="50,150 100,50 150,150" fill="yellow" stroke="black" stroke-width="2" />
+   </svg>
+   ```
+
+   - `points`：多个点的坐标，顶点之间用空格分开。
+
+6. **路径（）**
+
+   路径是 SVG 中最强大的绘制工具，允许绘制复杂的形状和曲线。路径由一系列的命令组成，如 `M`（移动到）、`L`（直线到）、`C`（贝塞尔曲线）等。
+
+   ```xml
+   <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+     <path d="M10 10 H 90 V 90 H 10 L 10 10" fill="transparent" stroke="black" stroke-width="2" />
+   </svg>
+   ```
+
+   - ```
+     d
+     ```
+
+     ：路径的数据。
+
+     - `M`：移动到某个点。
+     - `H`：水平直线。
+     - `V`：垂直直线。
+     - `L`：画直线。
+     - `C`：贝塞尔曲线。
+
+#### 常用属性
+
+- **fill**：指定图形的填充颜色。
+- **stroke**：指定图形的边框颜色。
+- **stroke-width**：指定图形边框的宽度。
+- **opacity**：设置透明度。
+- **transform**：对图形进行变换，如平移、旋转、缩放等。
+
+#### 示例：组合形状
+
+```xml
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 绘制矩形 -->
+  <rect x="10" y="10" width="100" height="50" fill="blue" />
+  <!-- 绘制圆形 -->
+  <circle cx="150" cy="30" r="20" fill="red" />
+  <!-- 绘制路径 -->
+  <path d="M10 100 L100 150 L10 150 Z" fill="green" />
+</svg>
+```
+
+#### 动画和交互
+
+SVG 也支持动画。你可以通过 `<animate>` 元素在 SVG 中创建动画。
+
+```xml
+<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="50" cy="50" r="20" fill="green">
+    <animate attributeName="cx" from="50" to="150" dur="2s" repeatCount="indefinite" />
+  </circle>
+</svg>
+```
+
+这个示例会使圆形在横向上做来回动画。
+
+#### 总结
+
+SVG 是一种非常强大且灵活的绘图语言，适用于Web开发中的图形展示。它的优势在于图形可以缩放而不失真，适用于从简单的形状到复杂的图形和动画的表现。你可以根据需求选择合适的元素、属性和方法来绘制和控制图形。
+
+如果你对某个部分有更详细的需求或问题，欢迎随时提出！
+
+
+
+
+
+
+
 
 
 ### 视频< video>< /video>
@@ -509,7 +663,7 @@ SVG 是一种使用 XML 描述 2D 图形的语言。
 
   
 
-## 2.4布局
+## 2.4.布局
 
 ### 头部< header>< /header>
 
@@ -660,7 +814,7 @@ SVG 是一种使用 XML 描述 2D 图形的语言。
 
 
 
-## 2.5其他
+## 2.5.其他
 
 ### 颜色
 

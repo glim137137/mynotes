@@ -202,7 +202,52 @@
 
 
 
-# 5.类
+# 5.集合
+
+## 5.1.集合方法
+
+1. **集合的创建**
+
+- `set(iterable)`: 创建一个新的集合，可以从任何可迭代对象（如列表、元组、字符串等）中创建。
+
+2. **添加和移除元素**
+
+- `add(elem)`: 向集合中添加元素 `elem`。
+- `remove(elem)`: 从集合中移除元素 `elem`，如果元素不存在会引发 `KeyError`。
+- `discard(elem)`: 从集合中移除元素 `elem`，如果元素不存在不会引发错误。
+- `pop()`: 随机移除并返回集合中的一个元素，如果集合为空则引发 `KeyError`。
+
+3. **清空和复制**
+
+- `clear()`: 清空集合中的所有元素。
+- `copy()`: 返回集合的浅拷贝。
+
+4. **集合运算**
+
+- `union(other)`: 返回两个集合的并集。
+- `intersection(other)`: 返回两个集合的交集。
+- `difference(other)`: 返回当前集合与 `other` 集合的差集。
+- `symmetric_difference(other)`: 返回两个集合的对称差集，即在其中一个集合中但不在两个集合交集中出现的元素。
+
+5. **子集和超集测试**
+
+- `issubset(other)`: 检查当前集合是否是 `other` 集合的子集。
+- `issuperset(other)`: 检查当前集合是否是 `other` 集合的超集。
+
+6. **集合运算符**
+
+集合还支持一些操作符：
+
+- `|`（并集）
+- `&`（交集）
+- `-`（差集）
+- `^`（对称差集）
+
+
+
+
+
+# 6.类
 
 A ***class*类** allows us to group data (**attributes属性**) and methods (note that we call **methods方法** instead of functions here) together in a way that is easy to be reuse and build upon if needed.
 
@@ -213,7 +258,7 @@ Class Student:
 
 
 
-## 5.1.类的实例
+## 6.1.类的实例
 
 A `class` is a blueprint for creating **instances**. For example, each unique student that we create using the `Student` class will be an instance of that class. In the following code snippet, we create two instances of `Student` class. Note that class instantiation uses the same function notation with **round brackets ()** after the name of the class.
 
@@ -224,7 +269,7 @@ student_2 = Student()
 
 
 
-### 5.1.1.实例属性
+### 6.1.1.实例属性
 
 ```python
 student_1.id = "scs00001"
@@ -238,7 +283,7 @@ student_2.email = "msusanti@university.com"
 
 
 
-### 5.1.2.实例方法
+### 6.1.2.实例方法
 
 #### 实例方法
 
@@ -414,7 +459,7 @@ for num in sequence:
 
 
 
-## 5.2.类变量
+## 6.2.类变量
 
 类变量是与类本身关联的变量，而不是与类的实例关联。它们被所有实例共享，通常用于存储与类相关的属性或状态，而不是特定于某个实例的属性。
 
@@ -454,7 +499,7 @@ print(dog2.species)  # 输出: Canis lupus familiaris
 
 
 
-## 5.3.类方法
+## 6.3.类方法
 
 ### 类方法
 
@@ -530,7 +575,7 @@ print(result_multiply) # 输出: 15
 
 
 
-## 5.4.继承
+## 6.4.继承
 
 继承是面向对象编程中的一个基本概念，它允许一个类（子类或派生类）继承另一个类（父类或基类）的属性和方法。这使得代码重用变得更加容易，同时也可以通过扩展父类的功能来实现更复杂的行为。
 
@@ -576,7 +621,7 @@ print(cat.speak())     # 输出: Meow!
 
 
 
-# 6.文件操作
+# 7.文件操作
 
 ## 1. 文件打开与关闭
 
@@ -740,7 +785,7 @@ with open('output.csv', 'w', newline='') as csvfile:
 - **`quotechar`**：定义用于引用字段的字符，默认为 `"`。
 - **`newline=''`**：在打开文件时，建议使用此参数以避免多余的空行。
 
-# 7.特殊函数
+# 8.特殊函数
 
 
 
@@ -790,17 +835,134 @@ print(round(1234.5678, -2))  # 输出: 1200
 
 
 
-# 8.库
+## all()
+
+`all()`是一个内置函数，用于检查可迭代对象（如列表、元组、集合或字典）中的所有元素是否都为 `True`。如果所有元素都为 `True`，则 `all()` 函数返回 `True`。如果可迭代对象为空，则 `all()` 返回 `True`。
+
+
+
+```python
+# 所有元素都为 True
+print(all([True, 1, 'hello']))  # 输出：True
+
+# 任何一个元素为 False
+print(all([True, 0, 'hello']))  # 输出：False
+
+# 空的可迭代对象
+print(all([]))                 # 输出：True
+
+# 检查列表中的所有数字是否都小于 10
+numbers = [1, 2, 3, 4, 5]
+print(all(number < 10 for number in numbers))  # 输出：True
+
+# 检查列表中的所有数字是否都小于 5
+numbers = [1, 2, 3, 10, 5]
+print(all(number < 5 for number in numbers))  # 输出：False
+```
+
+
+
+## enumerate()
+
+枚举`enumerate()` 是 Python 中的一个内置函数，允许你在遍历可迭代对象（如列表或元组）时，跟踪当前项的索引。它返回一个迭代器，该迭代器生成索引和相应项目的元组。
+
+**语法**
+
+```python
+enumerate(iterable, start=0)
+```
+
+- **iterable**: 你想要迭代的集合（例如列表、元组）。
+- **start**: 起始索引（默认值为 0）。
+
+**示例**
+
+以下是一个简单的示例，演示 `enumerate()` 的用法：
+
+```python
+fruits = ['苹果', '香蕉', '樱桃']
+
+for index, fruit in enumerate(fruits):
+    print(index, fruit)
+
+# 输出：
+# 0 苹果
+# 1 香蕉
+# 2 樱桃
+```
+
+
+
+# 9.库
+
+## random
+
+### 1.生成随机数
+
+- 生成一个**随机浮点数**（范围在 [0.0, 1.0)）：
+
+  ```python
+  random_float = random.random()
+  ```
+
+- 生成一个**指定范围内的随机整数**：
+
+  ```python
+  random_int = random.randint(a, b)  # 包含 a 和 b
+  ```
+
+- 生成一个**指定范围内的随机浮点数**：
+
+  ```python
+  random_uniform = random.uniform(a, b)  # 包含 a，不包含 b
+  ```
+
+### 2.随机选择
+
+- 从列表中随机选择**一个元素**：
+
+  ```python
+  random_choice = random.choice(['apple', 'banana', 'cherry'])
+  ```
+
+- 从列表中随机选择**多个元素**（**不重复**）：
+
+  ```python
+  random_sample = random.sample(['apple', 'banana', 'cherry'], k=2)
+  ```
+
+- 从列表中随机选择**多个元素**（**可能重复**）：
+
+  ```python
+  random_choices = random.choices(['apple', 'banana', 'cherry'], k=3)
+  ```
+
+### 3.洗牌
+
+- **随机打乱一个列表**：
+
+  ```python
+  my_list = [1, 2, 3, 4, 5]
+  random.shuffle(my_list)
+  ```
+
+### 4.设置随机种子
+
+通过设置随机种子，您可以确保在调试或测试过程中每次运行程序时生成相同的随机数序列：
+
+```python
+random.seed(a)  # a 是种子值
+
+# 生成一些随机数
+print(random.randint(1, 100))  # 结果会是相同的
+print(random.randint(1, 100))  # 每次运行的输出将相同
+```
 
 
 
 
 
-
-
-
-
-# 9.注意事项
+# 10.注意事项
 
 
 
@@ -811,3 +973,6 @@ print(round(1234.5678, -2))  # 输出: 1200
 
 
 
+# 11.关键字
+
+## nonlocal

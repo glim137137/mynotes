@@ -34,7 +34,7 @@ p
 
 # 2.基础样式
 
-## 2.1选择器
+## 2.1.选择器
 
 ### id选择器
 
@@ -186,7 +186,7 @@ li:nth-child(2) {
 
 
 
-## 2.2背景
+## 2.2.背景
 
 - **background-attachment**：背景图像是否固定或者随着页面的其余部分滚动。
 
@@ -262,7 +262,7 @@ body {
 
 
 
-## 2.3文字
+## 2.3.文字
 
 ### 文本
 
@@ -410,7 +410,7 @@ table, th, td {
 
 
 
-## 2.4布局
+## 2.4.布局
 
 ### display属性
 
@@ -877,6 +877,7 @@ img {
 
   ```css
   grid-area: header; /* 使用命名的网格区域 */
+  grid-area: 1 / 2 / 3 / 4; /* 使用网格的行和列的行号来定义网格区域 row-start / column-start / row-end / column-end */
   ```
 
 
@@ -891,8 +892,228 @@ img {
 
 
 
+```css
+div {
+	transform: rotate(45deg);
+	transform-origin:20% 40%;
+}
+```
+
+
+
+**2D 转换方法**
+
+| 函数                            | 描述                                     |
+| :------------------------------ | :--------------------------------------- |
+| matrix(*n*,*n*,*n*,*n*,*n*,*n*) | 定义 2D 转换，使用六个值的矩阵。         |
+| translate(*x*,*y*)              | 定义 2D 转换，沿着 X 和 Y 轴移动元素。   |
+| translateX(*n*)                 | 定义 2D 转换，沿着 X 轴移动元素。        |
+| translateY(*n*)                 | 定义 2D 转换，沿着 Y 轴移动元素。        |
+| scale(*x*,*y*)                  | 定义 2D 缩放转换，改变元素的宽度和高度。 |
+| scaleX(*n*)                     | 定义 2D 缩放转换，改变元素的宽度。       |
+| scaleY(*n*)                     | 定义 2D 缩放转换，改变元素的高度。       |
+| rotate(*angle*)                 | 定义 2D 旋转，在参数中规定角度。         |
+| skew(*x-angle*,*y-angle*)       | 定义 2D 倾斜转换，沿着 X 和 Y 轴。       |
+| skewX(*angle*)                  | 定义 2D 倾斜转换，沿着 X 轴。            |
+| skewY(*angle*)                  | 定义 2D 倾斜转换，沿着 Y 轴。            |
+
+
+
+**3D 转换方法**
+
+| 函数                                                         | 描述                                      |
+| :----------------------------------------------------------- | :---------------------------------------- |
+| matrix3d(*n*,*n*,*n*,*n*,*n*,*n*, *n*,*n*,*n*,*n*,*n*,*n*,*n*,*n*,*n*,*n*) | 定义 3D 转换，使用 16 个值的 4x4 矩阵。   |
+| translate3d(*x*,*y*,*z*)                                     | 定义 3D 转化。                            |
+| translateX(*x*)                                              | 定义 3D 转化，仅使用用于 X 轴的值。       |
+| translateY(*y*)                                              | 定义 3D 转化，仅使用用于 Y 轴的值。       |
+| translateZ(*z*)                                              | 定义 3D 转化，仅使用用于 Z 轴的值。       |
+| scale3d(*x*,*y*,*z*)                                         | 定义 3D 缩放转换。                        |
+| scaleX(*x*)                                                  | 定义 3D 缩放转换，通过给定一个 X 轴的值。 |
+| scaleY(*y*)                                                  | 定义 3D 缩放转换，通过给定一个 Y 轴的值。 |
+| scaleZ(*z*)                                                  | 定义 3D 缩放转换，通过给定一个 Z 轴的值。 |
+| rotate3d(*x*,*y*,*z*,*angle*)                                | 定义 3D 旋转。                            |
+| rotateX(*angle*)                                             | 定义沿 X 轴的 3D 旋转。                   |
+| rotateY(*angle*)                                             | 定义沿 Y 轴的 3D 旋转。                   |
+| rotateZ(*angle*)                                             | 定义沿 Z 轴的 3D 旋转。                   |
+| perspective(*n*)                                             | 定义 3D 转换元素的透视视图。              |
+
+
+
+| 属性                                                         | 描述                                 | CSS  |
+| :----------------------------------------------------------- | :----------------------------------- | :--- |
+| [transform](https://www.runoob.com/cssref/css3-pr-transform.html) | 向元素应用 2D 或 3D 转换。           | 3    |
+| [transform-origin](https://www.runoob.com/cssref/css3-pr-transform-origin.html) | 允许你改变被转换元素的位置。         | 3    |
+| [transform-style](https://www.runoob.com/cssref/css3-pr-transform-style.html) | 规定被嵌套元素如何在 3D 空间中显示。 | 3    |
+| [perspective](https://www.runoob.com/cssref/css3-pr-perspective.html) | 规定 3D 元素的透视效果。             | 3    |
+| [perspective-origin](https://www.runoob.com/cssref/css3-pr-perspective-origin.html) | 规定 3D 元素的底部位置。             | 3    |
+| [backface-visibility](https://www.runoob.com/cssref/css3-pr-backface-visibility.html) | 定义元素在不面对屏幕时是否可见。     | 3    |
+
+
+
 ## 3.2过渡
+
+```css
+.gramma {
+    transition: property duration timing-function delay;
+}
+
+.item {
+    transition: color 0.3s ease-in-out;
+}
+```
+
+
+
+| 属性                                                         | 描述                                         | CSS  |
+| :----------------------------------------------------------- | :------------------------------------------- | :--- |
+| [transition](https://www.runoob.com/cssref/css3-pr-transition.html) | 简写属性，用于在一个属性中设置四个过渡属性。 | 3    |
+| [transition-property](https://www.runoob.com/cssref/css3-pr-transition-property.html) | 规定应用过渡的 CSS 属性的名称。              | 3    |
+| [transition-duration](https://www.runoob.com/cssref/css3-pr-transition-duration.html) | 定义过渡效果花费的时间。默认是 0。           | 3    |
+| [transition-timing-function](https://www.runoob.com/cssref/css3-pr-transition-timing-function.html) | 规定过渡效果的时间曲线。默认是 "ease"。      | 3    |
+| [transition-delay](https://www.runoob.com/cssref/css3-pr-transition-delay.html) | 规定过渡效果何时开始。默认是 0。             | 3    |
 
 
 
 ## 3.3动画
+
+```css
+.gramma {
+    animation: name duration timing-function delay iteration-count direction fill-mode play-state;
+}
+
+@keyframes mymove
+{
+from {top:0px;}
+to {top:200px;}
+}
+
+.item {
+    animation: mymove 36.5s linear infinite;
+}
+
+```
+
+
+
+| 属性                                                         | 描述                                                         | CSS  |
+| :----------------------------------------------------------- | :----------------------------------------------------------- | :--- |
+| [@keyframes](https://www.runoob.com/cssref/css3-pr-animation-keyframes.html) | 规定动画。                                                   | 3    |
+| [animation](https://www.runoob.com/cssref/css3-pr-animation.html) | 所有动画属性的简写属性。                                     | 3    |
+| [animation-name](https://www.runoob.com/cssref/css3-pr-animation-name.html) | 规定 @keyframes 动画的名称。                                 | 3    |
+| [animation-duration](https://www.runoob.com/cssref/css3-pr-animation-duration.html) | 规定动画完成一个周期所花费的秒或毫秒。默认是 0。             | 3    |
+| [animation-timing-function](https://www.runoob.com/cssref/css3-pr-animation-timing-function.html) | 规定动画的速度曲线。默认是 "ease"。                          | 3    |
+| [animation-fill-mode](https://www.runoob.com/cssref/css3-pr-animation-fill-mode.html) | 规定当动画不播放时（当动画完成时，或当动画有一个延迟未开始播放时），要应用到元素的样式。 | 3    |
+| [animation-delay](https://www.runoob.com/cssref/css3-pr-animation-delay.html) | 规定动画何时开始。默认是 0。                                 | 3    |
+| [animation-iteration-count](https://www.runoob.com/cssref/css3-pr-animation-iteration-count.html) | 规定动画被播放的次数。默认是 1。                             | 3    |
+| [animation-direction](https://www.runoob.com/cssref/css3-pr-animation-direction.html) | 规定动画是否在下一周期逆向地播放。默认是 "normal"。          | 3    |
+| [animation-play-state](https://www.runoob.com/cssref/css3-pr-animation-play-state.html) | 规定动画是否正在运行或暂停。默认是 "running"。               | 3    |
+
+
+
+
+
+
+
+# 4.技巧
+
+
+
+## 水平垂直居中
+
+```html
+<div class="banner">
+  <img src="images/banner-bg.png" alt="" class="banner-bg">
+  <img src="images/banner-title.png" alt="banner-title" class="banner-title">
+</div>
+
+```
+
+
+
+```css
+.banner {
+  position: relative;
+  height: 960px;             /* 示例高度 */
+}
+
+.banner-bg {
+  position: absolute;         /* 背景图绝对定位 */
+  object-fit: cover;         /* 保持图像比例并填充父元素 */
+}
+
+.banner-title {
+  position: absolute; 
+  top: 50%;                  /* 上边距为 50% */
+  left: 50%;                 /* 左边距为 50% */
+  transform: translate(-50%, -50%); /* 将元素中心移至父元素中心 */
+  z-index: 1;                /* 将标题提升到最上层 */
+}
+
+```
+
+
+
+## :nth-child()
+
+**基本语法：**
+
+```css
+:nth-child(n)
+```
+
+- `n` 是一个表达式，表示子元素的位置，可以是数字、关键词（odd, even…），甚至是包含 `n` 的公式（n从0开始）。
+
+```html
+<div class="seat-area">
+    <div class="seat"></div> * 48个
+</div>
+```
+
+```css
+.seat-area {
+  padding-top: 50px;
+  display: grid;  /* 从左往右排列 */
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.seat:nth-child(4n+3){
+  margin-left: 20px;
+}
+```
+
+![image-20250302135232738](images/image-20250302135232738.png)
+
+
+
+
+
+
+
+## 实现width: 100%
+
+```html
+<div class="container">
+    <div class="box1">
+        box1
+    </div>
+	<div class="box2">
+        box2
+    </div>
+</div>
+```
+
+```css
+.container {
+	position: relative;
+}
+
+.box2 {
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+```
+

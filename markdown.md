@@ -1,8 +1,8 @@
-[TOC]
-
-# [Markdown+Typora/VSCode 超全教程] 给大一新生安利的文本神器
+# Markdown+Typora/VSCode
 
 Sakiyary 2022/7/16
+
+[TOC]
 
 ## 😂 简要介绍
 

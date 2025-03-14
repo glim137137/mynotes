@@ -659,7 +659,7 @@ Task：输入数量不确定的[0, 9]范围内的整数，统计每一种数字�
 
 ## 4.2.指针
 
-`&`  **取地址运算符**：
+### 4.2.1`&`  **取地址运算符**：
 
 ```c
 // 1.整数与地址
@@ -702,19 +702,19 @@ printf("%p\n", &a[1]);          // 0xbff8dd48
 
 
 
-`*` **指针**
+### 4.2.2`*` **指针**
 
 ```c
 // 1.初始化
 int i;
-int* p = &i;
+int *p = &i;
 
 int i;
-int* p = NULL;
+int *p = NULL;
 p = &i;        
 
 // 2.通用类型指针(不知道指向什么类型)
-void* p;
+void *p;
 ```
 
 1. 指针就是**保存地址的变量**。
@@ -724,7 +724,7 @@ void* p;
 3. 指针是跨域访问
 
    ```c
-   void f(int* p);
+   void f(int *p);
    
    int main(void){
        int i = 0;
@@ -734,7 +734,7 @@ void* p;
        return 0;
    }
    
-   void f(int* p){
+   void f(int *p){
        printf("%p\n", p);    // 0xbffbcd70
        printf("%d\n", *p);   // 0
        *p = 1;
@@ -752,7 +752,7 @@ void* p;
    }
    
    // 指针跨域可以做到
-   void swap(int* pa, int* pb)
+   void swap(int *pa, int *pb)
    
    int main(void){
        int a = 1;
@@ -763,14 +763,14 @@ void* p;
        return 0;
    }
        
-   void swap(int* pa, int* pb){
+   void swap(int *pa, int *pb){
        int temp = *pa;
        *pa = *pb;
        *pb = temp;
    }
    
    // 2.函数返回多个值，某些值就只能通过指针返回。
-   void minmax(int a[], int len, int* min, int* max){
+   void minmax(int a[], int len, int *min, int *max){
        int i;
        *min = *max = a[0];
        for (i=1; i<len; i++){
@@ -784,7 +784,7 @@ void* p;
    }
    
    // 3. 函数返回运算状态1 or 0，指针返回结果。（异常处理）
-   int divide(int a, int b, int* result){
+   int divide(int a, int b, int *result){
        int ret = 1;
        if (b == 0){
            ret = 0;
@@ -811,7 +811,7 @@ void* p;
    
    // 3.[]运算符可以对指针做,*运算符可以对数组做
    int a[5] = {1000, 2000, 3, 4, 5};
-   int* p = a;
+   int *p = a;
    printf("%d\n", p[1]);  // 2000
    printf("%d\n", *a);    // 1000
    ```
@@ -821,11 +821,11 @@ void* p;
    ```c
    // 1.固定指针指向的变量(p++  //error) p是const
    int i = 1;
-   int* const p = &i;
+   int *const p = &i;
    
    // 2.禁止指针去修改变量(*p = 2  //error) *p是const
    int i = 1;
-   const int* p = &i;
+   const int *p = &i;
    ```
 
 7. 指针的运算：
@@ -838,11 +838,11 @@ void* p;
    printf("%p", p+1);     // 5b
    
    int b[3] = {4, 5, 6};
-   int* q = b;
+   int *q = b;
    printf("%p", q);       // 2c
    printf("%p", q+1);     // 30
    
-   int* r = b[2];         // 两指针相减
+   int *r = b[2];         // 两指针相减
    printf("%d", r-q);     // 2
    
    // 2.优先级
@@ -856,47 +856,71 @@ void* p;
    int *i = NULL;
    ```
 
-9. 指针的类型转换
+9. 指针的作用：
+
+   ![image-20240911181005224](./images/image-20240911181005224.png)
+
+10. 指针的类型转换
 
    ```c
    int i;
-   int* p = &i;
-   void* q = (void*) p;
+   int *p = &i;
+   //可以让函数或数据结构处理不同类型的指针，而不需要知道具体的数据类型。
+   void *q = (void*) p;  
    ```
 
-10. 动态内存分配：
 
-    使用动态内存分配函数要包含头文件`#include <stdlib.h>`
 
-    ```c
-    // 1.malloc (Memory Allocation)
-    // 用于分配指定大小的连续内存块。它返回一个指向分配的内存的指针，如果分配失败则返回NULL。
-    int* p = (int*) malloc(sizeof(int) * 10); // 分配可以容纳10个整数的内存空间
-    
-    // 2.calloc (Contiguous Allocation)
-    // 与malloc类似，但它分配的内存块会初始化为零。它需要两个参数：元素的数量和每个元素的大小。
-    int* p = (int*) calloc(10, sizeof(int)); // 分配并初始化10个整数的内存空间
-    
-    // 3.realloc (Reallocation)
-    // 用于调整先前分配的内存块的大小。它可以扩大或缩小内存块的大小。
-    int* p = (int*) realloc(p, sizeof(int) * 20); // 调整内存块大小以容纳20个整数
-    
-    // 4.free
-    用于释放先前分配的动态内存，防止内存泄漏。
-    free(p); // 释放先前分配的内存
-    ```
+### 4.2.3.动态内存分配（堆）：
 
-    ![image-20240912135503378](./images/image-20240912135503378.png)
+使用动态内存分配函数要包含头文件`#include <stdlib.h>`
 
-11. 指针的作用：
+```c
+// 1.malloc (Memory Allocation)
+// 用于分配指定大小的连续内存块。它返回一个指向分配的内存的指针，如果分配失败则返回NULL。
+int* p = (int*) malloc(sizeof(int) * 10); // 分配可以容纳10个整数的内存空间
 
-    ![image-20240911181005224](./images/image-20240911181005224.png)
+// 2.calloc (Contiguous Allocation)
+// 与malloc类似，但它分配的内存块会初始化为零。它需要两个参数：元素的数量和每个元素的大小。
+int* p = (int*) calloc(10, sizeof(int)); // 分配并初始化10个整数的内存空间
+
+// 3.realloc (Reallocation)
+// 用于调整先前分配的内存块的大小。它可以扩大或缩小内存块的大小。
+int* p = (int*) realloc(p, sizeof(int) * 20); // 调整内存块大小以容纳20个整数
+	
+// 4.free
+用于释放先前分配的动态内存，防止内存泄漏。
+free(p); // 释放先前分配的内存
+```
+
+![image-20240912135503378](./images/image-20240912135503378.png)
+
+### 4.2.4.栈 vs. 堆
+
+| 特性           | 栈（Stack）                      | 堆（Heap）                           |
+| -------------- | -------------------------------- | ------------------------------------ |
+| **内存分配**   | 自动分配和释放（由系统管理）     | 手动分配和释放（由程序员管理）       |
+| **大小**       | 通常较小，有限制                 | 较大，受限于系统内存                 |
+| **访问速度**   | 快，访问高效                     | 相对慢，需要动态管理                 |
+| **生命周期**   | 与函数调用的生命周期一致         | 程序员控制，直到手动释放             |
+| **分配方式**   | 后进先出（LIFO），栈顶分配和释放 | 任意位置分配，管理复杂               |
+| **内存管理**   | 系统自动管理，程序员无需干预     | 需要程序员手动管理，容易发生内存泄漏 |
+| **溢出问题**   | 栈溢出（例如递归过深）           | 堆溢出（例如内存分配过多）           |
+| **多线程支持** | 每个线程有独立栈                 | 所有线程共享堆                       |
+| **使用场景**   | 局部变量、函数调用上下文         | 动态数据结构、长时间存储的数据       |
+
+**总结**
+
+- **栈**的特点是 **快速**、**自动**、**大小有限**，适合存储函数的局部变量和函数调用上下文。
+- **堆**的特点是 **灵活**、**需要手动管理**、**内存较大**，适合动态分配内存并存储需要长时间存在的数据。
+
+
 
 
 
 ## 4.3.字符串
 
-### 4.3.1.空字符
+### 4.3.1.结束符
 
 在 C 语言中，字符串实际上是使用空字符 `\0` 结尾的一维字符数组。因此，`\0` 是用于标记字符串的结束。
 
@@ -913,7 +937,7 @@ char site[7] = {'R', 'U', 'N', 'O', 'O', 'B', '\0'};
 
 
 
-### 4.3.2.声明字符串变量
+### 4.3.2.声明字符串变量（初始化）
 
 ```c
 /*
@@ -933,6 +957,8 @@ s是一个字符数组，其大小由初始化时的字符串字面值决定。�
 例如，s[0] = 'H'; 是合法的，s 的内容会被修改为 "Hello,world"。
 */
 char myStr[] = "hello,world";
+char myStr[] = {"hello,world"};
+char myStr[] = {'R', 'U', 'N', 'O', 'O', 'B', '\0'};
 ```
 
  
@@ -958,10 +984,13 @@ printf("%s\n", myStr);
 
 ```c
 char myStr[5] = "";
-// myStr[0] == "\0"
+// myStr[0] == '\0'
 
 char myStr[] = "";
 // 
+
+char myStr[1] = {'\0'};
+// myStr[0] == '\0'
 ```
 
 
@@ -1034,8 +1063,8 @@ int main() {
 
 **原型**:
 
-```
-csize_t strlen(const char *str);
+```c
+size_t strlen(const char *str);
 ```
 
 - **参数**:
@@ -1222,6 +1251,10 @@ void paint(enum color c){
 
 ## 4.5.结构体
 
+结构体的定义相当于**新定义一种数据类型**
+
+### 4.5.1.基本结构体
+
 ```c
 #include <stdio.h>
 
@@ -1231,13 +1264,6 @@ struct Person {
     int age;
     float height;
 };
-
-typedef struct {
-    int x;
-    int y;
-} Point;
-
-Point p1; // 现在可以用 Point 来声明变量
 
 
 int main() {
@@ -1258,6 +1284,122 @@ int main() {
 }
 
 ```
+
+
+
+### 4.5.2.typedef
+
+```c
+typedef struct {
+    int x;
+    int y;
+} Point;
+
+Point p1; // 现在可以用 Point 来声明变量
+```
+
+
+
+
+
+### 4.5.3.结构体指针运算符
+
+**作用**：
+
+当你有一个结构体的指针时，想要访问该结构体的成员，就需要使用 `->` 运算符。它是对 **指针解引用** 和 **成员访问** 的简写。
+
+**语法**：
+
+```
+cpointer->member
+```
+
+其中：
+
+- `pointer` 是一个指向结构体的指针。
+- `member` 是结构体中的一个成员（字段）。
+
+**例子**：
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+struct Person {
+    char name[50];
+    int age;
+};
+
+int main() {
+    // 创建一个结构体变量
+    struct Person person1;
+
+    // 使用 "->" 运算符访问结构体成员
+    struct Person *ptr = &person1;  // 创建指向结构体的指针
+
+    // 通过指针设置结构体成员
+    strcpy(ptr->name, "Alice");
+    ptr->age = 30;
+
+    // 通过指针访问结构体成员
+    printf("Name: %s\n", ptr->name);
+    printf("Age: %d\n", ptr->age);
+
+    return 0;
+}
+
+
+
+```
+
+
+
+### 4.5.4.结构体实现链表
+
+```c
+# include <stdio.h>
+struct entry {
+    int data;
+    struct entry *next;
+};
+
+
+// 定义了一个find函数，返回值是entry结构体类型(栈实现)
+struct entry find(struct entry head, int value) {
+    struct entry *current;
+    // 遍历链表
+    for (current = &head; current != NULL; current = current->next)
+        if (current->data == value)
+            return *current;
+    
+    struct entry empty = {-1, NULL};
+    return empty;
+}
+
+// 定义了一个addElement函数，返回值是一个entry的指针(堆实现)
+struct entry *addElement(int value, const struct entry *head) {
+    struct entry *newEntry = (struct entry *) malloc(sizeof(struct entry));
+    newEntry->data = value;
+    newEntry->next = head;
+    return newEntry;
+}
+
+
+int main() {
+    // 链表初始化
+    struct entry a, b;
+    a.data = 3; 
+    a.next = &b;
+    b.data = 4;
+    b.next = NULL;
+    
+    struct entry found = find(a,4);
+    printf("%d\n", found.data);
+    return 0;
+} 
+```
+
+
 
 
 
@@ -1302,11 +1444,11 @@ c#define 宏名称 值
 
 ## 5.1.格式化
 
-### 5.1.1.int
+### int
 
 **输入：%d**
 
-**进阶用法**
+
 
 ```c
 // 1.读取带空格的整数
@@ -1315,7 +1457,7 @@ scanf("%d %d %d", &a, &b, &c);   //输入: "1 21 3"
 
 **输出：%d**
 
-**进阶用法**
+
 
 ```c
 // 1.指定宽度
@@ -1330,11 +1472,11 @@ printf("Zero-padded number: %05d\n", num); // 输出: "00042"
 
 
 
-### 5.1.2.float & double
+### float & double
 
 **输入：%f (float)    %lf (double)**
 
-**进阶用法**
+
 
 ```c
 // 1.读取带空格的浮点数
@@ -1349,7 +1491,7 @@ c 会被赋值为 **3.0**
 
 **输出：%f (float&double)     %lf (在输出中与%f没有区别，一般都用%f)     %e (float&double)**
 
-**进阶用法**
+
 
 ```c
 // 1.指定精度
@@ -1371,11 +1513,9 @@ printf("Uppercase scientific notation: %E\n", num); // 输出: 1.234568E+06
 
 
 
-### 5.1.3.char
+### char
 
 **输入：%c**
-
-**进阶用法**
 
 ```c
 // 1.读取时有无空格
@@ -1394,8 +1534,6 @@ printf("|%d, %d, %c|", num, ch, ch);
 ```
 
 **输出：%c   %d**
-
-**进阶用法**
 
 ```c
 // 1.输出字符的 ASCII 值
@@ -1422,7 +1560,46 @@ printf("%c\n", ch_49);   // 输出: 1
 
 
 
+### pointer
 
+**输入：**
+
+```c
+// 1.输入指针通常不是直接从用户输入一个地址，而是将指针传递给一个函数，或者使用动态内存分配来让指针指向有效的内存。
+#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int *ptr = malloc(sizeof(int));  // 动态分配内存
+    if (ptr == NULL) {
+        printf("Memory allocation failed\n");
+        return 1;
+    }
+
+    printf("Enter an integer: ");
+    scanf("%d", ptr);  // 将输入值存储在指针指向的内存中
+
+    // 输出指针的值
+    printf("You entered: %d\n", *ptr);
+
+    free(ptr);  // 释放动态分配的内存
+    return 0;
+}
+
+```
+
+
+
+**输出：%p**
+
+```C
+int value = 42;
+int *ptr = &value;  // ptr 指向 value 的地址
+
+// 输出指针的地址
+printf("Pointer address: %p\n", (void*)ptr);  // 输出value 的地址: 
+printf("Value at pointer: %d\n", *ptr);  // 输出指针指向的值: 42
+```
 
 
 
@@ -1629,13 +1806,41 @@ bash./my_program Hello World
 
 
 
+## atoi()
+
+**character-to-int**
+
+**函数原型**：
+
+```c
+int atoi(const char *str);
+```
+
+**参数**：
+
+- `str`：一个指向以 `\0` 结尾的字符串的指针，该字符串表示一个整数（可以包含正负号）。
+
+**返回值**：
+
+- 返回转换后的整数值。如果字符串无法转换为有效的整数（比如包含非数字字符），则返回 0。
 
 
 
+## atof()
 
+**character-to-float**
 
+**函数原型**：
 
+```c
+double atof(const char *str);
+```
 
+- **参数**：
+  - `str`：指向一个 C 字符串的指针，字符串中应包含你想要转换的数字。如果字符串不能有效地转换为浮动数，`atof()` 会返回 `0.0`。
+- **返回值**：
+  - 如果字符串 `str` 代表有效的浮动数值，则返回该值。
+  - 如果字符串 `str` 不能转换为浮动数值（比如字符串为空或不含有效数字），则返回 `0.0`。
 
 # 7.文件操作
 
@@ -1701,7 +1906,7 @@ int fclose(FILE *stream);
 
 ### fgets()
 
-**`fgets()`**：从文件中读取一个字符串。
+**`fgets()`**：从文件中读取**一行字符串**。
 
 **函数原型**：
 
@@ -1719,7 +1924,7 @@ char *fgets(char *str, int num, FILE *stream);
 
 ### fputs()
 
-**`fputs()`**：向文件写入一个字符串。
+**`fputs()`**：向文件写入**一行字符串**。
 
 **函数原型**：
 
@@ -1828,7 +2033,7 @@ int feof(FILE *stream);
 
 ### getc()
 
-`getc()` 函数是从文件流读取字符
+`getc()` 函数是从文件流读取字符	
 
 **函数原型**：
 
@@ -1859,3 +2064,539 @@ int putc(int char, FILE *stream);
 
 
 
+### fseek()
+
+**函数原型**：
+
+```c
+int fseek(FILE *stream, long int offset, int whence);
+```
+
+- **参数**：
+  - `stream`：文件指针，指向你要操作的文件（必须是一个已打开的文件）。
+  - `offset`：相对于 `whence` 的偏移量，单位是字节。可以是正数（向文件末尾方向移动）或负数（向文件开头方向移动）。
+  - `whence`：起始位置，用于确定偏移量offset的参考点，常见的值有：
+    - `SEEK_SET`：从文件的开头开始偏移。
+    - `SEEK_CUR`：从当前文件指针的位置开始偏移。
+    - `SEEK_END`：从文件的末尾开始偏移
+- **返回值**：
+  - 成功时返回 `0`。
+  - 失败时返回 `-1`，并设置 `errno` 来指示错误原因。
+
+
+
+# 8.编译
+
+## 8.1.编译源文件
+
+### 1.编译单个源文件
+
+假设你有一个源文件 `hello.c`，可以用以下命令编译：
+
+```bash
+gcc hello.c -o hello
+```
+
+这条命令将 `hello.c` 编译并生成一个名为 `hello` 的可执行文件。
+
+你可以在编译完成后直接运行生成的可执行文件：
+
+```bash
+./hello
+```
+
+
+
+### 2.编译多个源文件
+
+1. 基本编译
+
+假设你有多个源文件，比如 `file1.c` 和 `file2.c`，你可以使用以下命令：
+
+```bash
+gcc file1.c file2.c -o myprogram
+```
+
+这会将 `file1.c` 和 `file2.c` 编译并链接成名为 `myprogram` 的可执行文件。
+
+2. 使用对象文件
+
+你可以先将源文件编译成对象文件，然后再链接它们。这通常在大型项目中很有用。
+
+```bash
+gcc -c file1.c
+gcc -c file2.c
+gcc file1.o file2.o -o myprogram
+```
+
+![image-20241104142618622](images/image-20241104142618622.png)
+
+3. 使用通配符
+
+如果你的源文件以特定的扩展名（如 `.c`）结束，可以使用通配符来编译它们。例如，如果你有多个 `.c` 文件：
+
+```bash
+gcc *.c -o myprogram
+```
+
+4. 指定编译选项
+
+你可以添加编译选项，比如优化级别、警告级别等：
+
+```bash
+gcc -Wall -O2 file1.c file2.c -o myprogram
+```
+
+5. 头文件的处理
+
+如果你的源文件使用了自定义的头文件，确保在编译时能够找到这些头文件，使用 `-I` 选项指定头文件路径：
+
+```bash
+gcc -I/path/to/headers file1.c file2.c -o myprogram
+```
+
+6. 多个文件夹中的源文件
+
+如果源文件分散在多个目录中，可以在命令中指定它们的路径：
+
+```bash
+gcc src/file1.c src/file2.c utils/file3.c -o myprogram
+```
+
+7. 生成可执行文件和调试信息
+
+如果你希望生成调试信息，以便使用调试工具（如 `gdb`），可以使用 `-g` 选项：
+
+```bash
+gcc -g file1.c file2.c -o myprogram
+```
+
+
+
+## 8.2.自定义头文件
+
+### 1. 创建头文件
+
+首先，你需要创建一个新的头文件，通常以 `.h` 为扩展名。例如，你可以创建一个名为 `myheader.h` 的文件。
+
+**示例 `myheader.h`**：
+
+```c
+#ifndef MYHEADER_H
+#define MYHEADER_H
+
+// 函数声明
+void greet(const char *name);
+int add(int a, int b);
+
+// 宏定义
+#define PI 3.14159
+
+// 结构体定义
+typedef struct {
+    int x;
+    int y;
+} Point;
+
+#endif // MYHEADER_H
+```
+
+### 2. 实现头文件中的函数c
+
+在一个源文件中实现你在头文件中声明的函数。例如，可以创建一个名为 `myheader.c` 的文件来实现这些函数。
+
+**示例 `myheader.c`**：
+
+```c
+#include <stdio.h>
+#include "myheader.h" // 包含自定义头文件
+
+void greet(const char *name) {
+    printf("Hello, %s!\n", name);
+}
+
+int add(int a, int b) {
+    return a + b;
+}
+```
+
+### 3. 使用头文件
+
+在其他源文件中，你可以使用 `#include` 指令来包含你的自定义头文件。例如，可以在 `main.c` 中使用这些功能：
+
+**示例 `main.c`**：
+
+```c
+#include <stdio.h>
+#include "myheader.h" // 包含自定义头文件
+
+int main() {
+    greet("Alice");
+    int sum = add(5, 10);
+    printf("Sum: %d\n", sum);
+    
+    Point p;
+    p.x = 10;
+    p.y = 20;
+    printf("Point: (%d, %d)\n", p.x, p.y);
+    
+    return 0;
+}
+```
+
+### 4. 编译程序
+
+确保在编译时包含所有相关的源文件。例如，你可以使用以下命令编译：
+
+```c
+gcc -I/path/to/headers main.c myheader.c -o myprogram
+```
+
+
+
+## 8.3.静态函数与外部变量
+
+### 8.3.1静态函数
+
+在 C 语言中，**静态函数**（`static function`）是使用 `static` 关键字声明的函数，它具有如下特点：
+
+1. **作用域限定**
+
+- 静态函数的作用域仅限于其所在的源文件（即文件内可见）。
+- 这意味着静态函数不能在其他源文件中被调用或引用。它不能被外部代码访问，也不能被其他文件中的函数所调用。
+
+2. **链接性（Linkage）**
+
+- 静态函数有 **内部链接性**，意味着它只对当前源文件可见，编译器会将其视为文件内部的一部分。
+- 这与通常的函数（具有外部链接性）不同，通常的函数可以在其他文件中被访问。
+
+3. **避免命名冲突**
+
+- 使用静态函数可以避免不同文件中的同名函数发生冲突，尤其是在大型项目中，多个源文件可能有相同名字的函数，使用 `static` 可以确保它们互不干扰。
+
+4. **优化**
+
+- 编译器可能对静态函数进行更激进的优化，因为它知道该函数只会在当前源文件内调用。
+- 比如，编译器可以将静态函数内联化，或者删除未使用的静态函数。
+
+**静态函数的示例**
+
+```c
+#include <stdio.h>
+
+// 静态函数声明
+static void printMessage() {
+    printf("Hello from the static function!\n");
+}
+
+int main() {
+    printMessage(); // 正常调用静态函数
+    return 0;
+}
+```
+
+在上面的代码中：
+
+- `printMessage` 是一个静态函数，它只能在当前源文件（`main.c`）内被调用。
+- 如果其他源文件（如 `other.c`）中尝试调用 `printMessage`，编译时将会报错，因为 `printMessage` 的作用域被限制在 `main.c` 文件内。
+
+**静态函数的优势**
+
+1. **减少外部命名冲突**：静态函数避免了多个文件间可能的命名冲突，尤其是当多个文件中有相同名称的函数时。
+2. **提高编译优化**：因为编译器知道静态函数只在当前文件中使用，它可以进行更为激进的优化，如内联等。
+3. **封装功能**：将实现细节封装在文件内部，避免了外部调用者不必要地依赖该函数。
+
+**总结**：
+
+静态函数是限制作用域的函数，它只能在定义它的文件内部访问和调用。在需要将某些函数限制在本文件中时，静态函数是一个非常有用的工具。
+
+
+
+### 8.3.2.外部变量
+
+在 C 语言中，**外部变量**（**external variables**）是指在所有函数之外、通常在文件的顶部或外部声明的变量。这些变量具有全局作用域，可以被同一个程序中不同函数访问和修改。
+
+1. **外部变量的声明**
+
+外部变量通常在程序的外部区域声明，即在 `main` 函数或任何其他函数之外。它们的作用域通常覆盖整个文件，如果需要在多个源文件之间共享外部变量，可以使用 `extern` 关键字。
+
+2. **全局变量 vs 外部变量**
+
+- **全局变量**：通常是指在所有函数之外声明的变量，并且其作用域通常是从声明点开始，到文件结束。
+- **外部变量**：通常用于描述在多个源文件中共享的变量，使用 `extern` 关键字声明，可以在不同文件中访问同一个变量。
+
+3. **extern 关键字**
+
+`extern` 关键字用于声明一个变量是外部变量，表示该变量在其他地方（通常是其他源文件）定义。这使得该变量可以在当前源文件中使用，但不需要重新定义它。
+
+4. **外部变量的特点**
+
+- 外部变量在程序启动时分配内存，并且在程序的生命周期内存在。
+- 它们的初始值是零，除非在声明时显式地赋予初值。
+- 外部变量可以在任何函数中被访问和修改，但最好遵循适当的封装规则，避免不必要的修改。
+
+5. **外部变量的示例**
+
+在单个文件中使用外部变量：
+
+```c
+#include <stdio.h>
+
+// 外部变量声明
+int globalVar = 10; // 定义全局变量
+
+void function1() {
+    printf("In function1, globalVar = %d\n", globalVar);
+}
+
+void function2() {
+    globalVar = 20; // 修改全局变量
+    printf("In function2, globalVar = %d\n", globalVar);
+}
+
+int main() {
+    printf("In main, globalVar = %d\n", globalVar);
+    function1();
+    function2();
+    printf("After function2, globalVar = %d\n", globalVar);
+    return 0;
+}
+```
+
+在上面的代码中：
+
+- `globalVar` 是一个全局变量，它可以在 `main`、`function1` 和 `function2` 中访问。
+- 你可以修改这个变量的值，这些修改会影响到所有函数对该变量的访问。
+
+使用 `extern` 关键字跨文件共享外部变量：
+
+假设有两个源文件 `file1.c` 和 `file2.c`，我们想在 `file1.c` 中定义一个外部变量，并在 `file2.c` 中访问它。
+
+**file1.c**（定义外部变量）：
+
+```c
+#include <stdio.h>
+
+// 定义外部变量
+int globalVar = 100;
+
+void printGlobalVar() {
+    printf("In file1.c, globalVar = %d\n", globalVar);
+}
+```
+
+**file2.c**（访问外部变量）：
+
+```c
+#include <stdio.h>
+
+// 声明外部变量
+extern int globalVar;
+
+void modifyGlobalVar() {
+    globalVar = 200;
+}
+
+int main() {
+    printf("In file2.c, before modification, globalVar = %d\n", globalVar);
+    modifyGlobalVar();
+    printf("In file2.c, after modification, globalVar = %d\n", globalVar);
+    return 0;
+}
+```
+
+编译和链接：
+
+```bash
+gcc file1.c file2.c -o program
+./program
+```
+
+输出结果：
+
+```
+In file2.c, before modification, globalVar = 100
+In file2.c, after modification, globalVar = 200
+```
+
+6. **外部变量的作用域**
+
+- 外部变量的作用域是程序中的所有函数（或至少是声明它的文件中的所有函数）。
+- 如果希望外部变量在多个文件之间共享，需要在所有源文件中使用 `extern` 关键字声明该变量。
+
+7. **外部变量的优缺点**
+
+**优点：**
+
+- 外部变量可以在不同的函数和源文件中共享数据。
+- 它们可以在整个程序生命周期内保持数据的状态。
+
+**缺点：**
+
+- 外部变量可能导致程序中的数据依赖和意外修改，增加了调试的难度。
+- 它们使得函数的副作用更加不可控，降低了代码的封装性和可维护性。
+- 过度使用外部变量可能导致程序逻辑不清晰。
+
+**总结**：
+
+- **外部变量**在程序中具有全局作用域，它们可以在不同的函数中访问和修改。
+- 使用 `extern` 关键字可以在多个源文件之间共享外部变量。
+- 外部变量可以非常方便地共享数据，但应小心使用，以免导致数据的不良修改和程序的复杂性增加。
+
+
+
+
+
+## 8.4.预处理器指令
+
+### C 语言中的预处理器 (Preprocessor)
+
+C 语言中的 **预处理器** 是在编译过程中对源代码进行预处理的工具，它主要负责在源代码编译之前对代码进行文本替换、条件编译、文件包含等操作。预处理器并不直接处理程序的逻辑，而是通过指令对源代码进行修改，生成最终供编译器使用的代码。
+
+预处理器指令通常以 `#` 开头，表示编译器在处理源代码之前需要对其进行处理。
+
+### 常见的预处理器指令
+
+1. **`#define`**：定义宏（常量或函数）
+2. **`#include`**：包含头文件
+3. **`#ifdef` / `#ifndef`**：条件编译，检查宏是否已定义
+4. **`#if` / `#else` / `#elif` / `#endif`**：条件编译，基于表达式的真假决定是否编译某段代码
+5. **`#undef`**：取消宏定义
+6. **`#pragma`**：提供编译器特定的指令
+
+### 1. **`#define`**：定义宏
+
+`#define` 用于定义常量或宏函数。在编译时，编译器会将所有匹配的代码替换为宏定义的内容。
+
+- 定义常量：
+
+  ```c
+  #define PI 3.14
+  ```
+
+  这样，代码中的 `PI` 会被替换成 `3.14`。
+
+- 定义宏函数：
+
+  ```c
+  #define SQUARE(x) ((x) * (x))
+  ```
+
+  这会将 `SQUARE(5)` 替换为 `((5) * (5))`，相当于一个内联函数。
+
+### 2. **`#include`**：包含头文件
+
+`#include` 用于引入外部文件，通常是头文件。头文件包含常用的声明和宏定义。
+
+- 包含标准库头文件：
+
+  ```c
+  #include <stdio.h>
+  ```
+
+- 包含自定义的头文件：
+
+  ```c
+  #include "myheader.h"
+  ```
+
+### 3. **`#ifdef` / `#ifndef`**：条件编译
+
+`#ifdef` 检查某个宏是否已经定义，如果定义了则编译随后的代码块；`#ifndef` 则是检查宏是否未定义，未定义则编译随后的代码块。
+
+- 示例：
+
+  ```c
+  #define DEBUG
+  #ifdef DEBUG
+    printf("Debugging enabled\n");
+  #endif
+  ```
+
+  如果 `DEBUG` 已定义，上述代码会打印出 "Debugging enabled"。
+
+- 示例：使用 `#ifndef` 来防止多重包含（防止头文件被多次引入）：
+
+  ```c
+  #ifndef MYHEADER_H
+  #define MYHEADER_H
+  // 头文件内容
+  #endif
+  ```
+
+### 4. **`#if` / `#else` / `#elif` / `#endif`**：条件编译
+
+`#if` 用于根据给定的条件判断是否编译一段代码，可以结合 `#else` 和 `#elif` 来进行多条件判断。
+
+- 示例：
+
+  ```c
+  #define VERSION 2
+  
+  #if VERSION == 1
+    printf("Version 1\n");
+  #elif VERSION == 2
+    printf("Version 2\n");
+  #else
+    printf("Unknown Version\n");
+  #endif
+  ```
+
+  如果 `VERSION` 是 2，输出将是 `Version 2`。
+
+### 5. **`#undef`**：取消宏定义
+
+`#undef` 用于取消一个已经定义的宏。
+
+- 示例：
+
+  ```c
+  #define MAX 100
+  // 使用 MAX
+  #undef MAX
+  // 现在不能再使用 MAX，因为它已经被取消定义
+  ```
+
+### 6. **`#pragma`**：编译器指令
+
+`#pragma` 是一种向编译器传递特殊指令的方式。编译器会根据这些指令执行特定的操作。
+
+- 示例：禁止某些编译警告：
+
+  ```c
+  #pragma warning(disable: 4996)
+  ```
+
+### 预处理器的工作流程
+
+1. **文本替换**：预处理器首先将源代码中的宏替换成相应的内容。
+2. **文件包含**：遇到 `#include` 指令时，预处理器会把指定文件的内容插入到当前位置。
+3. **条件编译**：根据条件编译指令，预处理器决定是否编译某段代码。
+4. **宏展开**：宏定义中的函数形式会被展开为实际的代码。
+
+### 示例：使用 `#if` 和 `#define` 进行调试控制
+
+```c
+#include <stdio.h>
+
+#define DEBUG 1  // 定义 DEBUG 为 1，启用调试输出
+
+int main() {
+    int x = 5;
+    
+    #if DEBUG
+        printf("Debug: x = %d\n", x);
+    #endif
+    
+    printf("Normal program execution\n");
+    
+    return 0;
+}
+```
+
+- 如果 `DEBUG` 被定义为 `1`，程序会输出调试信息。
+- 如果 `DEBUG` 被定义为 `0`，则不会输出调试信息。
+
+### 总结
+
+预处理器指令在 C 语言中用于在编译时进行代码的修改。它为程序员提供了一种灵活的方式来控制代码的条件编译、宏替换、文件包含等操作，使得程序可以根据不同的编译环境或条件进行适当的修改。

@@ -1,4 +1,4 @@
-# Sql-injection 结构化查询语言注入
+# Sql-injection
 
 [TOC]
 

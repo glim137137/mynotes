@@ -1,4 +1,4 @@
-# File upload  文件上传漏洞
+# File upload
 
 [TOC]
 
