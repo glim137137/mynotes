@@ -2,7 +2,7 @@
 
 [TOC] 
 
-## 1.简介
+# 1.简介
 
 Git 是一个分布式版本控制系统，用于跟踪计算机文件的修改，尤其是源代码。它允许多个开发者协作，同时维护项目的历史记录。
 
@@ -19,7 +19,7 @@ Git 是一个分布式版本控制系统，用于跟踪计算机文件的修改�
 
 ![image-20241027215006107](images/image-20241027215006107.png)
 
-## 2.基本命令
+# 2.基本命令
 
 
 
@@ -65,7 +65,7 @@ git commit -m "message"    #提交暂存区的更改，附上提交信息。
 
 
 
-## 3.分支
+# 3.分支
 
 
 
@@ -92,7 +92,7 @@ git push origin --delete <branchname>  #远程
 
 
 
-## 4.远程仓库
+# 4.远程仓库
 
 
 
@@ -103,9 +103,9 @@ git push origin --delete <branchname>  #远程
 
 
 
-## 5.工作流程
+# 5.工作流程
 
-### 1、克隆仓库
+## 1、克隆仓库
 
 如果你要参与一个已有的项目，首先需要将远程仓库克隆到本地：
 
@@ -114,7 +114,7 @@ git clone https://github.com/username/repo.git
 cd repo
 ```
 
-### 2、创建新分支
+## 2、创建新分支
 
 为了避免直接在 main 或 master 分支上进行开发，通常会创建一个新的分支：
 
@@ -122,11 +122,11 @@ cd repo
 git checkout -b new-feature
 ```
 
-### 3、工作目录
+## 3、工作目录
 
 在工作目录中进行代码编辑、添加新文件或删除不需要的文件。
 
-### 4、暂存文件
+## 4、暂存文件
 
 将修改过的文件添加到暂存区，以便进行下一步的提交操作：
 
@@ -136,7 +136,7 @@ git add filename
 git add .
 ```
 
-### 5、提交更改
+## 5、提交更改
 
 将暂存区的更改提交到本地仓库，并添加提交信息：
 
@@ -144,7 +144,7 @@ git add .
 git commit -m "Add new feature"
 ```
 
-### 6、拉取最新更改
+## 6、拉取最新更改
 
 在推送本地更改之前，最好从远程仓库拉取最新的更改，以避免冲突：
 
@@ -154,7 +154,7 @@ git pull origin main
 git pull origin new-feature
 ```
 
-### 7、推送更改
+## 7、推送更改
 
 将本地的提交推送到远程仓库：
 
@@ -162,11 +162,11 @@ git pull origin new-feature
 git push origin new-feature
 ```
 
-### 8、创建 Pull Request（PR）
+## 8、创建 Pull Request（PR）
 
 在 GitHub 或其他托管平台上创建 Pull Request，邀请团队成员进行代码审查。PR 合并后，你的更改就会合并到主分支。
 
-### 9、合并更改
+## 9、合并更改
 
 在 PR 审核通过并合并后，可以将远程仓库的主分支合并到本地分支：
 
@@ -176,7 +176,7 @@ git pull origin main
 git merge new-feature
 ```
 
-### 10、删除分支
+## 10、删除分支
 
 如果不再需要新功能分支，可以将其删除：
 
@@ -189,3 +189,46 @@ git branch -d new-feature
 ```shell
 git push origin --delete new-feature
 ```
+
+
+
+# 6.我的操作
+
+
+
+## 6.1.上传github
+
+```shell
+git init
+git add .
+# 查看当前分支的详细信息
+git status
+git commit -m "2025-3-15"
+# 添加远程库 git remote add <remote_name> <url>
+git remote add origin https://github.com/yourusername/mynotes.git
+# 重命名本地分支
+git branch -M main
+# 查看所有分支（本地和远程）
+git branch -a
+# 从远程仓库拉取 main 分支的更新，并将本地的提交应用在远程提交之上的命令
+git pull --rebase origin main
+# 将本地分支推送到远程仓库，并且设置该远程分支为默认的上游分支（upstream branch）。这样，在以后使用 git push 或 git pull 时，Git 会自动推送或拉取到这个默认的远程分支。
+git push -u origin main
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

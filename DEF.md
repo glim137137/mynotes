@@ -289,7 +289,9 @@ for (i in myObj.cars) {
 
 ## 解析
 
-**普通解析**
+### 普通解析 `JSON.parse()`
+
+`JSON.parse()` 方法用于将一个 JSON 字符串转换为 JavaScript 对象。
 
 ```js
 var text = '{"employees":[' +
@@ -302,7 +304,7 @@ document.getElementById("demo").innerHTML =
 obj.employees[1].firstName + " " + obj.employees[1].lastName;
 ```
 
-**解析日期**
+解析日期
 
 1. Date()
 
@@ -331,6 +333,58 @@ var obj = JSON.parse(text, function (key, value) {
  
 document.getElementById("demo").innerHTML = obj.name + ", " + obj.birth;
 ```
+
+
+
+### 在Ajax中解析 `response.json()`
+
+```js
+// 使用 fetch() 发起 GET 请求
+fetch('https://api.example.com/data')
+  .then(response => {
+    // 检查响应是否为成功状态 (200-299)
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    // 使用 response.json() 解析响应体中的 JSON 数据
+    return response.json();
+  })
+  .then(data => {
+    // 处理解析后的 JSON 数据
+    console.log(data);
+  })
+  .catch(error => {
+    // 处理错误
+    console.error('There was a problem with the fetch operation:', error);
+  });
+
+```
+
+
+
+### 将数据转换为 JSON 数据 `JSON.stringify()`
+
+`JSON.stringify()` 方法用于将一个 JavaScript 对象转换为 JSON 字符串。
+
+```js
+// JavaScript 对象
+const obj = { name: "John", age: 30, city: "New York" };
+
+// 将对象转换为 JSON 字符串
+const jsonString = JSON.stringify(obj);
+
+console.log(jsonString);
+// 输出: '{"name":"John","age":30,"city":"New York"}'
+
+```
+
+
+
+
+
+
+
+
 
 
 

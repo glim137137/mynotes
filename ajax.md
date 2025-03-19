@@ -122,23 +122,27 @@ $ bower install axios
 $ yarn add axios
 ```
 
-使用 jsDelivr CDN:
+使用CDN:
 
 ```html
+<!-- 使用 jsDelivr CDN: -->
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-```
-
-使用 unpkg CDN:
-
-```html
+<!-- 使用 unpkg CDN: -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 ```
 
-为了直接使用 `require` 导入预构建的 CommonJS 模块（如果您的模块打包器无法自动解析它们），我们提供了以下预构建模块：
+然后你就可以直接使用 `axios`，不需要 `import` 或 `require`。
+
+CommonJS 引入方式（适用于 Node.js）
 
 ```js
-const axios = require('axios/dist/browser/axios.cjs'); // browser
-const axios = require('axios/dist/node/axios.cjs'); // node
+const axios = require('axios');
+```
+
+ES6 模块引入方式（适用于前端或使用 ES6 模块的项目）
+
+```js
+import axios from 'axios';
 ```
 
 
@@ -702,7 +706,7 @@ fetch(url)
 
 ## 使用 Fetch
 
-### 1.基本 GET 请求：
+### 1.基本 GET 请求
 
 ```js
 fetch('https://api.example.com/data')
@@ -713,7 +717,7 @@ fetch('https://api.example.com/data')
 
 在这个例子中，fetch 默认执行 GET 请求，返回的 response 是一个 Response 对象，通过调用 .json() 方法来解析 JSON 数据。
 
-### 2.发送 POST 请求：
+### 2.发送 POST 请求
 
 ```js
 fetch('https://api.example.com/data', {

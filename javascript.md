@@ -269,6 +269,10 @@ var z=123e-5;     // 0.00123
 
    - 将一个字符串解析为浮动点数（`float`）。与 `parseFloat` 相同。
    - **返回值**: 解析后的浮动点数。
+   - **解析规则**：
+       - `parseFloat()` 会从字符串的开头开始解析，直到遇到一个不是数字字符或者小数点的字符为止。在遇到非数字字符时，解析会停止。
+       - 如果字符串的开头不是数字或者没有有效的小数部分，返回 `NaN`。
+       - `parseFloat()` 会处理字符串中的数字，包括整数、小数和科学计数法。
 
    ```javascript
    console.log(Number.parseFloat('3.14abc'));   // 3.14
@@ -280,6 +284,9 @@ var z=123e-5;     // 0.00123
 
    - 将一个字符串解析为整数，`radix` 是一个可选的参数，用来指定解析的进制。
    - **返回值**: 解析后的整数。
+   - **解析规则**：
+       - `parseInt()` 会从字符串的开头开始解析，直到遇到一个不是数字的字符为止。在遇到非数字字符时，解析会停止。
+       - 如果字符串的开头不是数字，则返回 `NaN`。
 
    ```javascript
    console.log(Number.parseInt('10'));         // 10
@@ -1321,7 +1328,81 @@ console.log(x);  // 15
 
 
 
+### localStorage
 
+`localStorage` 是 Web 存储 API 提供的一部分，它允许在用户的浏览器中以键值对的形式永久性地存储数据。`localStorage` 的数据在浏览器会话结束后仍然存在，并且不会过期，直到被显式删除。它适用于存储需要长期保存的数据，例如用户设置、登录信息等。
+
+**主要特点**：
+
+- **数据持久性**：`localStorage` 存储的数据没有过期时间，除非被显式删除。
+- **同源策略**：存储的数据只能在同一域名下的页面中访问，不同的域名、协议或端口之间的数据是隔离的。
+- **存储大小限制**：`localStorage` 通常允许存储每个域名约 5MB 的数据，具体大小可能因浏览器而异。
+- **同步存储**：对 `localStorage` 的操作是同步的，即在操作完成后，数据会立即可用。
+
+**常用方法**：
+
+1. **`localStorage.setItem(key, value)`**
+
+    - 用于将数据存储在 `localStorage` 中。
+    - 参数：
+        - `key`: 键名，表示数据的名称。
+        - `value`: 值，存储的数据，通常是字符串类型。
+
+    ```javascript
+    localStorage.setItem('username', 'Alice');
+    ```
+
+2. **`localStorage.getItem(key)`**
+
+    - 用于从 `localStorage` 获取指定 `key` 的数据。
+
+    - 参数
+
+        ：
+
+        - `key`: 键名，表示要获取的数据。
+
+    - **返回值**：如果找到了对应的值，返回该值；如果没有找到，返回 `null`。
+
+    ```javascript
+    const username = localStorage.getItem('username');
+    console.log(username);  // 输出: Alice
+    ```
+
+3. **`localStorage.removeItem(key)`**
+
+    - 用于从 `localStorage` 删除指定 `key` 的数据。
+    - 参数：
+        - `key`: 键名，表示要删除的数据。
+
+    ```javascript
+    localStorage.removeItem('username');
+    ```
+
+4. **`localStorage.clear()`**
+
+    - 用于清空 `localStorage` 中的所有数据。
+
+    ```javascript
+    localStorage.clear();
+    ```
+
+5. **`localStorage.length`**
+
+    - 返回 `localStorage` 中存储的键值对数量。
+
+    ```javascript
+    console.log(localStorage.length);  // 输出存储的键值对数量
+    ```
+
+6. **`localStorage.key(index)`**
+
+    - 根据索引获取 `localStorage` 中的键名。
+
+    ```js
+    const key = localStorage.key(0);
+    console.log(key);  // 输出第一个键名
+    ```
 
 
 
@@ -2323,7 +2404,7 @@ let intervalId = setInterval(() => {
 
 #### 2. Promise
 
-在 JavaScript 中，**`Promise`** 是一种用于表示异步操作最终完成（或失败）及其结果值的对象。它可以帮助你管理异步操作，避免回调地狱（callback hell），使得异步代码更加简洁、可读。
+在 JavaScript 中，**`Promise`** 是一种用于表示**异步操作最终完成（或失败）及其结果值的对象**。它可以帮助你管理异步操作，避免回调地狱（callback hell），使得异步代码更加简洁、可读。
 
 **Promise 的三种状态**
 
@@ -3229,7 +3310,7 @@ createElement()
 
 creatTextNode()
 
-insertBefore()
+parentNode.**insertBefore**(newNode, referenceNode);
 
 **删除已有 HTML 元素**
 
@@ -3861,4 +3942,126 @@ function getRandomBetween(n, m) {
     return Math.random() < 0.5
   }
 ```
+
+
+
+## 可选链操作符
+
+**可选链操作符**（Optional Chaining Operator）`?.` 是 JavaScript 中的一种新语法，它允许你在访问对象的深层嵌套属性时安全地避免出现 `TypeError` 错误。如果在访问某个属性或方法时，目标对象是 `null` 或 `undefined`，则表达式会短路并返回 `undefined`，而不会抛出错误。
+
+### 语法：
+
+```javascript
+obj?.property
+obj?.[property]
+obj?.method()
+```
+
+### 解释：
+
+1. **`obj?.property`**：访问对象 `obj` 的属性 `property`，如果 `obj` 是 `null` 或 `undefined`，则返回 `undefined`，而不是抛出错误。
+2. **`obj?.[property]`**：使用可选链访问对象的动态属性（通过变量 `property`），如果 `obj` 是 `null` 或 `undefined`，返回 `undefined`。
+3. **`obj?.method()`**：调用对象的 `method` 方法，如果 `obj` 是 `null` 或 `undefined`，则不会执行方法，而是返回 `undefined`。
+
+### 例子：
+
+#### 1. 访问对象属性
+
+```javascript
+const user = { name: 'Alice', address: { city: 'New York' } };
+
+console.log(user?.address?.city); // 输出: 'New York'
+console.log(user?.address?.zipcode); // 输出: undefined (address 存在，但 zipcode 不存在)
+console.log(user?.contact?.phone); // 输出: undefined (contact 是 null 或 undefined)
+```
+
+#### 2. 调用对象方法
+
+```javascript
+const obj = {
+  greet: () => 'Hello, world!',
+};
+
+console.log(obj?.greet()); // 输出: 'Hello, world!'
+console.log(obj?.nonExistentMethod()); // 输出: undefined (不会抛出错误)
+```
+
+#### 3. 访问数组元素
+
+```javascript
+const arr = [{ name: 'Alice' }, { name: 'Bob' }];
+
+console.log(arr?.[1]?.name); // 输出: 'Bob'
+console.log(arr?.[2]?.name); // 输出: undefined (数组长度不足)
+```
+
+### 优势：
+
+1. **避免错误**：在传统的代码中，访问 `null` 或 `undefined` 的属性会抛出 `TypeError`，而可选链操作符允许你安全地访问深层嵌套的属性。
+2. **简化代码**：在使用可选链时，你不再需要显式地检查每一层对象是否为 `null` 或 `undefined`，这使得代码更加简洁和易读。
+
+### 使用场景：
+
+- **访问深层嵌套的对象属性**：当你不确定某个对象的深层嵌套属性是否存在时，可选链可以避免访问不存在的属性时抛出错误。
+- **函数调用**：当你调用一个可能不存在的方法时，使用可选链可以避免错误。
+- **动态属性访问**：当你访问的属性名是动态的，例如通过变量来访问属性时，可选链同样有效。
+
+### 总结：
+
+可选链操作符 `?.` 是一种让代码更加安全和简洁的特性。它能让你在访问对象的属性、调用方法、或访问数组元素时，如果目标对象是 `null` 或 `undefined`，不会抛出错误，而是返回 `undefined`。这大大简化了代码并减少了错误发生的风险。
+
+
+
+
+
+## DOM位置操作
+
+### 1.同级DOM从后方插入
+
+```html
+<div id="parent">
+    <div id="1"></div>
+    <div id="2"></div>
+</div>
+```
+
+```javascript
+// 获取节点1和节点2
+const node1 = document.getElementById('1');
+const node2 = document.getElementById('2');
+
+// 获取节点2的父节点
+const parent = node2.parentNode;
+
+// 获取节点2的下一个兄弟节点（即节点2之后的第一个兄弟节点）
+const nextSibling = node2.nextSibling;***
+
+// 将节点1插入到节点2之后
+parent.insertBefore(node1, nextSibling);
+```
+
+
+
+
+
+## 类型转换
+
+
+
+### 1.String -> Number
+
+```js
+const numInt = Number.parseInt(String)
+const numFloat = Number.parseFloat(String)
+```
+
+
+
+### 2.Array-like -> Array
+
+```js
+const arr = Array.from(arrayLike, mapFn, thisArg)
+```
+
+
 

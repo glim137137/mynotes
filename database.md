@@ -1587,3 +1587,558 @@ END;
 
 ### 6.2.2.Example
 
+
+
+
+
+# 7.Entity Relationship Modeling
+
+
+
+## 7.1.ER Modeling
+
+**定义**：ER建模通过系统分析数据需求，帮助设计良好的数据库。
+
+> Entity-relationship modeling analyses data  requirements in a systematic way to help produce a  well-designed database.
+
+**实施时机**：应在数据库实现之前完成。
+
+> E-R modeling should always be completed before you  implement your database.
+
+**基本概念**：
+
+- **实体（Entities）**：需要存储数据的对象。
+- **属性（Attributes）**：实体或关系的特性。
+- **关系（Relationships）**：实体之间的关联。
+
+**两要素**：
+
+- static data structure
+- constraints
+- 没有 dynamic data operation
+
+
+
+## 7.2.ER Diagram
+
+![image-20250318120348833](images/image-20250318120348833.png)
+
+1. Entities with Attributes and Keys
+2. Relations with Arrows, sometimes with Attributes connected with dash line
+3. Multiplicty
+
+
+
+## 7.3.Entity Types
+
+**定义**：具有相同属性的对象组，由企业识别为独立存在。
+
+> Group of objects with same properties, identified by enterprise as having an independent existence.
+
+**实体实例（Entity Occurrence）**：实体类型的具体对象。
+
+> Uniquely identifiable object of an entity type
+
+**分类**：
+
+- **强实体类型（Strong Entity Type）**：不依赖其他实体类型存在，如Staff。
+- **弱实体类型（Weak Entity Type）**：依赖其他实体类型存在，如建筑中的房间。
+
+**示例**：
+
+- 物理实体：Staff、Property、Customer。
+
+    > Physical entity types (e.g. a car, a person, a football team) 
+
+- 活动/事件实体：Registration、Concert。
+
+    > Activity/event entity types (e.g. a concert, registration) 
+
+- 概念实体：Timetable、Program。
+
+    > Conceptual entity types (a concert programme, a timetable)
+
+
+
+
+
+## 7.4.Relationship Types
+
+**定义**：实体类型之间有意义的关联集合。
+
+> Set of meaningful associations among entity types.
+
+**关系实例**：每个参与实体类型的一个实例组成的唯一关联。
+
+> Uniquely identifiable association, which includes one occurrence from each participating entity type. :question::question:
+
+**语义网（Semantic Network）：**
+
+> Semantic Net of Has Relationship Type
+
+![image-20250318155139002](images/image-20250318155139002.png)
+
+**关系的度（Degree）**：
+
+> Number of participating entities in relationship.
+
+- 二元关系（Binary）：如PrivateOwner owns PropertyForRent。
+- 三元关系（Ternary）：如Staff registers Client at Branch。
+- 四元关系（Quaternary）：如Arranges。
+
+**递归关系（Recursive Relationship）**：同一实体类型以不同角色多次参与，如Staff supervises Staff。
+
+> Relationship type where same entity type participates more than once in different roles.
+
+**角色名（Role Names）**：指示实体在关系中的目的，如Supervisor和Supervisee。
+
+> Relationships may be given **role names** to indicate  purpose that each participating entity type plays in a  relationship.
+
+
+
+## 7.5.Attributes
+
+**定义**：实体或关系类型的特性。
+
+> Property of an entity or a relationship type.
+
+**属性域（Attribute Domain）**：属性的允许值集合。
+
+> Set of allowable values for one or more attributes.
+>
+> :star:Relationship Attribute Domain hasn’t {PK} and {FK}
+
+**类型**：
+
+- **简单属性（Simple Attribute）**：单一组件，如DOB（出生日期）。
+
+    > Attribute composed of a single component with an  independent existence.  
+    >
+    > − E.g.  DOB: 1990-10-11
+
+- **复合属性（Composite Attribute）**：多个组件，如Address（地址）。
+
+    > Attribute composed of multiple components, each with  an independent existence.
+    >
+    > − E.g.  Address:  Xiaoyuan Road 100, Pidu, Chengdu
+
+- **单值属性（Single-valued Attribute）**：每个实例一个值，如stuID（学号）。
+
+    > Attribute that holds a single value for each occurrence of  an entity type.  
+    >
+    > − E.g. stuID: 2020112233
+
+- **多值属性（Multi-valued Attribute）**：每个实例多个值，如Author of Book（书籍作者）。
+
+    >Attribute that holds multiple values for each occurrence  of an entity type. 
+    >
+    >− E.g.  Author of Book：Li Fan, T. Hanks, M. Burton
+
+- **派生属性（Derived Attribute）**：从其他属性值推导，如Age从DOB派生。
+
+    >Attribute that represents a value that is derivable from  value of a related attribute, or set of attributes, not  necessarily in the same entity type. 
+    >
+    >− E.g.  Age is derived attr. of DOB
+
+
+
+## 7.6.Keys
+
+**候选键（Candidate Key）**：唯一标识实体实例的最小属性集。
+
+>Minimal set of attributes that uniquely identifies each  occurrence of an entity type.
+
+**主键（Primary Key）**：选定的候选键，用于唯一标识实体实例。
+
+>Candidate key selected to uniquely identify each occurrence of an entity type.
+
+**复合键（Composite Key）**：由多个属性组成的**候选键**。
+
+>**A candidate key** that consists of two or more attributes.
+
+
+
+
+
+## 7.7.Structural Constraints
+
+**二元关系类型**：
+
+- :star:**EntityOne’s Cardinality:EntityTwo’s Cardinality**
+
+- **一对一（1:1）**：如Staff manages Branch。
+- **一对多（1:\*）**：如Staff oversees PropertyForRent。
+- **多对多（\*:\*）**：如Newspaper advertises PropertyForRent。
+
+**多重性（Multiplicity）**：关系的主要约束类型，由以下组成：
+
+> Main type of constraint on relationships is called multiplicity.
+
+- **参与（Participation）**：所有或部分实体实例是否参与关系。
+
+    > Determines whether all or only some entity occurrences (实体实例) participate in a relationship.
+
+- **基数（Cardinality）**：实体参与关系实例的最大数量。
+
+    > Describes maximum number of possible relationship  occurrences (关系实例) for an entity participating in a given relationship type.
+
+- :star:**Multiplicity = Participation + Cardinality**
+
+**复杂关系的多重性（Multiplicity for Complex Relationships）**：在n元关系中，当其他(n-1)个值固定时，实体类型的可能实例数量。
+
+> Number (or range) of possible occurrences of an entity  type in an n-ary relationship when other (n-1) values  are fixed.
+
+**多重性表示**：
+
+- :star:**Participation..Cardinality**
+
+- **0..1**：零或一个。
+- **1..1**：恰好一个。
+- **0..\***：零或多个。
+- **1..\***：一个或多个。
+
+![image-20250318163243752](images/image-20250318163243752.png)
+
+
+
+## 7.8.Problems with ER Models
+
+
+
+**连接陷阱（Connection Traps）**：设计概念模型时可能出现的问题。
+
+> Problems may arise when designing a conceptual data model called connection traps. 
+
+**类型**：
+
+- **扇形陷阱（Fan Trap）**：实体类型间关系路径不明确，如Staff-Division-Branch模型中无法确定员工所在分支。
+
+    > Where a model represents a relationship between entity types,  but pathway between certain entity occurrences  is ambiguous
+
+- **断层陷阱（Chasm Trap）**：模型暗示关系存在，但某些实例间无路径，如Branch-Staff-PropertyForRent中某些物业无关联员工。
+
+    > Where a model suggests the existence of a relationship between entity types, but pathway does not exist between certain entity occurrences.
+
+**解决方法**：重构模型，确保路径清晰。
+
+
+
+# 8.Normalization
+
+
+
+## 8.1.Why Normalisation
+
+**避免更新异常 update  anomalies**:
+
+- **插入异常 insertion**: 无法在没有员工的情况下添加分支（例如StaffBranch表中的B008）。
+- **删除异常 deletion**: 删除员工可能意外删除分支信息。
+- **修改异常 modification**: 数据冗余（例如分支地址重复）导致一致性风险。
+
+**目标**:
+
+- 最小化所需的属性数量。minimal number of attributes required;
+- 将逻辑上密切相关的属性分组到同一关系中。 attributes with a close logical relationship in the same  relation;
+- 减少冗余。minimal redundancy.
+
+**示例（StaffBranch表）**
+
+| staffNo    | sName      | position   | salary     | branchNo | bAddress             |
+| ---------- | ---------- | ---------- | ---------- | -------- | -------------------- |
+| SL21       | John White | Manager    | 30000      | B005     | 22 Deer Rd, London   |
+| SG37       | Ann Beech  | Assistant  | 12000      | B003     | 163 Main St, Glasgow |
+| SG14       | David Ford | Supervisor | 18000      | B003     | 163 Main St, Glasgow |
+| SL41       | Julie Lee  | Assistant  | 9000       | B005     | 22 Deer Rd, London   |
+| :question: | :question: | :question: | :question: | B008     | 12, Main St, Leeds   |
+
+- **问题**:
+    1. B003的bAddress重复冗余。
+    
+    2. 无法在没有员工的情况下插入分支（例如B008）。
+    3. 删除SG37和SG14会导致B003信息丢失。
+    4. 修改SL21的B005的bAddress时，无法使SL41的B005的bAddress保持一致
+
+
+
+
+
+## 8.2.Normalisation Supports Database Design
+
+**规范化在数据库设计中的作用**
+
+- 自顶向下方法 Use top-down approach:
+    - 使用ER建模，从用户需求、表单/报告、数据字典等推导关系。
+    - 将ER模型映射为一组关系。
+- 规范化作为验证 Use normalization as a validation technique:
+    - 通过检查关系结构确保设计合理（本讲及第16章第2.2步有详细描述）。
+
+**重要性**
+
+- 反映现实世界中的实体关系（例如家族企业、办公室恋情）。
+
+    > Relations in DB reflect complicated relationships among  Entities in the real world.
+    >
+    >  e.g, relationship in family corporation, office romance.
+
+- 防止“非纯”或复杂关系导致的**异常**（例如经理叔叔与员工侄子的依赖关系）。
+
+    > If the relation in a table is not pure, a number of **anomalies**  are produced, which can make analysis of the  data troublesome.
+    >
+    > Not pure relations or complicate relations means **the dependency（依赖）among  data.**
+    >
+    >  e.g, Uncle as a manager, his nephew as a staff.
+
+**解决方案**
+
+- 数据标准化是数据库优化和数据管理的一个关键部分，它可以帮助改进数据清洗、潜在客户路由、数据分割以及其他数据质量管理过程。
+
+    > Data normalization is  a key part of **DB refine** and **data management** that can help improve **data  cleansing**, **lead routing**, **segmentation**, and **other data quality processes**.
+
+- 将模式分解为更小、更纯的关系，消除问题依赖。
+
+    > The only way to avoid the problem in schema is to decompose（分解）the schema into two or more  schemas to eliminate dependency and purify  relations.
+
+
+
+## 8.3.Properties of Decomposition
+
+**无损连接性质**:
+
+- 从分解后的小关系中可重构原始关系（例如通过连接Staff和Branch表恢复bAddress）。
+
+    > **Lossless-join property** enables us to find any instance of the original relation from corresponding instances in  the smaller relations. 
+    >
+    > • bAddress can be retrieved by joining Staff and  Branch
+
+**依赖保持性质**:
+
+- 原始关系的约束可在分解后的小关系上强制执行（例如分解后staffNo → sName依然保持）。
+
+    > **Dependency preservation property** enables us to  enforce a constraint on the original relation by enforcing  some constraint on each of the smaller relations. 
+    >
+    > • sName is **functionally dependent** on staffNo in  StaffBranch. When decomposed, staffNo still refers  to the same sName.
+
+
+
+## 8.4.Functional Dependencies (FD)
+
+**定义**：
+
+Functional dependency describes relationship between attributes.
+
+- **A → B**: 如果在关系R中，属性A唯一确定属性B的一个值（可以是1:1或1:n关系）。
+
+    - **A: 决定因素 determinant**
+    - **B: 依赖项 dependent**
+
+    > If A and B are attributes of relation R, B is **functionally dependent** on A (denoted A → B), if **each value of A** in R **is associated** with **exactly one value of B** in R (may be 1:1 or 1:n relationship).
+
+**示例**：
+
+- 员工分行 StaffBranch：
+    - staffNo → sName
+    - branchNo → bAddress
+    - staffNo → position, salary, branchNo, bAddress
+- 学生表  Table records for each student：
+    - Grade → Pass/Fail
+    - StudentID, Module → Grade
+
+**关键概念**
+
+- **完全函数依赖 Full Functional Dependencies**: B完全依赖于A，且不依赖于A的任何真子集（例如staffNo → branchNo，(StudentID, CourseID) →^f^ Score）。单属性一定是完全函数依赖。
+
+    > Full functional dependency indicates that if A and B are  attributes of a relation, **B is fully functionally dependent on A**, if B is functionally dependent on A, **but not on any  proper subset of A .**
+
+- **部分函数依赖 Partial Functional Dependency**：当一个属性仅依赖于复合主键的一部分，而不是整个复合主键时，产生的依赖关系。（例如 (staffNo, sName) →^P^ branchNo，staffNo一个就可以决定branchNo所以是部分依赖）
+
+    > It refers to a situation where an attribute in a relational database is functionally dependent on part of a composite primary key rather than the whole primary key.
+
+- **传递依赖 Transitive Dependencies**: 如果A → B且B → C，则C通过B传递依赖于A（例如staffNo → branchNo → bAddress）。
+
+    >Transitive dependency describes a condition where A, B,  and C are attributes of a relation such that if **A → B and  B →C**, then **C is transitively dependent on A via B**  (provided that A is not functionally dependent on B or  C).
+
+**Armstrong公理**
+
+1. **关系的完整函数依赖集可能非常大**：
+
+    - 对于一个给定的关系，可能存在很多函数依赖。这些依赖描述了在该关系中如何从某些属性推导出其他属性。因此，关系的完整函数依赖集可能非常庞大。
+
+        > The complete set of functional dependencies for a  given relation can be very large.
+
+2. **Closure闭包**：
+
+    - **F的闭包（F^+^）** 是由给定的函数依赖集 **F** 推导出的所有函数依赖的集合。换句话说，F+ 包含了由 F 中的函数依赖推导出的所有可能的函数依赖。
+
+        > The set of all functional dependencies that are  implied by a given set of functional dependencies F is  called the closure of F, written F+.
+
+    - F^+^ 是一个包含 **F** 中所有显式的函数依赖及所有隐式的（通过推导得出的）函数依赖的集合。
+
+    - **Closure on functional dependencies**：
+
+        Given relation R(A, B, C, D) with functional  dependencies F {A->B, B->C}.
+
+        **The closure of F, F+** : A → A, A → B, A → C, B → B, B → C, C → C, D → D, AB → A,  AB → B, AB → C, AC → A, AC → B, AC → C, AD → A, AD → B,  AD → C, AD → D, BC → B, BC → C, BD → B, BD → C, BD → D,  CD → C, CD → D, ABC → A, ABC → B, ABC → C, ABD → A,  ABD → B, ABD → C, ABD → D, BCD → B, BCD → C, BCD → D,  ABCD → A, ABCD → B, ABCD → C, ABCD → D.
+
+    - **Closure on attribute set**：
+
+        Given relation R(A, B, C, D, E) with functional  dependencies F {A->B, B->C, D-> E, E-> D}.
+
+        **The closure of attributes**：{A}^+^ = {A, B, C}，{B}^+^={B, C}，{C}^+^={C} • {D}^+^={D, E}，{E}^+^={D, E}，{AB}^+^ = {A, B, C}，etc…
+
+3. **Armstrong公理（Armstrong's Axioms）**：
+
+    - **Armstrong公理** 是一组规则，用来推导出一个函数依赖集的闭包（F+）。它们提供了一种标准化的方法来从一个已知的函数依赖集推导出所有可能的函数依赖。
+
+        > **Armstrong’s axioms** is used to find F+.
+        >
+        > A set of inference(推理推断) rules, called **Armstrong’s axioms**, specifies how new functional  dependencies can be inferred from given ones.
+
+    - **Armstrong’s axioms**：
+
+        Let **A, B, and C** be **subsets of the attributes** of **the relation R**. Armstrong’s axioms are as follows:
+
+    1. **反射律（Reflexivity）**：If B is a subset of A, then A → B
+    2. **增加律（Augmentation）**： If A → B, then A,C → B,C
+    3. **传递律（Transitivity）**：If A → B and B → C, then A → C
+
+    - **Further rules**：
+
+        Let **D** be another subset of the attributes of  **relation R**
+
+    4. **Self  Determination（自决定）**: A → A
+    5. **Decomposition（分解）**: If A → B,C then A → B and A → C
+    6. **Union（合并）**: IfA → B and A → C thenA → B,C
+    7. **Composition（组合）**: If A → B and C → D then A,C → B,D
+
+
+
+
+
+## 8.5.The Process of Normalisation
+
+- **定义**: 基于主键和函数依赖分析关系的正式技术。
+- **步骤**: 通过一系列范式（1NF → 2NF → 3NF → BCNF），逐步强化格式并减少异常。
+- **权衡**: 规范化程度越高，异常越少，但查询效率可能降低。
+
+**范式层次 Grade of normalization**
+
+- UNF < 1NF < 2NF < **3NF** < **BCNF** < 4NF < 5NF < 6NF
+
+- **6NF**: 每行仅包含主键和最多一个其他属性。
+
+    > FYI：6NF - a table is in 6NF when the row contains the Primary  Key, and at most one other attribute.
+
+
+
+**未规范化形式（UNF Unnormalised Form）**
+
+- **要求**:包含重复组（例如单元格内多个值）。
+- **示例**: StaffPropertyInspection表中一个物业有多次检查。
+
+![image-20250319084138304](images/image-20250319084138304.png)
+
+**第一范式**（1NF First Normal Form）
+
+- **要求**: 原子值（每个单元格仅一个值）。
+
+    > A relation in which the intersection of each row and  column contains one and only one value **(atomic  value)**.
+
+- **UNF to 1NF**：
+
+    1. **选择关键属性**： 选择一个属性或一组属性作为未经规范化表的主键（Key）。主键是用来唯一标识每一行的属性或属性组合。
+
+        > Nominate an attribute or group of attributes to act as  the key for the unnormalised table.
+
+    2. **识别重复组**： 在未经规范化的表中，识别出哪些属性是重复出现的，特别是那些与主键属性相关联的重复数据组（Repeating Groups）。这些重复的数据通常存在于一行的多个列中。
+
+        > Identify the repeating group(s) in the unnormalised  table which repeats for the key attribute(s).
+
+    3. **去除重复组**： 通过以下两种方法之一去除重复数据组：
+
+        - **“扁平化”表格**：将重复的数据填入每一行中对应空列，以确保每一行的数据都能唯一标识，不再存在重复组。
+
+            > Entering appropriate data into the empty columns of rows  containing the repeating data (‘flattening’ the table)
+
+        - **分离重复数据**：将重复的数据与原主键属性一起，放入一个新的关系（即新的表）中。这样原来的表只保留主键和非重复的属性。
+
+            > Placing the repeating data along with a copy of the original  key attribute(s) into a separate relation.
+
+![image-20250319085241334](images/image-20250319085241334.png)
+
+**第二范式（2NF Second Normal Form）**
+
+- **要求**: 1NF + 无部分依赖（每个非主键属性完全依赖于候选键）。
+
+    > A relation that is in 1NF and every non-primary-key  attribute is fully functionally dependent on  any  candidate key . 
+
+- **1NF to 2NF**：
+
+    1. **识别功能依赖**： 在关系中识别功能依赖（Functional Dependencies）。
+
+        > Identify the functional dependencies in the relation.
+
+    2. **识别主键**： 确定 1NF 关系中的主键（Primary Key）。
+
+        > Identify the primary key for the 1NF relation.
+
+    3. **消除部分依赖**： 如果存在部分依赖（Partial Dependency），即某个非主属性仅依赖于主键的一部分（而不是整个主键），则需要消除这些部分依赖。消除部分依赖的方法是：
+
+        > If partial dependencies exist on the primary key  remove them by placing then in a new relation along  with a copy of their determinant .
+
+        - 将存在部分依赖的非主属性与其决定因子（Determinant，指的是决定属性值的属性或属性组合）一起，放入一个新的关系（新的表）中。
+        - 原始表中则只保留主键的其他部分和那些完全依赖于整个主键的属性。
+
+![image-20250319090430410](images/image-20250319090430410.png)
+
+**第三范式（3NF）**
+
+- **要求**: 2NF + 无传递依赖（任何非主键属性不能依赖于另一个非主键属性，它必须直接依赖于候选键）。
+
+    > A relation that is in 1NF and 2NF and in which no non-primary-key attribute is transitively dependent on any candidate key.
+
+- **2NF to 3NF**：
+
+    1. **识别功能依赖**： 在关系中识别功能依赖（Functional Dependencies）。
+
+        > Identify the functional dependencies in the relation.
+
+    2. **识别主键**： 确定 2NF 关系中的主键（Primary Key）。
+
+        > Identify the primary key for the 2NF relation.
+
+    3. **消除传递依赖**： 如果在关系中存在 **传递依赖**（transitive dependencies），则需要通过将这些依赖关系移到一个新的关系中来消除传递依赖，同时保留它们的 **决定因素**（determinant）。
+
+        > If transitive dependencies exist on the primary key remove them by placing them in a new relation along  with a copy of their determinant.
+
+**Boyce-Codd范式（BCNF Boyce–Codd Normal Form）**
+
+- **要求**: 3NF+每个决定因素（determinant）必须是候选键。
+
+    >  A relation is in BCNF if and only if every determinant is a  candidate key.
+
+- **3NF to BCNF**：
+
+    如果一个关系包含以下特征（伪候选键，即**非候选键的超键**），可能会违反BCNF：
+
+    1. **包含两个（或更多）复合候选键**：复合候选键是由多个属性组成的候选键。
+
+        > contains two (or more) composite candidate keys;
+
+    2. **这些候选键有重叠**：即它们有至少一个属性是相同的。
+
+        > the candidate keys overlap, that is have at least one attribute in common.
+
+
+
+**总结**
+
+![image-20250319144117772](images/image-20250319144117772.png)
+
+![image-20250319144103168](images/image-20250319144103168.png)
+
+
+
+
+
+
+

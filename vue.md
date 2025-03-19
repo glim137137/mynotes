@@ -744,7 +744,7 @@ function test(){
   
 </script>
 ```
-### *  情况三
+### * 情况三
 监视`reactive`定义的【对象类型】数据，且默认开启了深度监视。
 ```vue
 <template>
@@ -3196,3 +3196,455 @@ const Child = defineAsyncComponent(()=>import('./Child.vue'))
 - 移除了`$children` 实例 `propert`。
 
   ......
+
+
+
+
+
+# 9.模板语法
+
+## 9.1.Vue2
+
+### 1.插值表达式（Mustache Syntax）
+
+插值语法用于将 Vue 实例的数据绑定到模板中的 HTML 元素：
+
+```html
+<!-- 单向数据绑定 -->
+<div id="app">
+  <p>{{ message }}</p> <!-- 输出 message 的值 -->
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello, Vue!'
+    }
+  });
+</script>
+```
+
+这里，`{{ message }}` 会被 Vue 实例中的 `message` 属性的值替换。
+
+### 2.指令（Directives）
+
+Vue 提供了多个指令用于在 DOM 中绑定数据、控制渲染等。指令通常以 `v-` 开头。
+
+#### 2.1.`v-bind`：动态绑定属性
+
+`v-bind` 用于动态绑定 HTML 属性：
+
+```html
+<img v-bind:src="imageSrc" alt="Vue logo">
+```
+
+上述代码会将 `imageSrc` 变量的值绑定到 `src` 属性。
+
+#### 2.2.`v-if`：条件渲染
+
+`v-if` 用于基于条件来渲染 DOM 元素：
+
+```html
+<p v-if="seen">现在你看到我了！</p>
+```
+
+`v-if` 会根据表达式的布尔值决定是否渲染该元素。
+
+#### 2.3.`v-for`：列表渲染
+
+`v-for` 用于渲染列表：
+
+```html
+<ul>
+  <li v-for="item in items" :key="item.id">{{ item.text }}</li>
+</ul>
+```
+
+这里，`v-for` 会根据 `items` 数组渲染出列表项。每个项目需要一个唯一的 `key` 来帮助 Vue 跟踪元素的变动。
+
+#### 2.4.`v-model`：双向数据绑定
+
+`v-model` 用于实现表单元素和数据的双向绑定：
+
+```html
+<input v-model="message" placeholder="输入内容">
+<p>你输入的内容是：{{ message }}</p>
+```
+
+`v-model` 绑定了一个输入框的值和 Vue 实例中的 `message` 数据，实现了双向绑定。
+
+### 3.事件绑定（`v-on`）
+
+`v-on` 用于监听 DOM 事件并执行一些方法。
+
+```html
+<button v-on:click="sayHello">点击我</button>
+```
+
+上面的代码将会在点击按钮时触发 `sayHello` 方法。你也可以使用简写 `@` 来绑定事件：
+
+```html
+<button @click="sayHello">点击我</button>
+```
+
+### 4.计算属性（Computed Properties）
+
+计算属性是基于其依赖进行缓存的，并且在相关依赖发生变化时才会重新计算。
+
+```html
+<div id="app">
+  <p>{{ reversedMessage }}</p>
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello, Vue!'
+    },
+    computed: {
+      reversedMessage: function() {
+        return this.message.split('').reverse().join('');
+      }
+    }
+  });
+</script>
+```
+
+在这个例子中，`reversedMessage` 会返回 `message` 的反转值，且只有当 `message` 改变时，`reversedMessage` 才会重新计算。
+
+### 5.方法（Methods）
+
+你可以通过 `methods` 来处理事件或执行其他操作。
+
+```html
+<div id="app">
+  <button @click="greet">点击我</button>
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    methods: {
+      greet() {
+        alert('你好，Vue!');
+      }
+    }
+  });
+</script>
+```
+
+### 6.样式绑定（`v-bind:style` 和 `v-bind:class`）
+
+Vue 支持动态绑定样式和类。
+
+#### 6.1.`v-bind:style` 动态样式
+
+```html
+<div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }">
+  动态样式
+</div>
+```
+
+#### 6.2.`v-bind:class` 动态类
+
+```html
+<div v-bind:class="{ active: isActive, 'text-danger': hasError }">
+  动态类
+</div>
+```
+
+这里，`v-bind:class` 允许你动态地给元素添加或移除类。
+
+### 7.组件插槽（Slots）
+
+Vue 允许你在父组件中定义插槽，并将子组件内容传递给父组件的插槽。
+
+#### 父组件：
+
+```html
+<child-component>
+  <template #default>
+    <p>这是父组件插槽的内容！</p>
+  </template>
+</child-component>
+```
+
+#### 子组件：
+
+```html
+<template>
+  <div>
+    <slot></slot>
+  </div>
+</template>
+```
+
+### 8.生命周期钩子
+
+Vue 实例提供了多种生命周期钩子，在不同的阶段执行不同的操作。
+
+```
+new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello, Vue!'
+  },
+  created() {
+    console.log('Vue 实例已创建');
+  },
+  mounted() {
+    console.log('Vue 实例已挂载到 DOM');
+  }
+});
+```
+
+
+
+
+
+## 9.2.Vue3
+
+### 1.插值表达式（Mustache Syntax）
+
+Vue 3 中插值语法依然是 `{{ }}`，用于将 Vue 实例的数据绑定到 HTML 元素：
+
+```html
+<div id="app">
+  <p>{{ message }}</p>
+</div>
+
+<script>
+  const app = Vue.createApp({
+    data() {
+      return {
+        message: 'Hello, Vue 3!'
+      }
+    }
+  });
+  app.mount('#app');
+</script>
+```
+
+### 2.指令（Directives）
+
+Vue 3 延续了 Vue 2 的指令，但在使用时有一些改进和新特性。
+
+#### 2.1.`v-bind`：动态绑定属性
+
+`v-bind` 依然用于动态绑定 HTML 属性：
+
+```html
+html<img v-bind:src="imageSrc" alt="Vue logo">
+```
+
+你还可以使用简写 `:src` 来代替：
+
+```html
+html<img :src="imageSrc" alt="Vue logo">
+```
+
+#### 2.2.`v-if`：条件渲染
+
+`v-if` 用于条件渲染：
+
+```html
+html<p v-if="isVisible">显示内容</p>
+```
+
+#### 2.3.`v-for`：列表渲染
+
+`v-for` 用于遍历数组并渲染列表项：
+
+```html
+html<ul>
+  <li v-for="item in items" :key="item.id">{{ item.name }}</li>
+</ul>
+```
+
+#### 2.4.`v-model`：双向数据绑定
+
+Vue 3 对 `v-model` 做了一些改进，支持多个 `v-model` 绑定到同一个组件的不同 prop。默认情况下，它绑定的是 `modelValue`，你可以通过自定义 `modelValue` 来绑定到不同的属性。
+
+```html
+html<input v-model="message" placeholder="输入内容">
+```
+
+如果你在自定义组件中使用 `v-model`，可以指定绑定的 prop 名：
+
+```html
+html<MyComponent v-model:myProp="value"></MyComponent>
+```
+
+#### 2.5.`v-on`：事件绑定
+
+事件绑定依然使用 `v-on`，你可以使用简写 `@` 来绑定事件：
+
+```html
+html<button @click="handleClick">点击我</button>
+```
+
+#### 2.6.`v-show`：条件显示
+
+与 `v-if` 类似，`v-show` 也用于条件渲染，但是 `v-show` 会始终渲染元素，并通过控制元素的 `display` 样式来显示或隐藏它：
+
+```html
+html<p v-show="isVisible">显示内容</p>
+```
+
+### 3.计算属性（Computed Properties）
+
+计算属性的使用和 Vue 2 类似。它是基于它们的依赖进行缓存的，只有在依赖项变化时，才会重新计算。
+
+```html
+html<div id="app">
+  <p>{{ reversedMessage }}</p>
+</div>
+
+<script>
+  const app = Vue.createApp({
+    data() {
+      return {
+        message: 'Hello, Vue 3!'
+      }
+    },
+    computed: {
+      reversedMessage() {
+        return this.message.split('').reverse().join('');
+      }
+    }
+  });
+  app.mount('#app');
+</script>
+```
+
+### 4.方法（Methods）
+
+在 Vue 3 中，方法与 Vue 2 相同。它们用于处理事件或执行其他操作。
+
+```html
+html<div id="app">
+  <button @click="greet">点击我</button>
+</div>
+
+<script>
+  const app = Vue.createApp({
+    methods: {
+      greet() {
+        alert('Hello from Vue 3!');
+      }
+    }
+  });
+  app.mount('#app');
+</script>
+```
+
+### 5.组件插槽（Slots）
+
+Vue 3 中插槽的使用与 Vue 2 类似，但 Vue 3 支持具名插槽和作用域插槽的更灵活的写法。
+
+#### 5.1 默认插槽
+
+```html
+html<ChildComponent>
+  <p>这是父组件传递给子组件的内容</p>
+</ChildComponent>
+```
+
+#### 5.2.具名插槽
+
+```html
+html<ChildComponent>
+  <template v-slot:header>
+    <h1>这是头部内容</h1>
+  </template>
+  <template v-slot:footer>
+    <p>这是底部内容</p>
+  </template>
+</ChildComponent>
+```
+
+#### 5.3.作用域插槽
+
+```html
+<ChildComponent v-slot:default="slotProps">
+  <p>{{ slotProps.msg }}</p>
+</ChildComponent>
+```
+
+### 6.`<script setup>`（Composition API）
+
+Vue 3 引入了 Composition API，`<script setup>` 是一种新的简洁语法，用于编写组件的逻辑。
+
+```html
+<template>
+  <p>{{ message }}</p>
+  <button @click="greet">点击我</button>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+
+const message = ref('Hello from Vue 3');
+const greet = () => {
+  alert('Hello!');
+};
+</script>
+```
+
+- `ref` 用于声明响应式数据。
+- `setup` 中的代码会在组件创建之前执行。
+
+### 7.响应式引用（ref）
+
+在 Vue 3 中，`ref` 被用来创建响应式数据。它通常用于普通数据类型，而 `reactive` 则用于对象。
+
+```html
+<div id="app">
+  <p>{{ count }}</p>
+  <button @click="count++">增加</button>
+</div>
+
+<script>
+  const { createApp, ref } = Vue;
+
+  const app = createApp({
+    setup() {
+      const count = ref(0);
+      return { count };
+    }
+  });
+
+  app.mount('#app');
+</script>
+```
+
+### 8.`<Suspense>` 组件
+
+Vue 3 引入了 `<Suspense>` 组件，用于处理异步组件的加载。它允许你在组件加载时展示一个等待状态。
+
+```html
+<Suspense>
+  <template #default>
+    <AsyncComponent />
+  </template>
+  <template #fallback>
+    <p>加载中...</p>
+  </template>
+</Suspense>
+```
+
+### 9.生命周期钩子
+
+Vue 3 保留了大部分生命周期钩子，但它们被纳入了 Composition API 中的 `setup` 函数。你可以使用 `onMounted`, `onUpdated`, `onUnmounted` 等 API 来管理组件的生命周期。
+
+```html
+<script setup>
+import { onMounted } from 'vue';
+
+onMounted(() => {
+  console.log('组件已挂载');
+});
+</script>
+```
