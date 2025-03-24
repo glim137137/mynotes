@@ -208,6 +208,169 @@ var str_len = txt.length;
   const ends = str.endsWith("!"); // true
   ```
 
+
+
+**示例**
+
+大多数方法是String对象原型的方法，即`String.prototype.methodFunc()`；此外的是**静态方法**`String.methodFunc()`
+
+```js
+// 示例字符串
+const str = "  Hello, World!  ";
+const anotherStr = "JavaScript";
+
+// 1. at() - 返回指定索引处的字符（支持负索引）
+console.log("at:", str.at(2)); // 输出: "l"
+// 注释: 索引 2 是 "l"，负索引从末尾计数，如 str.at(-1) 返回 " "
+
+// 2. charAt() - 返回指定索引处的字符
+console.log("charAt:", str.charAt(1)); // 输出: "H"
+// 注释: 如果索引超出范围，返回空字符串 ""
+
+// 3. charCodeAt() - 返回指定索引处字符的 UTF-16 编码
+console.log("charCodeAt:", str.charCodeAt(1)); // 输出: 72
+// 注释: "H" 的 UTF-16 编码是 72，超出范围返回 NaN
+
+// 4. codePointAt() - 返回指定索引处字符的 Unicode 码点
+console.log("codePointAt:", str.codePointAt(1)); // 输出: 72
+// 注释: 支持完整的 Unicode（如表情符号），超出范围返回 undefined
+
+// 5. concat() - 连接两个或多个字符串
+const concatenated = str.concat(" ", anotherStr);
+console.log("concat:", concatenated); // 输出: "  Hello, World! JavaScript"
+// 注释: 返回新字符串，不修改原字符串
+
+// 6. endsWith() - 检查字符串是否以指定子串结尾
+console.log("endsWith:", str.endsWith("!  ")); // 输出: true
+// 注释: 可指定长度参数，如 str.endsWith("!", 15)
+
+// 7. includes() - 检查字符串是否包含指定子串
+console.log("includes:", str.includes("World")); // 输出: true
+// 注释: 区分大小写，可指定起始搜索位置
+
+// 8. indexOf() - 返回子串首次出现的索引
+console.log("indexOf:", str.indexOf("l")); // 输出: 2
+// 注释: 未找到返回 -1，可指定起始搜索位置
+
+// 9. lastIndexOf() - 返回子串最后一次出现的索引
+console.log("lastIndexOf:", str.lastIndexOf("l")); // 输出: 10
+// 注释: 从右向左搜索，未找到返回 -1
+
+// 10. localeCompare() - 比较两个字符串在本地化排序中的顺序
+console.log("localeCompare:", str.localeCompare("  Hello, World!  ")); // 输出: 0
+// 注释: 返回负数（前者小）、0（相等）或正数（后者小）
+
+// 11. match(regexp) - 使用正则表达式匹配字符串
+const matches = str.match(/[A-Z]/g);
+console.log("match:", matches); // 输出: ["H", "W"]
+// 注释: 返回匹配数组，未匹配返回 null
+
+// 12. matchAll(regexp) - 返回正则表达式所有匹配的迭代器
+const allMatches = [...str.matchAll(/l/g)];
+console.log("matchAll:", allMatches.map(m => m[0])); // 输出: ["l", "l", "l"]
+// 注释: 需要全局标志 /g，返回迭代器
+
+// 13. normalize() - 返回字符串的 Unicode 规范化形式
+const accented = "café";
+console.log("normalize:", accented.normalize("NFC")); // 输出: "café"
+// 注释: 处理组合字符，默认 NFC（完全组合）
+
+// 14. padEnd(targetLength[, padString]) - 在字符串末尾填充字符到指定长度
+console.log("padEnd:", str.padEnd(20, "-")); // 输出: "  Hello, World!  ----"
+// 注释: 不截断原字符串，只填充
+
+// 15. padStart(targetLength[, padString]) - 在字符串开头填充字符到指定长度
+console.log("padStart:", str.padStart(20, "-")); // 输出: "----  Hello, World!  "
+// 注释: 常用于对齐文本
+
+// 16. repeat(count) - 重复字符串指定次数
+console.log("repeat:", "ha".repeat(3)); // 输出: "hahaha"
+// 注释: 参数必须是非负整数
+
+// 17. replace(pattern, replacement) - 替换第一个匹配的子串
+console.log("replace:", str.replace("World", "Earth")); // 输出: "  Hello, Earth!  "
+// 注释: 可使用正则表达式，只替换首次匹配
+
+// 18. replaceAll(pattern, replacement) - 替换所有匹配的子串
+console.log("replaceAll:", str.replaceAll("l", "L")); // 输出: "  HeLLo, WorLd!  "
+// 注释: 无需正则表达式即可替换所有匹配
+
+// 19. search(regexp) - 返回正则表达式首次匹配的索引
+console.log("search:", str.search(/o/)); // 输出: 5
+// 注释: 未找到返回 -1，类似 indexOf 但支持正则
+
+// 20. slice(start[, end]) - 提取字符串的一部分
+console.log("slice:", str.slice(2, 7)); // 输出: "Hello"
+// 注释: 从 start（包含）到 end（不包含），支持负索引
+
+// 21. split([separator[, limit]]) - 将字符串按指定分隔符拆分为数组
+console.log("split:", str.split(" ")); // 输出: ["", "", "Hello,", "World!", "", ""]
+// 注释: 可指定最大拆分次数
+
+// 22. startsWith() - 检查字符串是否以指定子串开头
+console.log("startsWith:", str.startsWith("  ")); // 输出: true
+// 注释: 可指定起始搜索位置
+
+// 23. substring(start[, end]) - 提取指定索引之间的子串
+console.log("substring:", str.substring(2, 7)); // 输出: "Hello"
+// 注释: 不支持负索引，与 slice 类似但处理不同
+
+// 24. toLocaleLowerCase() - 转换为本地化小写
+console.log("toLocaleLowerCase:", str.toLocaleLowerCase()); // 输出: "  hello, world!  "
+// 注释: 根据语言环境转换（如土耳其语的 "I"）
+
+// 25. toLocaleUpperCase() - 转换为本地化大写
+console.log("toLocaleUpperCase:", str.toLocaleUpperCase()); // 输出: "  HELLO, WORLD!  "
+// 注释: 根据语言环境转换
+
+// 26. toLowerCase() - 转换为小写
+console.log("toLowerCase:", str.toLowerCase()); // 输出: "  hello, world!  "
+// 注释: 标准 ASCII 转换
+
+// 27. toString() - 返回字符串本身
+console.log("toString:", str.toString()); // 输出: "  Hello, World!  "
+// 注释: 对于字符串对象，返回原始字符串
+
+// 28. toUpperCase() - 转换为大写
+console.log("toUpperCase:", str.toUpperCase()); // 输出: "  HELLO, WORLD!  "
+// 注释: 标准 ASCII 转换
+
+// 29. trim() - 移除字符串两端的空白字符
+console.log("trim:", str.trim()); // 输出: "Hello, World!"
+// 注释: 只移除首尾的空格、换行等
+
+// 30. trimEnd() - 移除字符串末尾的空白字符
+console.log("trimEnd:", str.trimEnd()); // 输出: "  Hello, World!"
+// 注释: 只移除尾部空白
+
+// 31. trimStart() - 移除字符串开头的空白字符
+console.log("trimStart:", str.trimStart()); // 输出: "Hello, World!  "
+// 注释: 只移除头部空白
+
+// 32. valueOf() - 返回字符串的原始值
+console.log("valueOf:", str.valueOf()); // 输出: "  Hello, World!  "
+// 注释: 与 toString() 类似，用于获取原始字符串
+
+
+
+// 静态方法
+// 33. String.fromCharCode() - 从 UTF-16 码点创建字符串
+console.log("fromCharCode:", String.fromCharCode(72, 101, 108, 108, 111)); // 输出: "Hello"
+// 注释: 静态方法，输入数字码点
+
+// 34. String.fromCodePoint() - 从 Unicode 码点创建字符串
+console.log("fromCodePoint:", String.fromCodePoint(128512)); // 输出: "😀"
+// 注释: 静态方法，支持完整的 Unicode（如表情符号）
+
+// 35. String.raw() - 创建原始字符串（忽略转义字符）
+console.log("raw:", String.raw`Hi\nWorld`); // 输出: "Hi\\nWorld"
+// 注释: 静态方法，常用于模板字面量
+```
+
+
+
+
+
 #### 数字（Number）
 
 ```js
@@ -341,6 +504,98 @@ var z=123e-5;     // 0.00123
 
 
 
+**示例**
+
+大多数方法是Number对象原型的方法，即`Number.prototype.methodFunc()`；此外的是**静态方法**`Number.methodFunc()`
+
+```js
+// 示例数字
+const num = 123.456;
+const integer = 42;
+
+// 实例方法
+// 1. toExponential([fractionDigits]) - 将数字转换为指数记数法
+console.log("toExponential:", num.toExponential(2)); // 输出: "1.23e+2"
+// 注释: 参数指定小数点后位数，返回字符串，123.456 ≈ 1.23 × 10²
+
+// 2. toFixed([digits]) - 将数字格式化为指定小数位数
+console.log("toFixed:", num.toFixed(1)); // 输出: "123.5"
+// 注释: 四舍五入到指定位数，返回字符串
+
+// 3. toLocaleString([locales[, options]]) - 将数字转换为本地化字符串
+console.log("toLocaleString:", num.toLocaleString('en-US')); // 输出: "123.456"
+// 注释: 根据语言环境格式化，可指定选项，如货币格式
+
+// 4. toPrecision([precision]) - 将数字格式化为指定有效数字
+console.log("toPrecision:", num.toPrecision(4)); // 输出: "123.5"
+// 注释: 返回指定有效位数的字符串，可能用指数记数法
+
+// 5. toString([radix]) - 将数字转换为字符串（指定进制）
+console.log("toString:", integer.toString(16)); // 输出: "2a"
+// 注释: 参数指定进制（2-36），默认 10 进制
+
+// 6. valueOf() - 返回数字的原始值
+const numObj = new Number(42);
+console.log("valueOf:", numObj.valueOf()); // 输出: 42
+// 注释: 返回基本数字值，区分 Number 对象和原始值
+
+// 静态方法
+// 7. Number.parseInt(string[, radix]) - 将字符串解析为整数
+console.log("parseInt:", Number.parseInt("123.45", 10)); // 输出: 123
+// 注释: 参数：字符串、进制（2-36），忽略小数部分
+
+// 8. Number.parseFloat(string) - 将字符串解析为浮点数
+console.log("parseFloat:", Number.parseFloat("123.45abc")); // 输出: 123.45
+// 注释: 解析字符串直到无效字符，返回浮点数
+
+// 9. Number.isFinite() - 检查数字是否为有限值
+console.log("isFinite:", Number.isFinite(42)); // 输出: true
+console.log("isFinite:", Number.isFinite(Infinity)); // 输出: false
+// 注释: 不强制转换参数，区分全局 isFinite()
+
+// 10. Number.isInteger() - 检查数字是否为整数
+console.log("isInteger:", Number.isInteger(42)); // 输出: true
+console.log("isInteger:", Number.isInteger(42.0)); // 输出: true
+console.log("isInteger:", Number.isInteger(42.1)); // 输出: false
+// 注释: 检查是否为整数，不强制转换
+
+// 11. Number.isNaN() - 检查值是否为 NaN
+console.log("isNaN:", Number.isNaN(NaN)); // 输出: true
+console.log("isNaN:", Number.isNaN(42)); // 输出: false
+// 注释: 不强制转换参数，区分全局 isNaN()
+
+// 12. Number.isSafeInteger() - 检查数字是否为安全整数
+console.log("isSafeInteger:", Number.isSafeInteger(42)); // 输出: true
+console.log("isSafeInteger:", Number.isSafeInteger(2 ** 53)); // 输出: false
+// 注释: 安全整数范围：-(2^53 - 1) 到 2^53 - 1
+
+// 13. Number.toInteger() - 已废弃，使用 Math.trunc() 替代
+// console.log("toInteger:", Number.toInteger(42.7)); // 未定义
+// 注释: ES6 之前提案，现不可用，改为 Math.trunc(42.7) 输出 42
+
+// 示例：结合使用
+const value = "123.456";
+const parsed = Number.parseFloat(value); // 转换为数字
+console.log("Combined example:");
+console.log("parsed:", parsed);                    // 输出: 123.456
+console.log("toFixed:", parsed.toFixed(2));        // 输出: "123.46"
+console.log("toExponential:", parsed.toExponential(1)); // 输出: "1.2e+2"
+console.log("toString:", parsed.toString(2));      // 输出: "1111011.01110100101111000110101"
+console.log("isInteger:", Number.isInteger(parsed)); // 输出: false
+console.log("isSafeInteger:", Number.isSafeInteger(parsed)); // 输出: false
+
+// 特殊值测试
+console.log("Special values:");
+console.log("isFinite Infinity:", Number.isFinite(Infinity)); // 输出: false
+console.log("isNaN NaN:", Number.isNaN(NaN)); // 输出: true
+console.log("parseInt 'abc':", Number.parseInt("abc")); // 输出: NaN
+console.log("parseFloat '12.3.4':", Number.parseFloat("12.3.4")); // 输出: 12.3
+```
+
+
+
+
+
 #### 布尔（Boolean）
 
 ```js
@@ -422,7 +677,7 @@ name=person["lastname"];
   };
   ```
 
-- **Object**
+-  **使用 new Object()**
 
   ```js
   // 1.
@@ -567,6 +822,149 @@ name=person["lastname"];
   ```javascript
   Object.seal(person);
   ```
+
+
+
+**示例**
+
+所有方法全是Object对象原型的**静态方法**`Object.methodFunc()`
+
+```js
+// 示例对象
+const person = {
+  name: 'Alice',
+  age: 25,
+  hobbies: ['reading', 'gaming'],
+  address: {
+    city: 'New York',
+    zip: 10001
+  }
+};
+
+// 另一个对象用于演示继承或合并
+const extraInfo = {
+  job: 'Engineer',
+  age: 26 // 将覆盖 person 中的 age
+};
+
+// 1. Object.assign() - 将一个或多个源对象的属性复制到目标对象
+const mergedObject = Object.assign({}, person, extraInfo);
+console.log('Object.assign:', mergedObject);
+// 输出: { name: 'Alice', age: 26, hobbies: ['reading', 'gaming'], address: { city: 'New York', zip: 10001 }, job: 'Engineer' }
+// 注释: 修改目标对象并返回它，浅拷贝，后面的对象会覆盖前面的同名属性
+
+// 2. Object.create() - 创建一个新对象，使用指定的原型对象
+const newPerson = Object.create(person);
+console.log('Object.create:', newPerson.name); // 输出: 'Alice'
+// 注释: newPerson 继承了 person 的属性，但自身没有这些属性，访问通过原型链
+
+// 3. Object.defineProperty() - 直接在一个对象上定义新属性或修改现有属性
+const obj = {};
+Object.defineProperty(obj, 'key', {
+  value: 'static',
+  writable: false, // 不可写
+  enumerable: true, // 可枚举
+  configurable: true // 可配置
+});
+console.log('Object.defineProperty:', obj.key); // 输出: 'static'
+// 尝试修改
+obj.key = 'changed'; // 不会生效，因为 writable: false
+console.log('Object.defineProperty after attempt:', obj.key); // 输出: 'static'
+
+// 4. Object.defineProperties() - 定义多个属性
+const multiProps = {};
+Object.defineProperties(multiProps, {
+  name: { value: 'Bob', writable: true },
+  age: { value: 30, enumerable: true }
+});
+console.log('Object.defineProperties:', multiProps); // 输出: { name: 'Bob', age: 30 }
+
+// 5. Object.entries() - 返回对象可枚举属性的 [key, value] 数组
+const entries = Object.entries(person);
+console.log('Object.entries:', entries);
+// 输出: [['name', 'Alice'], ['age', 25], ['hobbies', ['reading', 'gaming']], ['address', { city: 'New York', zip: 10001 }]]
+// 注释: 可用于 for...of 循环或转换为 Map
+
+// 6. Object.freeze() - 冻结对象，阻止修改
+const frozen = Object.freeze({ x: 1 });
+frozen.x = 2; // 不会生效
+console.log('Object.freeze:', frozen); // 输出: { x: 1 }
+// 注释: 浅冻结，嵌套对象仍可修改
+
+// 7. Object.fromEntries() - 从键值对数组创建对象
+const pairs = [['a', 1], ['b', 2]];
+const fromEntriesObj = Object.fromEntries(pairs);
+console.log('Object.fromEntries:', fromEntriesObj); // 输出: { a: 1, b: 2 }
+// 注释: 与 Object.entries() 相反
+
+// 8. Object.getOwnPropertyDescriptor() - 获取属性的描述符
+const descriptor = Object.getOwnPropertyDescriptor(person, 'name');
+console.log('Object.getOwnPropertyDescriptor:', descriptor);
+// 输出: { value: 'Alice', writable: true, enumerable: true, configurable: true }
+
+// 9. Object.getOwnPropertyDescriptors() - 获取所有自有属性的描述符
+const descriptors = Object.getOwnPropertyDescriptors(person);
+console.log('Object.getOwnPropertyDescriptors:', descriptors);
+// 输出: 包含 name、age、hobbies、address 的描述符对象
+
+// 10. Object.getOwnPropertyNames() - 返回所有自有属性名（包括不可枚举）
+const propNames = Object.getOwnPropertyNames(person);
+console.log('Object.getOwnPropertyNames:', propNames);
+// 输出: ['name', 'age', 'hobbies', 'address']
+
+// 11. Object.getPrototypeOf() - 获取对象的原型
+const proto = Object.getPrototypeOf(newPerson);
+console.log('Object.getPrototypeOf:', proto === person); // 输出: true
+
+// 12. Object.hasOwn() - 检查对象是否具有指定自有属性
+console.log('Object.hasOwn:', Object.hasOwn(person, 'name')); // 输出: true
+console.log('Object.hasOwn:', Object.hasOwn(person, 'toString')); // 输出: false
+// 注释: 不检查原型链上的属性
+
+// 13. Object.is() - 比较两个值是否相同（严格相等，处理特殊情况）
+console.log('Object.is:', Object.is(NaN, NaN)); // 输出: true
+console.log('Object.is:', Object.is(0, -0)); // 输出: false
+// 注释: 与 === 类似，但区分 0 和 -0，且 NaN 被视为相同
+
+// 14. Object.isExtensible() - 检查对象是否可扩展（能否添加新属性）
+console.log('Object.isExtensible:', Object.isExtensible(person)); // 输出: true
+
+// 15. Object.isFrozen() - 检查对象是否被冻结
+console.log('Object.isFrozen:', Object.isFrozen(frozen)); // 输出: true
+console.log('Object.isFrozen:', Object.isFrozen(person)); // 输出: false
+
+// 16. Object.isSealed() - 检查对象是否被密封（不可添加属性，但可修改现有属性）
+const sealed = Object.seal({ y: 2 });
+console.log('Object.isSealed:', Object.isSealed(sealed)); // 输出: true
+
+// 17. Object.keys() - 返回对象可枚举的自有属性名数组
+const keys = Object.keys(person);
+console.log('Object.keys:', keys); // 输出: ['name', 'age', 'hobbies', 'address']
+
+// 18. Object.preventExtensions() - 阻止对象扩展（不能添加新属性）
+const noExt = Object.preventExtensions({ z: 3 });
+noExt.newProp = 'test'; // 不会添加
+console.log('Object.preventExtensions:', noExt); // 输出: { z: 3 }
+
+// 19. Object.seal() - 密封对象（不可添加或删除属性，但可修改现有属性值）
+const sealedObj = Object.seal({ a: 1 });
+sealedObj.a = 2; // 可以修改
+delete sealedObj.a; // 无法删除
+console.log('Object.seal:', sealedObj); // 输出: { a: 2 }
+
+// 20. Object.setPrototypeOf() - 设置对象的原型
+const base = { baseProp: 'base' };
+const derived = {};
+Object.setPrototypeOf(derived, base);
+console.log('Object.setPrototypeOf:', derived.baseProp); // 输出: 'base'
+
+// 21. Object.values() - 返回对象可枚举的自有属性值数组
+const values = Object.values(person);
+console.log('Object.values:', values);
+// 输出: ['Alice', 25, ['reading', 'gaming'], { city: 'New York', zip: 10001 }]
+```
+
+
 
 
 
@@ -727,6 +1125,183 @@ const emptyArray = new Array(5); // 创建一个长度为5的空数组
      const reversedSum = [1, 2, 3].reduceRight((acc, val) => acc + val, 0); // 6
      ```
 
+**示例**
+
+大多数方法是Array对象原型的方法，即`Array.prototype.methodFunc()`；此外的是**静态方法**`Array.methodFunc()`
+
+```js
+// 创建一个初始的数组
+let arr = [1, 2, 3, 4, 5];
+
+// 1. push() - 向数组的末尾添加一个或多个元素
+arr.push(6); // arr = [1, 2, 3, 4, 5, 6]
+console.log("push:", arr);
+
+// 2. pop() - 删除数组的最后一个元素，并返回该元素
+let popped = arr.pop(); // popped = 6, arr = [1, 2, 3, 4, 5]
+console.log("pop:", popped, arr);
+
+// 3. shift() - 删除数组的第一个元素，并返回该元素
+let shifted = arr.shift(); // shifted = 1, arr = [2, 3, 4, 5]
+console.log("shift:", shifted, arr);
+
+// 4. unshift() - 向数组的开头添加一个或多个元素
+arr.unshift(1); // arr = [1, 2, 3, 4, 5]
+console.log("unshift:", arr);
+
+// 5. concat() - 合并两个或多个数组
+let newArr = arr.concat([6, 7]); // newArr = [1, 2, 3, 4, 5, 6, 7]
+console.log("concat:", newArr);
+
+// 6. slice([begin[, end]]) - 返回数组的一个子数组（浅拷贝），不修改原数组
+let slicedArr = arr.slice(1, 4); // slicedArr = [2, 3, 4]
+console.log("slice:", slicedArr);
+
+// 7. splice(start[, deleteCount[, item1[, item2[, ...]]]]) - 在数组中添加或删除元素，并返回删除的元素
+let splicedArr = arr.splice(2, 2, 8, 9); // 删除2个元素并添加8, 9
+// splicedArr = [3, 4], arr = [1, 2, 8, 9, 5]
+console.log("splice:", splicedArr, arr);
+
+// 8. forEach() - 对数组的每一项执行一个回调函数
+arr.forEach((item, index) => {
+  console.log(`forEach: Item at index ${index} is ${item}`);
+});
+
+// 9. map() - 创建一个新数组，数组中的元素是调用函数处理原数组元素后的结果
+let mappedArr = arr.map(x => x * 2); // mappedArr = [2, 4, 16, 18, 10]
+console.log("map:", mappedArr);
+
+// 10. filter() - 创建一个新数组，包含通过测试的所有元素
+let filteredArr = arr.filter(x => x > 5); // filteredArr = [8, 9]
+console.log("filter:", filteredArr);
+
+// 11. reduce(callback(accumulator, currentValue[, index[, array]])[, initialValue]) - 对数组的每一项执行一个回调函数，返回一个最终的累积结果
+let sum = arr.reduce((acc, current) => acc + current, 0); // sum = 20
+console.log("reduce:", sum);
+
+// 12. reduceRight() - 从数组的右端开始执行回调函数，返回一个最终的累积结果
+let reversedSum = arr.reduceRight((acc, current) => acc - current, 0); // reversedSum = -3
+console.log("reduceRight:", reversedSum);
+
+// 13. some(callback(element[, index[, array]])[, thisArg]) - 如果数组中至少有一个元素满足条件，则返回 true
+let hasEven = arr.some(x => x % 2 === 0); // hasEven = true (因为8是偶数)
+console.log("some:", hasEven);
+
+// 14. every(callback(element[, index[, array]])[, thisArg]) - 如果数组中的所有元素都满足条件，则返回 true
+let allEven = arr.every(x => x % 2 === 0); // allEven = false
+console.log("every:", allEven);
+
+// 15. find(callback(element[, index[, array]])[, thisArg]) - 返回数组中第一个符合条件的元素
+let firstEven = arr.find(x => x % 2 === 0); // firstEven = 2
+console.log("find:", firstEven);
+
+// 16. findIndex(callback(element[, index[, array]])[, thisArg]) - 返回数组中第一个符合条件的元素的索引
+let firstEvenIndex = arr.findIndex(x => x % 2 === 0); // firstEvenIndex = 1
+console.log("findIndex:", firstEvenIndex);
+
+// 17. includes() - 检查数组是否包含某个指定的元素，返回 true 或 false
+let includesFive = arr.includes(5); // includesFive = true
+console.log("includes:", includesFive);
+
+// 18. indexOf() - 返回数组中第一个指定元素的索引，如果未找到返回 -1
+let indexOfFive = arr.indexOf(5); // indexOfFive = 4
+console.log("indexOf:", indexOfFive);
+
+// 19. join() - 将数组的所有元素连接成一个字符串，并返回该字符串
+let joinedArr = arr.join(", "); // joinedArr = "1, 2, 8, 9, 5"
+console.log("join:", joinedArr);
+
+// 20. sort(compareFunction) - 对数组的元素进行排序，默认按字符顺序排序，修改原数组
+arr.sort(); // arr = [1, 2, 5, 8, 9]
+console.log("sort:", arr);
+
+const arr1 = [3, 1, 4, 2, 5];
+arr.sort((a, b) => a - b);  // 升序排列：如果返回值小于 0，则 a 会排在 b 前面。
+console.log(arr1);  // 输出: [1, 2, 3, 4, 5]
+
+// 21. reverse() - 反转数组的元素
+arr.reverse(); // arr = [9, 8, 5, 2, 1]
+console.log("reverse:", arr);
+
+// 22. fill(value[, start[, end]]) - 用一个固定值填充数组的指定部分
+arr.fill(0, 1, 4); // arr = [9, 0, 0, 0, 1]
+console.log("fill:", arr);
+
+// 23. copyWithin() - 浅拷贝并覆盖数组的指定部分
+arr.copyWithin(0, 1, 4); // arr = [0, 0, 0, 0, 1]
+console.log("copyWithin:", arr);
+
+// 24. flat([depth]) - 将嵌套数组“拉平”成一维数组
+let nestedArr = [1, [2, 3], [4, 5], 6];
+let flatArr = nestedArr.flat(); // flatArr = [1, 2, 3, 4, 5, 6]
+console.log("flat:", flatArr);
+
+// 25. flatMap(callback(currentValue[, index[, array]])[, thisArg]) - 首先映射每个元素，然后将结果“拉平”，深度为1
+let flatMappedArr = nestedArr.flatMap(x => x); // flatMappedArr = [1, 2, 3, 4, 5, 6]
+console.log("flatMap:", flatMappedArr);
+
+// 27. keys() - 返回一个新的数组迭代器对象，包含数组中每个索引
+let keys = arr.keys();
+console.log("keys:");
+for (let key of keys) {
+  console.log(key); // 输出数组的索引
+}
+
+// 28. values() - 返回一个新的数组迭代器对象，包含数组中的值
+let values = arr.values();
+console.log("values:");
+for (let value of values) {
+  console.log(value); // 输出数组的值
+}
+
+// 29. entries() - 返回一个新的数组迭代器对象，包含数组的键值对
+let entries = arr.entries();
+console.log("entries:");
+for (let [index, value] of entries) {
+  console.log(index, value); // 输出数组的索引和值
+}
+
+// 30. at() - 返回指定位置的元素，可以使用负数索引
+let elementAtIndex = arr.at(-1); // elementAtIndex = 1 (最后一个元素)
+console.log("at:", elementAtIndex);
+
+// 31. toString() - 返回数组的字符串表示
+console.log("toString:", arr.toString()); // 输出: "4,10,20,1"
+// 注释: 相当于 join() 无参数
+
+// 32. findLast() - 返回最后一个满足条件的元素
+const foundLast = arr.findLast(x => x < 4);
+console.log("findLast:", foundLast); // 输出: 3
+// 注释: 从右向左查找，未找到返回 undefined
+
+// 33. findLastIndex() - 返回最后一个满足条件的元素的索引
+const foundLastIndex = arr.findLastIndex(x => x < 4);
+console.log("findLastIndex:", foundLastIndex); // 输出: 2
+// 注释: 从右向左查找，未找到返回 -1
+
+// 34. lastIndexOf() - 返回元素最后一次出现的索引
+console.log("lastIndexOf:", arr.lastIndexOf(3)); // 输出: 2
+// 注释: 从右向左搜索，未找到返回 -1
+
+// 35. Array.isArray() - 检查是否为数组
+console.log("Array.isArray:", Array.isArray(arr)); // 输出: true
+console.log("Array.isArray:", Array.isArray("not array")); // 输出: false
+// 注释: 静态方法，返回布尔值
+
+// 36. Array.of() - 从一组参数创建数组
+const ofArr = Array.of(1, 2, 3);
+console.log("Array.of:", ofArr); // 输出: [1, 2, 3]
+// 注释: 静态方法，与 Array() 不同，不会创建稀疏数组
+
+// 37. Array.from(arrayLike[, mapFn[, thisArg]]) - 从类数组对象或可迭代对象创建一个新的数组实例
+let arrFrom = Array.from("hello"); // arrFrom = ["h", "e", "l", "l", "o"]
+console.log("from:", arrFrom);
+
+
+```
+
+
+
 **多维数组**
 
 JavaScript 也支持多维数组（数组中的数组）：
@@ -768,48 +1343,47 @@ function myFunction(var1, var2)
 
 - **JavaScript**：内置的 `RegExp` 对象
 
-1. **字符匹配**
+**创建 `RegExp` 对象**
 
-   - `a`：匹配字母 "a"。
-   - `.`：匹配任意单个字符（除了换行符）。
+可以通过两种方式来创建 `RegExp` 对象：
 
-2. **字符集**
+1. **字面量方式**：
 
-   - `[abc]`：匹配 "a"、"b" 或 "c" 中的任意一个字符。
-   - `[^abc]`：匹配不包含 "a"、"b" 或 "c" 的任意字符。
+    ```javascript
+    const regex = /pattern/;
+    ```
 
-3. **数量词**
+    例如，匹配数字：
 
-   - `*`：匹配前面的字符零次或多次。
-   - `+`：匹配前面的字符一次或多次。
-   - `?`：匹配前面的字符零次或一次。
-   - `{n}`：匹配前面的字符恰好 n 次。
-   - `{n,}`：匹配前面的字符至少 n 次。
-   - `{n,m}`：匹配前面的字符至少 n 次，但不超过 m 次。
+    ```javascript
+    const regex = /\d+/;
+    ```
 
-4. **边界匹配**
+2. **构造函数方式**：
 
-   - `^`：匹配输入的开始位置。
-   - `$`：匹配输入的结束位置。
+    ```javascript
+    const regex = new RegExp("pattern", "flags");
+    ```
 
-5. **分组与捕获**
-   - `()`：用于分组，可以提取匹配的子串。
-   - `|`：表示 "或" 的选择，`(a|b)` 匹配 "a" 或 "b"。
-   
-6. **转义字符**
+    例如，匹配数字并设置全局标志：
 
-   - `\`：用于转义特殊字符，例如 `\.` 匹配字面上的点号。
+    ```javascript
+    const regex = new RegExp("\\d+", "g");
+    ```
 
-7. **常用预定义字符类**
-   - `\b`：匹配一个单词边界，通常用于确保单词的完整性。
-   - `\B`：匹配一个非单词边界。
-   
-   - `\d`：匹配任何数字，等价于 `[0-9]`。
-   - `\D`：匹配任何非数字字符。
-   - `\w`：匹配任何单词字符，等价于 `[a-zA-Z0-9_]`。
-   - `\W`：匹配任何非单词字符。
-   - `\s`：匹配任何空白字符（空格、制表符、换行等）。
-   - `\S`：匹配任何非空白字符。
+**属性**
+
+- `regex.source`：返回正则表达式的源字符串。
+- `regex.flags`：返回正则表达式的标志字符串（如 "g", "i", "m"）。
+- `regex.lastIndex`：返回或设置下次匹配开始的索引。
+
+**常用标志**
+
+- `g`：全局匹配（查找所有匹配项，而不是只匹配第一个）。
+- `i`：忽略大小写。
+- `m`：多行匹配。
+- `u`：启用 Unicode 匹配。
+- `y`：粘性匹配，要求匹配从 `lastIndex` 位置开始。
 
 **常用正则表达式方法**
 
@@ -835,7 +1409,9 @@ console.log(result);  // ["abc", "bc"]
 
 如果没有匹配，`exec()` 返回 `null`。
 
-3. `match()` - 在字符串中执行匹配（正则在字符串里的）
+**常用字符串方法**
+
+1. `match()` - 在字符串中执行匹配（正则在字符串里的）
 
 `String.prototype.match()` 方法用于匹配正则表达式，返回匹配的结果。
 
@@ -853,7 +1429,7 @@ let result = str.match(/abc/g);
 console.log(result);  // ["abc", "abc", "abc"]
 ```
 
-4. `replace()` - 替换匹配的内容
+2. `replace()` - 替换匹配的内容
 
 `String.prototype.replace()` 用于查找匹配的部分并替换成指定的内容。
 
@@ -871,7 +1447,7 @@ let result = str.replace(/abc/g, "xyz");
 console.log(result);  // "xyz xyz xyz"
 ```
 
-5. `split()` - 按匹配分割字符串
+3. `split()` - 按匹配分割字符串
 
 `String.prototype.split()` 将字符串按匹配的正则表达式分割成数组。
 
@@ -1009,6 +1585,83 @@ console.log(result);  // ["apple", "banana", "orange"]
 ```js
 variablename = (condition)?value1:value2 
 ```
+
+
+
+### typeof 运算符
+
+`typeof`运算符返回一个字符串，表示操作数的类型。
+
+| 变量类型    | `typeof` 返回值 |
+| ----------- | --------------- |
+| `undefined` | `"undefined"`   |
+| `null`      | `"object"`      |
+| `Boolean`   | `"boolean"`     |
+| `Number`    | `"number"`      |
+| `BigInt`    | `"bigint"`      |
+| `String`    | `"string"`      |
+| `Symbol`    | `"symbol"`      |
+| `Function`  | `"function"`    |
+| `Object`    | `"object"`      |
+| `Array`     | `"object"`      |
+| `Date`      | `"object"`      |
+| `RegExp`    | `"object"`      |
+| `Error`     | `"object"`      |
+
+
+
+### instanceof 运算符
+
+`instanceof` 运算符是 JavaScript 中用于判断对象是否是某个构造函数的实例的运算符。它通过检查对象的原型链上是否包含构造函数的 `prototype` 属性来进行判断。
+
+**语法**：
+
+```javascript
+object instanceof constructor
+```
+
+- `object`：要检查的对象。
+- `constructor`：构造函数，通常是类或构造函数的名称。
+
+**返回值**：
+
+- 如果 `object` 是 `constructor` 的实例（即对象的原型链上存在构造函数的 `prototype` 属性），`instanceof` 返回 `true`。
+- 否则，返回 `false`。
+
+**示例**：
+
+```js
+function Person(name) {
+  this.name = name;
+}
+
+const person1 = new Person("Alice");
+
+console.log(person1 instanceof Person);  // true
+console.log(person1 instanceof Object);  // true
+console.log(person1 instanceof Array);   // false
+```
+
+```js
+// 定义构造函数
+function C() {}
+function D() {}
+var o = new C();
+o instanceof C; // true，因为 Object.getPrototypeOf(o) === C.prototype
+o instanceof D; // false，因为 D.prototype 不在 o 的原型链上
+o instanceof Object; // true，因为 Object.prototype.isPrototypeOf(o) 返回 true
+C.prototype instanceof Object; // true，同上
+C.prototype = {};
+var o2 = new C();
+o2 instanceof C; // true
+o instanceof C; // false，C.prototype 指向了一个空对象，这个空对象不在 o 的原型链上。
+D.prototype = new C(); // 继承
+var o3 = new D();
+o3 instanceof D; // true
+o3 instanceof C; // true 因为 C.prototype 现在在 o3 的原型链上
+```
+
+
 
 
 
@@ -1406,6 +2059,10 @@ console.log(x);  // 15
 
 
 
+
+
+
+
 ## 1.5.输入输出
 
 **输入**
@@ -1780,141 +2437,212 @@ console.log(mergedObj); // { a: 1, b: 2 }
 
 ### 原型
 
-在 JavaScript 中，**原型**（Prototype）是每个对象都有的一个内部属性，它指向另一个对象，称为“原型对象”。原型是 JavaScript 实现继承和共享方法、属性的基础。每个 Java式对象都有一个原型对象（通过`__proto__` 或者 `Object.getPrototypeOf()` 访问），原型对象也可以有自己的原型对象，从而形成一个链式结构，叫做**原型链**。
+在 JavaScript 中，**原型**`.prototype`是每个**构造函数**（实质是对象）都有的一个内部属性，它指向另一个对象，称为“原型对象”。原型是 JavaScript 实现继承和共享方法、属性的基础。每个 Java式对象都有一个原型对象（通过`__proto__` 或者 `Object.getPrototypeOf()` 访问），原型对象也可以有自己的原型对象，从而形成一个链式结构，叫做**原型链**。
 
-#### 1. 原型链
+![img](images/99b2b4e82f974d16bca6ecdf618cc1bb.png)
 
-JavaScript 中的对象继承是通过原型链来实现的。每当你访问一个对象的属性时，如果对象本身没有该属性，它会在对象的原型上查找，依次查找直到原型链的尽头（通常是 `Object.prototype`，它的原型为 `null`）。
+![image-20250321161334422](images/image-20250321161334422.png)
 
-例如：
+在 JavaScript 中，`.prototype`、`__proto__` 和 `.constructor` 是与对象和原型链密切相关的概念，它们之间的关系有点像“家族树”里的角色分工。让我用通俗的方式一步步讲解它们是什么，以及它们如何关联。
 
+---
+
+#### `.prototype`、`__proto__` 和 `.constructor` 
+
+##### (1) `.prototype`
+- **是什么**：`.prototype` 是**函数**的一个属性（普通对象没有这个属性）。当你用 `new` 创建实例时，这个属性决定了新对象的原型。
+- **特点**：它是一个对象，包含了实例可以继承的属性和方法。
+- **谁有它**：只有函数（包括构造函数）有 `.prototype`。
+
+例子：
 ```javascript
-let animal = {
-  eat() {
-    console.log('Eating...');
-  }
-};
-
-let dog = Object.create(animal);  // dog 的原型是 animal
-dog.bark = function() {
-  console.log('Barking...');
-};
-
-dog.bark();  // "Barking..."
-dog.eat();   // "Eating..."  (从原型 animal 中继承的)
-```
-
-在这个例子中，`dog` 对象没有 `eat` 方法，但是它的原型 `animal` 有，所以 `dog` 通过原型链可以访问到 `eat` 方法。
-
-#### 2. 原型的属性和方法
-
-- **`__proto__`**: **对象原型**，每个对象都有一个 `__proto__` 属性（浏览器中的非标准实现）。它指向该对象的构造函数的 `prototype` 属性。
-
-- **`constructor`**: 每个对象的原型对象都有一个 `constructor` 属性，指向创建该对象的构造函数。
-
-  ```javascript
-  let obj = {};
-  console.log(obj.__proto__ === Object.prototype);  // true
-  
-  console.log(obj.__proto__.constructor === Object); // true
-  ```
-
-- **`Object.getPrototypeOf(obj)`**: 用来获取对象的原型。
-
-  ```javascript
-  let obj = {};
-  console.log(Object.getPrototypeOf(obj) === Object.prototype); // true
-  ```
-
-- **`Object.setPrototypeOf(obj, prototype)`**: 用来设置对象的原型。
-
-  ```javascript
-  let obj = {};
-  let prototypeObj = { sayHi() { console.log("Hi!"); } };
-  Object.setPrototypeOf(obj, prototypeObj);
-  obj.sayHi(); // "Hi!"
-  ```
-
-#### 3. 构造函数与原型
-
-每个通过构造函数创建的对象都有一个**原型对象**，该原型对象是通过构造函数的 `prototype` 属性来设置的。
-
-例如：
-
-```javascript
-function Person(name, age) {
-  this.name = name;
-  this.age = age;
+function Person(name) {
+    this.name = name;
 }
-
 Person.prototype.sayHello = function() {
-  console.log('Hello ' + this.name);
+    console.log("Hello, " + this.name);
+};
+```
+
+##### (2) `__proto__`
+- **是什么**：`__proto__` 是**对象**的一个隐藏属性（准确说是 `[[Prototype]]` 的 getter/setter），指向该对象的原型。
+- **特点**：它是原型链的“连接线”，告诉你这个对象从哪里继承属性。
+- **谁有它**：几乎所有对象都有（通过原型链最终指向 `Object.prototype`）。
+
+例子：
+```javascript
+let person = new Person("Alice");
+console.log(person.__proto__ === Person.prototype); // true
+```
+
+##### (3) `.constructor`
+- **是什么**：`.constructor` 是对象的一个属性，指向创建这个对象的构造函数。
+- **特点**：它是通过原型继承来的，默认情况下存在于 `.prototype` 上。
+- **谁有它**：实例对象通过原型链访问到。
+
+例子：
+```javascript
+let person = new Person("Alice");
+console.log(person.constructor === Person); // true
+```
+
+---
+
+#### 代码示例
+```javascript
+function Person(name) {
+    this.name = name;
+}
+Person.prototype.sayHello = function() {
+    console.log("Hello, " + this.name);
 };
 
-let john = new Person('John', 25);
-john.sayHello();  // "Hello John"
+let alice = new Person("Alice");
+
+// 检查关系
+console.log(alice.__proto__ === Person.prototype);        // true
+console.log(alice.constructor === Person);                // true
+console.log(Person.prototype.constructor === Person);     // true
+console.log(alice.__proto__.constructor === Person);      // true
+
+alice.sayHello(); // 输出 "Hello, Alice"
 ```
 
-在这个例子中，`john` 是 `Person` 的实例，它继承了 `Person.prototype` 上的方法 `sayHello`。
+**解释**：
 
-#### 4. 原型链示例
+- `alice.__proto__` 是 `Person.prototype`，因为 `alice` 是通过 `Person` 创建的，继承了它的原型。
+- `Person.prototype.constructor` 默认指向 `Person`，表示这个原型对象是由 `Person` 构造函数管理的。
+- `alice.constructor` 通过原型链从 `Person.prototype` 继承，指向 `Person`。
 
+---
+
+#### 细节与注意点
+##### (1) `.prototype` 和 `__proto__` 的区别
+- `.prototype` 是构造函数的属性，用来设置实例的原型。
+- `__proto__` 是实例的属性，指向它的原型（通常是构造函数的 `.prototype`）。
+- **类比**：`.prototype` 是“父母辈的模板”，`__proto__` 是“孩子找父母的指针”。
+
+##### (2) `.constructor` 的动态性
+`.constructor` 是可以被修改的，因为它只是原型上的一个属性：
 ```javascript
-function Animal(name) {
-  this.name = name;
-}
+function Person() {}
+let p = new Person();
+Person.prototype.constructor = function Fake() {};
+console.log(p.constructor === Person); // false，变成了 Fake
+```
 
-Animal.prototype.sayName = function() {
-  console.log(this.name);
+##### (3) 原型链的终点
+所有对象的 `__proto__` 最终会指向 `Object.prototype`，而 `Object.prototype.__proto__` 是 `null`，这是原型链的尽头：
+```javascript
+let obj = {};
+console.log(obj.__proto__ === Object.prototype);      // true
+console.log(Object.prototype.__proto__ === null);     // true
+```
+
+---
+
+#### 三者的关系
+- **`.prototype`** 是构造函数的“蓝图”，定义了实例的共享属性和方法。
+- **`__proto__`** 是实例的“指针”，指向它的原型（通常是构造函数的 `.prototype`）。
+- **`.constructor`** 是原型上的“标签”，告诉实例它是由哪个构造函数创建的。
+
+##### 简单公式
+
+- `实例.__proto__ === 构造函数.prototype`
+- `实例.constructor === 构造函数`（通过原型继承）
+- `构造函数.prototype.constructor === 构造函数`
+
+如果你还有疑问，比如想深入原型链的某个细节，随时问我！
+
+##### 图解关系
+
+```
+Person (构造函数)
+   |
+   | .prototype (蓝图对象)
+   |       |
+   |       | .constructor 指向 Person
+   |
+person (实例)
+   |
+   | .__proto__ 指向 Person.prototype
+   |
+   | .constructor (通过 __proto__ 继承) 指向 Person
+```
+
+---
+
+#### 原型方法
+
+##### Object.create(proto)
+
+- **作用**：以指定对象作为原型创建新对象。
+
+```js
+const personPrototype = {
+ greet() {
+ console.log("hello!");
+ },
 };
+const Carl = Object.create(personPrototype);
 
-function Dog(name) {
-  Animal.call(this, name);  // 继承 Animal 的属性
-}
+carl.greet(); // hello!
 
-Dog.prototype = Object.create(Animal.prototype);  // 继承 Animal 的方法
-Dog.prototype.constructor = Dog;
-
-Dog.prototype.bark = function() {
-  console.log('Woof!');
-};
-
-const dog = new Dog('Buddy');
-dog.sayName();  // "Buddy" (继承自 Animal)
-dog.bark();     // "Woof!" (Dog 特有方法)
+console.log(Carl.__proto__ === personPrototype); // true
 ```
 
-在这个例子中，`Dog` 通过 `Object.create(Animal.prototype)` 继承了 `Animal` 的方法，并且 `dog` 实例能够访问 `sayName` 和 `bark` 方法。
+##### Object.getPrototypeOf(object)
 
-#### 5. 原型的继承
+用于获取对象的原型（即该对象的构造函数的 `prototype` 对象）。
 
-通过构造函数和原型机制，JavaScript 实现了继承。原型链允许一个对象继承另一个对象的属性和方法，从而实现了对象的共享和复用。
+```js
+const obj = {};
+console.log(Object.getPrototypeOf(obj));  // 输出：{}
+console.log(Object.getPrototypeOf(obj) === Object.prototype);  // true
 
-- **原型继承的缺点**：所有的实例共享原型对象上的属性和方法。如果原型上有可变的属性（例如数组、对象等），则多个实例间的属性可能会相互影响。
-
-```javascript
-function Dog(name) {
-  this.name = name;
-}
-
-Dog.prototype.friends = [];  // 共享的属性
-
-const dog1 = new Dog('Buddy');
-const dog2 = new Dog('Max');
-
-dog1.friends.push('Charlie');
-console.log(dog1.friends);  // ["Charlie"]
-console.log(dog2.friends);  // ["Charlie"]  (共享了同一个数组)
 ```
 
-为避免共享原型属性带来的问题，可以使用 `constructor` 函数中的 `this` 来确保每个实例都有独立的属性。
+##### Object.setPrototypeOf()
 
-```javascript
-function Dog(name) {
-  this.name = name;
-  this.friends = [];  // 独立的属性
-}
+用于设置对象的原型（即指定对象的 `[[Prototype]]`）。
+
+```js
+const obj = {};
+const proto = { greet: function() { console.log("Hello!"); } };
+
+Object.setPrototypeOf(obj, proto);
+obj.greet();  // 输出：Hello!
+
 ```
+
+##### obj.isPrototypeOf(obj2)
+
+- **作用**：检查当前对象是否在另一个对象的原型链中。
+- **返回值**：true（在原型链中）或 false（不在）。
+
+```js
+function Person() {}
+let p = new Person();
+console.log(Person.prototype.isPrototypeOf(p)); // true
+console.log(Object.prototype.isPrototypeOf(p)); // true（更上层的原型）
+```
+
+##### obj.hasOwnProperty(prop)
+
+- **作用**：检查对象**自身**是否具有某个属性，不包括原型链上的属性。
+- **返回值**：true（有该属性）或 false（没有）。
+
+```js
+let obj = { a: 1 };
+console.log(obj.hasOwnProperty("a"));        // true
+console.log(obj.hasOwnProperty("toString")); // false（toString 是原型上的）
+```
+
+
+
+
+
+
 
 
 
@@ -2061,7 +2789,7 @@ console.log(circle.area()); // 输出: 706.8583470577034
 
 ### this关键字
 
-JavaScript `this` 关键词指的是它所属的对象。
+JavaScript `this` 关键词指的是**它所属的对象**。
 
 它拥有不同的值，具体取决于它的使用位置：
 
@@ -2122,10 +2850,14 @@ JavaScript `this` 关键词指的是它所属的对象。
 
 像 `call()` 和 `apply()` 这样的方法可以将 this 引用到任何对象。
 
-- `call()`：立即调用函数，并明确指定 `this` 的值。
+- `call()`：立即调用函数，并明确指定 `this` 的值。。当一个 参数为null或undefined的时候，表示指向window（在浏览器中），和apply一样，call也只是临时改变 一次this指向，并立即执行。
 
   ```javascript
   func.call(thisArg, arg1, arg2, ...);
+  
+  var arr=[1,10,5,8,3];
+  console.log(Math.max.call(null,arr[0],arr[1],arr[2],arr[3],arr[4])); //10
+  
   ```
 
   
@@ -2142,6 +2874,10 @@ JavaScript `this` 关键词指的是它所属的对象。
 
   ```javascript
   const newFunc = func.bind(thisArg, arg1, arg2, ...);
+                    
+  var arr=[1,10,5,8,12];
+  var max=Math.max.bind(null,arr[0],arr[1],arr[2],arr[3])
+  console.log(max(arr[4])); //12，分两次传参
   ```
   
   
@@ -2803,17 +3539,302 @@ console.log(greet(name)); // 输出: Hello, Peter!
 
 
 
+### 新数据类型
 
 
 
+#### Symbol()
+
+`Symbol` 是 JavaScript 中的一种原始数据类型，最早在 ECMAScript 6（ES6）中引入。它代表一个独一无二且不可变的值，通常用于作为对象属性的标识符。`Symbol` 主要用来创建唯一的对象属性键，从而避免不同属性之间发生命名冲突。
+
+```js
+// 1. 创建一个Symbol
+const sym1 = Symbol('description1');
+const sym2 = Symbol('description2');
+
+// 2. 每个Symbol都是唯一的
+console.log(sym1 === sym2);  // false, 因为每个Symbol都是唯一的，即使它们有相同的描述
+
+// 3. Symbol的描述（description）只是一个提示，无法用于比较
+console.log(sym1.toString()); // "Symbol(description1)"
+console.log(sym2.toString()); // "Symbol(description2)"
+
+// 4. 使用Symbol作为对象属性键
+const obj = {
+  [sym1]: 'value1',
+  [sym2]: 'value2'
+};
+
+console.log(obj[sym1]);  // 'value1'
+console.log(obj[sym2]);  // 'value2'
+
+// 5. Symbol不能被枚举
+for (let key in obj) {
+  console.log(key);  // 不会打印出Symbol键
+}
+
+console.log(Object.getOwnPropertyNames(obj));  // 只返回普通属性
+console.log(Object.getOwnPropertySymbols(obj)); // ["Symbol(description1)", "Symbol(description2)"]
+
+// 6. Symbol.for() 和 Symbol.keyFor()
+// Symbol.for() 会在全局注册一个Symbol，如果存在相同的Symbol，它会返回相同的Symbol
+const sym3 = Symbol.for('shared');
+const sym4 = Symbol.for('shared');
+
+console.log(sym3 === sym4);  // true, 因为它们指向同一个Symbol
+
+// Symbol.keyFor() 用来获取全局注册Symbol的键
+console.log(Symbol.keyFor(sym3));  // 'shared'
+
+// 7. 使用Symbol作为常量
+const STATUS = {
+  PENDING: Symbol('pending'),
+  SUCCESS: Symbol('success'),
+  ERROR: Symbol('error')
+};
+
+function fetchData(status) {
+  switch (status) {
+    case STATUS.PENDING:
+      console.log('Fetching data...');
+      break;
+    case STATUS.SUCCESS:
+      console.log('Data fetched successfully!');
+      break;
+    case STATUS.ERROR:
+      console.log('An error occurred while fetching data.');
+      break;
+    default:
+      console.log('Unknown status');
+  }
+}
+
+fetchData(STATUS.PENDING);   // Fetching data...
+fetchData(STATUS.SUCCESS);   // Data fetched successfully!
+fetchData(STATUS.ERROR);     // An error occurred while fetching data.
+
+// 8. Symbol作为私有属性的模拟
+class MyClass {
+  constructor(name) {
+    this.name = name;
+    this[_privateSymbol] = 'This is a private property';
+  }
+
+  getPrivateData() {
+    return this[_privateSymbol];
+  }
+}
+
+const _privateSymbol = Symbol('private');
+
+const obj2 = new MyClass('John');
+console.log(obj2.name);  // 'John'
+console.log(obj2.getPrivateData());  // 'This is a private property'
+
+// 9. Symbol作为迭代器
+const myIterator = {
+  [Symbol.iterator]() {
+    let step = 0;
+    const values = ['a', 'b', 'c'];
+    
+    return {
+      next() {
+        if (step < values.length) {
+          return { value: values[step++], done: false };
+        } else {
+          return { done: true };
+        }
+      }
+    };
+  }
+};
+
+for (let value of myIterator) {
+  console.log(value);  // a, b, c
+}
+
+
+```
+
+**常见用途**：
+
+1. **唯一的属性键**： `Symbol` 经常用作对象的唯一属性键，确保不会和其他属性名称冲突。
+
+```js
+const user = {
+  name: 'Alice',
+  age: 25
+};
+
+const uniqueKey = Symbol('id');
+user[uniqueKey] = 12345;
+
+console.log(user[uniqueKey]);  // 输出: 12345
+```
 
 
 
+#### Set()
+
+`Set` 是 JavaScript 中的一种集合数据结构，它存储唯一的值（即去重）。不同于数组，`Set` 中的值是无序的，且不允许重复的元素。
+
+```js
+// 创建一个新的 Set
+const mySet = new Set();
+
+// 向 Set 中添加元素
+mySet.add(1);
+mySet.add(2);
+mySet.add(3);
+mySet.add(2);  // 不会添加重复元素
+// 也可以使用一个数组来初始化 Set 对象。
+mySet = new Set([1, 2, 3, 2]);
+
+console.log(mySet);  // Set { 1, 2, 3 }
+
+// 删除元素
+mySet.delete(2);
+console.log(mySet);  // Set { 1, 3 }
+
+// 判断元素是否存在
+console.log(mySet.has(3));  // true
+console.log(mySet.has(2));  // false
+
+// 获取 Set 的大小
+console.log(mySet.size);  // 2
+
+// 遍历 Set
+mySet.forEach((value) => {
+  console.log(value);  // 输出 1 和 3
+});
+
+// 使用 for...of 遍历
+for (let item of mySet) {
+  console.log(item);  // 输出 1 和 3
+}
+
+// 将 Set 转换为数组
+const myArray = [...mySet];
+console.log(myArray);  // [1, 3]
+
+// 使用 Set 去重数组
+const arr = [1, 2, 3, 3, 4, 4, 5];
+const uniqueArray = [...new Set(arr)];
+console.log(uniqueArray);  // [1, 2, 3, 4, 5]
+
+// 清空 Set
+mySet.clear();
+console.log(mySet);  // Set {}
+
+```
+
+`Set` 是一个很有用的 JavaScript 数据结构，特别适用于去重、检查元素是否存在和集合操作。它具有以下几个常用方法：
+
+- `add(value)`：添加元素。
+- `delete(value)`：删除指定元素。
+- `clear()`：清空集合。
+- `has(value)`：判断元素是否存在。
+- `size`：返回集合大小。
+- `forEach(callback)`：遍历集合。
 
 
 
+#### Map()
 
+`Map()` 是 JavaScript 中的一个内置对象，它用于存储键值对。与普通的 JavaScript 对象（Object）不同，`Map` 的键可以是任何类型（例如：对象、函数、任何原始类型），而不仅限于字符串或符号。
 
+```js
+// 创建一个新的 Map
+const myMap = new Map();
+
+// 向 Map 中添加键值对
+myMap.set('name', 'Alice');
+myMap.set('age', 30);
+myMap.set('city', 'New York');
+// 也可以使用一个数组来初始化 Map 对象。
+myMap = new Map([
+  ['name', 'Alice'],
+  ['age', 30],
+  ['city', 'New York']
+]);
+
+// 输出整个 Map
+console.log(myMap);  // Map { 'name' => 'Alice', 'age' => 30, 'city' => 'New York' }
+
+// 获取 Map 中的值
+console.log(myMap.get('name'));  // Alice
+console.log(myMap.get('age'));   // 30
+console.log(myMap.get('city'));  // New York
+
+// 检查 Map 中是否存在某个键
+console.log(myMap.has('name'));  // true
+console.log(myMap.has('country')); // false
+
+// 删除 Map 中的某个键值对
+myMap.delete('age');
+console.log(myMap);  // Map { 'name' => 'Alice', 'city' => 'New York' }
+
+// 获取 Map 的大小
+console.log(myMap.size);  // 2
+
+// 清空 Map
+myMap.clear();
+console.log(myMap);  // Map {}
+
+// 重新添加一些元素
+myMap.set('name', 'Bob');
+myMap.set('age', 25);
+myMap.set('city', 'Los Angeles');
+
+// 使用 forEach 遍历 Map
+myMap.forEach((value, key) => {
+  console.log(`${key}: ${value}`);
+});
+// 输出：
+// name: Bob
+// age: 25
+// city: Los Angeles
+
+// 使用 for...of 遍历 Map
+for (let [key, value] of myMap) {
+  console.log(`${key}: ${value}`);
+}
+// 输出：
+// name: Bob
+// age: 25
+// city: Los Angeles
+
+// 使用数组初始化 Map
+const arr = [
+  ['name', 'Charlie'],
+  ['age', 35],
+  ['city', 'Chicago']
+];
+const newMap = new Map(arr);
+console.log(newMap);  // Map { 'name' => 'Charlie', 'age' => 35, 'city' => 'Chicago' }
+
+// 将 Map 转换为数组
+const mapArray = [...myMap];
+console.log(mapArray);  
+// 输出：[ [ 'name', 'Bob' ], [ 'age', 25 ], [ 'city', 'Los Angeles' ] ]
+
+// 获取 Map 中所有的键和所有的值
+console.log([...myMap.keys()]);  // ['name', 'age', 'city']
+console.log([...myMap.values()]);  // ['Bob', 25, 'Los Angeles']
+
+```
+
+**总结**
+
+- `Map` 是一个存储键值对的集合，支持任何类型的键。
+- `set(key, value)`：添加键值对。
+- `get(key)`：获取值。
+- `has(key)`：检查是否存在指定键。
+- `delete(key)`：删除指定键值对。
+- `size`：返回 `Map` 中元素的数量。
+- `clear()`：清空 `Map` 中的所有元素。
+- 可以通过 `forEach()` 或 `for...of` 遍历 `Map`。
+- `Map` 中的键是有序的。
 
 # 2.文档对象模型（DOM）
 
@@ -3061,43 +4082,45 @@ document.getElementById("myText").style.color = 'red';
 
 ### 事件
 
-| 事件                  | 描述                                                       |
-| --------------------- | ---------------------------------------------------------- |
-| **鼠标事件**          |                                                            |
-| onclick               | 点击鼠标时触发此事件                                       |
-| ondblclick            | 双击鼠标时触发此事件                                       |
-| onmousedown           | 按下鼠标时触发此事件                                       |
-| onmouseup             | 鼠标按下后又松开时触发此事件                               |
-| onmouseover           | 当鼠标移动到某个元素上方时触发此事件                       |
-| onmousemove           | 移动鼠标时触发此事件                                       |
-| on**mouseenter**      | 当鼠标进入某个元素范围时触发此事件                         |
-| on**mouseleave**      | 当鼠标离开某个元素范围时触发此事件                         |
-| **键盘事件**          |                                                            |
-| onkeypress            | 当按下并松开键盘上的某个键时触发此事件                     |
-| onkeydown             | 当按下键盘上的某个按键时触发此事件                         |
-| on**keyup**           | 当放开键盘上的某个按键时触发此事件                         |
-| **页面/文件加载事件** |                                                            |
-| onabort               | 图片在下载过程中被用户中断时触发此事件                     |
-| onbeforeunload        | 当前页面的内容将要被改变时触发此事件                       |
-| onerror               | 出现错误时触发此事件                                       |
-| onload                | 页面内容加载完成时触发此事件                               |
-| onunload              | 改变当前页面时触发此事件                                   |
-| **浏览器/窗口事件**   |                                                            |
-| onmove                | 当移动浏览器的窗口时触发此事件                             |
-| onresize              | 当改变浏览器的窗口大小时触发此事件                         |
-| onscroll              | 当滚动浏览器的滚动条时触发此事件                           |
-| onstop                | 当按下浏览器的停止按钮或者正在下载的文件被中断时触发此事件 |
-| oncontextmenu         | 当弹出右键上下文菜单时触发此事件                           |
-| **表单事件**          |                                                            |
-| on**blur**            | 当前元素失去焦点时触发此事件                               |
-| onchange              | 当前元素失去焦点并且元素的内容发生改变时触发此事件         |
-| on**focus**           | 当某个元素获得焦点时触发此事件                             |
-| onreset               | 当点击表单中的重置按钮时触发此事件                         |
-| onsubmit              | 当提交表单时触发此事件                                     |
+| 事件                  | 描述                                                         |
+| --------------------- | ------------------------------------------------------------ |
+| **鼠标事件**          |                                                              |
+| **onclick**           | 点击鼠标时触发此事件                                         |
+| ondblclick            | 双击鼠标时触发此事件                                         |
+| onmousedown           | 按下鼠标时触发此事件                                         |
+| onmouseup             | 鼠标按下后又松开时触发此事件                                 |
+| onmouseover           | 当鼠标移动到某个元素上方时触发此事件                         |
+| onmousemove           | 移动鼠标时触发此事件                                         |
+| **onmouseenter**      | 当鼠标进入某个元素范围时触发此事件                           |
+| **onmouseleave**      | 当鼠标离开某个元素范围时触发此事件                           |
+| **键盘事件**          |                                                              |
+| onkeypress            | 当按下并松开键盘上的某个键时触发此事件                       |
+| onkeydown             | 当按下键盘上的某个按键时触发此事件                           |
+| **onkeyup**           | 当放开键盘上的某个按键时触发此事件                           |
+| **页面/文件加载事件** |                                                              |
+| onabort               | 图片在下载过程中被用户中断时触发此事件                       |
+| onbeforeunload        | 当前页面的内容将要被改变时触发此事件                         |
+| onerror               | 出现错误时触发此事件                                         |
+| onload                | 页面内容加载完成时触发此事件                                 |
+| onunload              | 改变当前页面时触发此事件                                     |
+| **浏览器/窗口事件**   |                                                              |
+| onmove                | 当移动浏览器的窗口时触发此事件                               |
+| onresize              | 当改变浏览器的窗口大小时触发此事件                           |
+| onscroll              | 当滚动浏览器的滚动条时触发此事件                             |
+| onstop                | 当按下浏览器的停止按钮或者正在下载的文件被中断时触发此事件   |
+| oncontextmenu         | 当弹出右键上下文菜单时触发此事件                             |
+| **表单事件**          |                                                              |
+| onblur                | 当前元素失去焦点时触发此事件<select>                         |
+| onfocus               | 当某个元素获得焦点时触发此事件<select>                       |
+| onreset               | 当点击表单中的重置按钮时触发此事件                           |
+| **onsubmit**          | 当提交表单时触发此事件                                       |
+| **onchange**          | 当前元素失去焦点并且元素的内容发生改变时触发此事件，<select> |
+| **oninput**           | 用户输入时触发，实时监控输入变化<input>`、`<textarea>        |
+| **onselect**          | 用户选中文本时触发<input>`、`<textarea>                      |
 
 ### 事件监听程序
 
-**1.添加事件监听器**
+#### 添加与移除事件监听器
 
 `addEventListener` 方法允许你为指定的元素绑定事件监听程序，它的基本语法如下：
 
@@ -3117,7 +4140,15 @@ element.addEventListener(event, handler, options);
 
 
 
-**事件对象**
+```
+element.removeEventListener(event, handler, options);
+```
+
+
+
+
+
+### 事件对象
 
 事件对象（`event`）包含了与事件相关的所有信息。你可以通过该对象访问关于事件的详细信息，比如：
 
@@ -3143,7 +4174,7 @@ element.addEventListener(event, handler, options);
 
 
 
-**事件捕获与冒泡**
+### 事件捕获与冒泡
 
 在浏览器中，事件会按层级结构传播。事件传播有两种模式：**捕获阶段**和**冒泡阶段**。
 
@@ -3163,56 +4194,46 @@ element.addEventListener('click', function(event) {
 
 
 
-**2.移除事件监听器**
+### 默认事件
 
-```
-element.removeEventListener(event, handler, options);
-```
+**默认事件**（也称为默认行为）是浏览器在某些用户交互或事件发生时自动执行的操作。不同类型的事件会触发不同的默认行为，通常由浏览器来处理。例如，点击一个超链接会跳转到指定的 URL，提交一个表单会将数据发送到服务器。
 
-示例
+1. **表单提交**：
+    - 当用户点击表单中的提交按钮时，表单会默认被提交到指定的 URL。
+    - 默认行为：提交表单。
+    - 示例：`<form action="/submit" method="POST">`
+2. **超链接点击**：
+    - 当用户点击一个 `<a>` 元素时，浏览器会默认跳转到该链接的 URL。
+    - 默认行为：跳转到链接。
+    - 示例：`<a href="https://www.example.com">Visit Example</a>`
+3. **复选框和单选框**：
+    - 复选框被勾选或取消勾选时，默认行为是更改它的状态。
+    - 默认行为：更改选中状态。
+    - 示例：`<input type="checkbox" />`
+4. **文本框输入**：
+    - 当用户在文本框中输入内容时，浏览器默认更新该文本框的值。
+    - 默认行为：更新输入框内容。
+    - 示例：`<input type="text" />`
+5. **图片点击**：
+    - 用户点击图片时，如果图片有链接，浏览器会默认跳转到该链接。
+    - 默认行为：跳转到图片的 `href` 链接（如果有）。
+    - 示例：`<a href="https://www.example.com"><img src="image.jpg" /></a>`
 
-```html
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-#myDIV {
-  background-color: coral;
-  border: 1px solid;
-  padding: 50px;
-  color: white;
-  font-size: 20px;
-}
-</style>
-</head>
-<body>
 
-<h1>JavaScript removeEventListener()</h1>
 
-<div id="myDIV">
-  <p>这个 div 元素有一个 onmousemove 事件处理程序，每次在这个橙色字段中移动鼠标时都会显示一个随机数。</p>
-  <p>单击按钮以删除 div 的事件处理程序。</p>
-  <button onclick="removeHandler()" id="myBtn">删除</button>
-</div>
+### 阻止冒泡与默认事件
 
-<p id="demo"></p>
+1. `stopPropagation()`，阻止冒泡，默认事件仍会执行 
+2. `preventDefault()`，阻止默认事件，冒泡仍会进行  
+3. `return false`，同时阻止冒泡和默认事件
 
-<script>
-document.getElementById("myDIV").addEventListener("mousemove", myFunction);
 
-function myFunction() {
-  document.getElementById("demo").innerHTML = Math.random();
-}
 
-function removeHandler() {
-  document.getElementById("myDIV").removeEventListener("mousemove", myFunction);
-}
-</script>
 
-</body>
-</html>
 
-```
+
+
+
 
 
 
@@ -3313,8 +4334,6 @@ creatTextNode()
 parentNode.**insertBefore**(newNode, referenceNode);
 
 **删除已有 HTML 元素**
-
-remove()
 
 removeChild()
 
@@ -4064,4 +5083,56 @@ const arr = Array.from(arrayLike, mapFn, thisArg)
 ```
 
 
+
+
+
+## 正则
+
+
+
+### split(reg).join‘|‘.filter(Boolean)
+
+```js
+const stopWords = new Set([
+  "的","为","了","是","在",
+  "我","有","和","就","不",
+  "都","上","也","很","到",
+]);
+
+function wordSegmentation(words) {
+  return words.split(RegExp([...stopWords, '\\w', '\\s', '[（：、，。）]'].join`|`)).filter(Boolean)
+}
+
+wordSegmentation(stopWord);
+```
+
+```js
+// 第一个测试用例原文：
+"人工智能（英语：Artificial Intelligence，缩写为AI）是研究、开发用于模拟、延伸和扩展人的智能的理论、
+方法、技术及应用系统的一门新技术科学。"
+// 分词结果：
+["人工智能","英语","缩写","研究","开发用于模拟","延伸","扩展人","智能","理论","方法","技术",
+"应用系统","一门新技术科学"];
+
+// 第二个测试用例原文：
+"自然语言处理（Natural Language Processing）是计算机科学、人工智能、语言学三者交叉的领域，
+涉及人类语言与计算机的相互作用。"
+// 分词结果：
+["自然语言处理","计算机科学","人工智能","语言学三者交叉","领域","人类语言","计算机","相互作用"];
+
+// 第三个测试用例原文：
+"人工智能（Artificial Intelligence，缩写为AI）是一门涉及机器智能的新兴科技，它的发展将会改变我们的
+生活方式和工作方式。机器学习（Machine Learning）是人工智能的一个分支，它使用算法和统计学来让计算机学习从数据中提取规律，
+从而不断改进自身的性能。"
+// 分词结果：
+["人工智能","缩写","一门","机器智能","新兴科技","发展","改变","生活方式","工作方式","机器学习",
+"人工智能","一个分支","使用算法","统计学","计算机学习","数据中提取规律","改进自身","性能"];
+
+// 第四个测试用例原文：
+"人工智能（Artificial Intelligence，缩写为AI）英文名。是研究、开发用于模拟、延伸和扩展人的智能的理论
+、方法、技术及应用系统的一门新技术科学。"
+// 分词结果：
+["人工智能","缩写","英文名","研究","开发用于模拟","延伸","扩展人","智能","理论","方法","技术",
+"应用系统","一门新技术科学"];
+```
 

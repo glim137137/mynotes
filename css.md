@@ -170,19 +170,20 @@ li:nth-child(2) {
 
 **伪元素**：
 
-| 选择器                                                       | 示例           | 示例说明                                        |
-| :----------------------------------------------------------- | :------------- | :---------------------------------------------- |
-| [:link](https://www.runoob.com/cssref/sel-link.html)         | a:link         | 选择所有未访问链接                              |
-| [:visited](https://www.runoob.com/cssref/sel-visited.html)   | a:visited      | 选择所有访问过的链接                            |
-| [:active](https://www.runoob.com/cssref/sel-active.html)     | a:active       | 选择正在活动链接                                |
-| [:hover](https://www.runoob.com/cssref/sel-hover.html)       | a:hover        | 把鼠标放在链接上的状态                          |
-| [:focus](https://www.runoob.com/cssref/sel-focus.html)       | input:focus    | 选择元素输入后具有焦点                          |
-| [:first-letter](https://www.runoob.com/cssref/sel-firstletter.html) | p:first-letter | 选择每个<p> 元素的第一个字母                    |
-| [:first-line](https://www.runoob.com/cssref/sel-firstline.html) | p:first-line   | 选择每个<p> 元素的第一行                        |
-| [:first-child](https://www.runoob.com/cssref/sel-firstchild.html) | p:first-child  | 选择器匹配属于任意元素的第一个子元素的 <p> 元素 |
-| [:before](https://www.runoob.com/cssref/sel-before.html)     | p:before       | 在每个<p>元素之前插入内容                       |
-| [:after](https://www.runoob.com/cssref/sel-after.html)       | p:after        | 在每个<p>元素之后插入内容                       |
-| [:lang(*language*)](https://www.runoob.com/cssref/sel-lang.html) | p:lang(it)     | 为<p>元素的lang属性选择一个开始值               |
+| 选择器                                                       | 示例             | 示例说明                                                     |
+| :----------------------------------------------------------- | :--------------- | :----------------------------------------------------------- |
+| [:link](https://www.runoob.com/cssref/sel-link.html)         | a:link           | 选择所有未访问链接                                           |
+| [:visited](https://www.runoob.com/cssref/sel-visited.html)   | a:visited        | 选择所有访问过的链接                                         |
+| [:active](https://www.runoob.com/cssref/sel-active.html)     | a:active         | 选择正在活动链接                                             |
+| [:hover](https://www.runoob.com/cssref/sel-hover.html)       | a:hover          | 把鼠标放在链接上的状态                                       |
+| [:focus](https://www.runoob.com/cssref/sel-focus.html)       | input:focus      | 选择元素输入后具有焦点                                       |
+| [:first-letter](https://www.runoob.com/cssref/sel-firstletter.html) | p:first-letter   | 选择每个<p> 元素的第一个字母                                 |
+| [:first-line](https://www.runoob.com/cssref/sel-firstline.html) | p:first-line     | 选择每个<p> 元素的第一行                                     |
+| [:first-child](https://www.runoob.com/cssref/sel-firstchild.html) | p:first-child    | 选择器匹配属于任意元素的第一个子元素的 <p> 元素              |
+| :nth-child(n)                                                | div:nth-child(n) | 选择父元素的第 N 个子元素。它允许你通过数学表达式来选择特定的子元素。这个伪类可以接受多种形式的参数。 |
+| [::before](https://www.runoob.com/cssref/sel-before.html)    | p::before        | 其将成为匹配选中的元素的第一个子元素。常通过content属性来为一个元素添加修饰性的内容。此元素默认为行内元素。 |
+| [::after](https://www.runoob.com/cssref/sel-after.html)      | p::after         | 用来创建一个伪元素，作为已选中元素的最后一个子元素。通常会配合content属性来为该元素添加装饰内容。这个虚拟元素默认是行内元素。 |
+| [:lang(*language*)](https://www.runoob.com/cssref/sel-lang.html) | p:lang(it)       | 为<p>元素的lang属性选择一个开始值                            |
 
 
 
@@ -882,7 +883,30 @@ img {
 
 
 
+## 2.5.自定义属性
 
+自定义属性（有时候也被称作CSS 变量或者级联变量）是由 CSS 作者定义的，它包含的值可以在整个文 档中重复使用。由自定义属性标记设定值（比如：  值（比如：  color: var(--main-color); ）。
+
+**基本用法**
+
+声明一个自定义属性，属性名需要以两个减号（--）开始，属性值则可以是任何有效的 CSS 值。和其他 属性一样，自定义属性也是写在规则集之内的，如下：
+
+```css
+element {
+	--main-bg-color: brown;
+}
+element {
+ 	background-color: var(--main-bg-color);
+}
+```
+
+注意，规则集所指定的选择器定义了自定义属性的可见作用域。通常的最佳实践是定义在根伪类  :root  下，这样就可以在 HTML 文档的任何地方访问到它了：
+
+```css
+:root {
+    --main-bg-color: brown;
+}
+```
 
 
 
@@ -1116,4 +1140,19 @@ to {top:200px;}
     right: 0;
 }
 ```
+
+
+
+## JS 修改 CSS
+
+```js
+element.style.getPropertyValue("class")
+element.style.setProperty("class", 'test')
+element.style.removeProperty('class')
+
+element.classList.add("class")
+element.classList.remove("plug")
+```
+
+
 

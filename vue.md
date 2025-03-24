@@ -3485,6 +3485,90 @@ html<MyComponent v-model:myProp="value"></MyComponent>
 html<button @click="handleClick">点击我</button>
 ```
 
+Vue 为事件绑定还提供了一些修饰符：
+
+**事件修饰符**
+
+| 修饰符     | 作用                                                         | 使用场景                 |
+| ---------- | ------------------------------------------------------------ | ------------------------ |
+| `.prevent` | 阻止事件的默认行为（如阻止表单提交、链接跳转等）             | 例如：阻止表单提交等     |
+| `.stop`    | 阻止事件冒泡，防止事件传递到父元素                           | 例如：阻止点击事件冒泡   |
+| `.once`    | 事件处理函数只会执行一次，执行后自动解除绑定                 | 例如：点击只触发一次事件 |
+| `.capture` | 事件在捕获阶段触发（即父元素先于子元素触发事件）             | 例如：优先捕获父元素事件 |
+| `.passive` | 不调用 `preventDefault()`，优化性能（主要用于滚动等事件）    | 例如：提高滚动性能       |
+| `.self`    | 用于避免父元素的事件被触发。仅当事件在绑定元素本身触发时才有效。 |                          |
+
+```html
+<!-- 单击事件将停止传递 -->
+<a @click.stop="doThis"></a>
+
+<!-- 提交事件将不再重新加载页面 -->
+ <form @submit.prevent="onSubmit"></form>
+ 
+<!-- 修饰语可以使用链式书写 -->
+ <a @click.stop.prevent="doThat"></a>
+ 
+<!-- 也可以只有修饰符 -->
+ <form @submit.prevent></form>
+ 
+<!-- 仅当 event.target 是元素本身时才会触发事件处理器 -->
+ <!-- 例如：事件处理器不来自子元素 -->
+ <div @click.self="doThat">...</div>
+ 
+<!-- 添加事件监听器时，使用 `capture` 捕获模式 -->
+ <!-- 例如：指向内部元素的事件，在被内部元素处理前，先被外部处理 -->
+ <div @click.capture="doThis">...</div>
+ 
+<!-- 点击事件最多被触发一次 -->
+ <a @click.once="doThis"></a>
+```
+
+**按键修饰符( keyup, keydown, keypress )**
+
+```html
+<!-- 仅在 `key` 为 `Enter` 时调用 `submit` -->
+<input @keyup.enter="submit" />
+```
+
+ Vue 为一些常用的按键提供了别名：
+
+`.enter` 
+
+`.tab` 
+
+`.delete` (捕获“Delete”和“Backspace”两个按键) 
+
+`.esc` 
+
+`.space` 
+
+`.up` / `.down` / `.left` / `.right`
+
+**鼠标修饰符( click )**
+
+`.left`
+
+`.right`
+
+`.middle`
+
+**`.exact` 修饰符**
+
+此外还有 `.exact` 修饰符，允许控制触发一个事件所需的确定组合的系统按键修饰符：
+
+```html
+<!-- 当按下 Ctrl 时，即使同时按下 Alt 或 Shift 也会触发 -->
+<button @click.ctrl="onClick">A</button>
+ 
+<!-- 仅当按下 Ctrl 且未按任何其他键时才会触发 -->
+<button @click.ctrl.exact="onCtrlClick">A</button>
+ 
+<!-- 仅当没有按下任何系统按键时触发 -->
+<button @click.exact="onClick">A</button>
+```
+
+
+
 #### 2.6.`v-show`：条件显示
 
 与 `v-if` 类似，`v-show` 也用于条件渲染，但是 `v-show` 会始终渲染元素，并通过控制元素的 `display` 样式来显示或隐藏它：
@@ -3648,3 +3732,6 @@ onMounted(() => {
 });
 </script>
 ```
+
+
+
