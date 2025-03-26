@@ -2515,7 +2515,7 @@ C 语言中的 **预处理器** 是在编译过程中对源代码进行预处理
 
   如果 `DEBUG` 已定义，上述代码会打印出 "Debugging enabled"。
 
-- 示例：使用 `#ifndef` 来防止多重包含（防止头文件被多次引入）：
+- 示例：使用 `#ifndef` 来防止多重包含（防止头文件被多次引入，Headers’s Gaurds）：
 
   ```c
   #ifndef MYHEADER_H

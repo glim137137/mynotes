@@ -1991,7 +1991,7 @@ import {defineStore} from 'pinia'
 // 你可以任意命名 `defineStore()` 的返回值，但最好使用 store 的名字，同时以 `use` 开头且以 `Store` 结尾。
 // (比如 `useUserStore`，`useCartStore`，`useProductStore`)
 // 第一个参数是你的应用中 Store 的唯一 ID。
-export const useCounterStore = defineStore('alerts', {
+export const useCounterStore = defineStore('counter', {
   // 其他配置...
 })
 ```
@@ -3436,13 +3436,13 @@ Vue 3 延续了 Vue 2 的指令，但在使用时有一些改进和新特性。
 `v-bind` 依然用于动态绑定 HTML 属性：
 
 ```html
-html<img v-bind:src="imageSrc" alt="Vue logo">
+<img v-bind:src="imageSrc" alt="Vue logo">
 ```
 
 你还可以使用简写 `:src` 来代替：
 
 ```html
-html<img :src="imageSrc" alt="Vue logo">
+<img :src="imageSrc" alt="Vue logo">
 ```
 
 #### 2.2.`v-if`：条件渲染
@@ -3450,7 +3450,7 @@ html<img :src="imageSrc" alt="Vue logo">
 `v-if` 用于条件渲染：
 
 ```html
-html<p v-if="isVisible">显示内容</p>
+<p v-if="isVisible">显示内容</p>
 ```
 
 #### 2.3.`v-for`：列表渲染
@@ -3458,8 +3458,10 @@ html<p v-if="isVisible">显示内容</p>
 `v-for` 用于遍历数组并渲染列表项：
 
 ```html
-html<ul>
-  <li v-for="item in items" :key="item.id">{{ item.name }}</li>
+<ul>
+  	<p v-if="condition1">Condition 1 is true</p>
+	<p v-else-if="condition2">Condition 2 is true</p>
+	<p v-else>If no condition is true</p>
 </ul>
 ```
 

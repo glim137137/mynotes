@@ -83,7 +83,9 @@ git checkout branchname
 git checkout -b branchname #创建新分支并切换到该分支
 
 # 合并分支(将其他分支合并到当前分支)
-git checkout branchname
+git checkout curBranch
+git merge otherBranch
+
 
 # 删除分支
 git checkout -d branchname  #本地
