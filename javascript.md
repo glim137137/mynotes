@@ -2781,7 +2781,31 @@ console.log(circle.area()); // 输出: 706.8583470577034
 - **getter**：定义了一个获取属性的自定义方法。
 - **setter**：定义了一个设置属性时的自定义行为。
 
+#### ES6 对象方法简写
 
+```javascript
+const obj = {
+  greet(name) {
+    return `Hello, ${name}`;
+  }
+};
+console.log(obj.greet("Alice")); // Hello, Alice
+
+// 传统方式（ES5）
+const obj = {
+  greet: function(name) {
+    return "Hello, " + name;
+  }
+};
+console.log(obj.greet("Alice")); // Hello, Alice
+
+```
+
+**简写规则：**
+
+- 省略 `function` 关键字。
+- 直接在对象中定义方法，保持 `key: value` 的结构。
+- `this` 仍然指向当前对象，与传统写法一致。
 
 
 
@@ -3063,6 +3087,8 @@ const functionName = (parameters) => {
    ```
 
    在这种情况下，箭头函数不会改变 `this` 的指向，它继承了 `sayHello` 方法所在的 `Person` 构造函数的 `this`，因此能够正确地访问到 `this.name`。
+
+
 
 
 

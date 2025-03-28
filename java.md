@@ -737,19 +737,19 @@ String[][] str = new String[3][4];
 
 ---
 
-### **1. 什么是 Java 包？**
-#### **定义**
+### 1. 什么是 Java 包？
+#### 定义
 包是类的命名空间（namespace），类似于文件系统中的目录。它通过将类、接口和其他资源组织到不同的包中，帮助开发者管理代码结构。
 
-#### **本质**
+#### 本质
 - **命名空间**：防止类名冲突。例如，两个不同的开发者可以定义名为 `Util` 的类，只要它们在不同的包中（如 `com.myapp.Util` 和 `org.lib.Util`），就不会冲突。
 - **访问控制**：包与访问修饰符（如 `public`, `protected`, 默认（包级））结合，控制类和成员的可见性。
 - **模块化**：将功能相似的类分组，提高代码的可维护性和可读性。
 
 ---
 
-### **2. 包的语法**
-#### **声明包**
+### 2. 包的语法
+#### 声明包
 在 Java 文件的开头使用 `package` 关键字声明包名：
 ```java
 package com.example.myapp;
@@ -761,13 +761,13 @@ public class MyClass {
 - 包名通常使用反向域名命名约定（如 `com.company.project`），以确保全局唯一性。
 - 包名必须与文件所在的目录结构一致。例如，`com.example.myapp.MyClass` 应位于 `com/example/myapp/` 目录下。
 
-#### **默认包**
+#### 默认包
 如果没有显式声明 `package`，类将被放入**默认包（default package）**。但不推荐使用默认包，尤其是在大型项目中。
 
 ---
 
-### **3. 导入包**
-#### **使用 `import`**
+### 3. 导入包
+#### 使用 `import`
 要使用其他包中的类，需要通过 `import` 语句引入：
 ```java
 import java.util.ArrayList;  // 导入特定类
@@ -784,7 +784,7 @@ public class Main {
 - `import java.util.*` 会导入 `java.util` 包中的所有公共类，但不会导入子包（如 `java.util.concurrent`）。
 - **完全限定名**：也可以不使用 `import`，直接用类的全名，如 `java.util.ArrayList`。
 
-#### **静态导入（Static Import）**
+#### 静态导入（Static Import）
 从 Java 5 开始，可以导入类的静态成员：
 ```java
 import static java.lang.Math.PI;
@@ -800,7 +800,7 @@ public class Test {
 
 ---
 
-### **4. Java 中的常见包**
+### 4. Java 中的常见包
 Java 标准库（Java API）包含许多内置包，例如：
 - **`java.lang`**：核心类（如 `String`, `Math`, `System`），无需显式导入。
 - **`java.util`**：实用工具类（如 `ArrayList`, `HashMap`, `Date`, `Scanner`）。
@@ -810,14 +810,14 @@ Java 标准库（Java API）包含许多内置包，例如：
 
 ---
 
-### **5. 包的访问控制**
+### 5. 包的访问控制
 包与 Java 的访问修饰符密切相关：
 - **`public`**：类或成员对所有包可见。
 - **`protected`**：对同一包内的类或子类可见。
 - **默认（包级访问）**：如果不指定修饰符（如 `class MyClass`），类或成员只对同一包内的类可见。
 - **`private`**：仅类内部可见，与包无关。
 
-#### **示例**
+#### 示例
 ```java
 package com.example;
 
@@ -837,7 +837,7 @@ public class PublicClass {
 
 ---
 
-### **6. 包的物理结构**
+### 6. 包的物理结构
 包名对应于文件系统的目录结构。例如：
 ```
 src/
@@ -861,13 +861,13 @@ public class MyClass {
 com/example/myapp/MyClass.class
 ```
 
-#### **编译和运行**
+#### 编译和运行
 - 编译：`javac com/example/myapp/MyClass.java`
 - 运行：`java com.example.myapp.MyClass`（需要在包含 `com` 的目录下执行）。
 
 ---
 
-### **7. 包的作用**
+### 7. 包的作用
 1. **命名冲突解决**：
    - 不同包中的同名类不会冲突。
 2. **代码组织**：
@@ -879,7 +879,7 @@ com/example/myapp/MyClass.class
 
 ---
 
-### **8. Java 9+ 的模块化（Module System）**
+### 8. Java 9+ 的模块化（Module System）
 从 Java 9 开始，引入了 **模块系统（Java Platform Module System, JPMS）**，通过 `module-info.java` 文件进一步增强包的管理：
 ```java
 module com.example.myapp {
@@ -892,7 +892,7 @@ module com.example.myapp {
 
 ---
 
-### **9. 实际示例**
+### 9. 实际示例
 假设一个简单的项目：
 ```
 src/
@@ -950,13 +950,207 @@ Log: User created: Alice
 
 ---
 
-### **总结**
+### 总结
 - **Java 包的本质**：一种命名空间和代码组织机制，通过目录结构和访问控制实现模块化。
 - **核心功能**：避免命名冲突、提高代码可维护性、支持访问控制。
 - **使用方式**：通过 `package` 定义，`import` 引入，结合访问修饰符使用。
 - **进化**：从简单的包管理到 Java 9 的模块系统，Java 不断增强其代码组织能力。
 
 包是 Java 中实现封装和模块化的基础工具，熟练掌握包的使用对于编写结构清晰、可扩展的代码至关重要。
+
+
+
+## 1.10.异常处理
+
+![image-20250327082213358](images/image-20250327082213358.png)
+
+所有的异常类是从 java.lang.Exception 类继承的子类。
+
+Exception 类是 Throwable 类的子类。除了Exception类外，Throwable还有一个子类Error 。
+
+Java 程序通常不捕获错误。错误一般发生在严重故障时，它们在Java程序处理的范畴之外。
+
+Error 用来指示运行时环境发生的错误。
+
+例如，JVM 内存溢出。一般地，程序不会从错误中恢复。
+
+异常类有两个主要的子类：IOException 类和 RuntimeException 类。
+
+### Java 异常处理详解
+
+Java 的异常处理机制用于处理程序运行过程中可能发生的错误，使程序能够更健壮地应对异常情况，而不会直接崩溃。
+
+------
+
+### 1. 异常的分类
+
+#### （1）Checked Exception（已检查异常）
+
+- 这些异常在**编译阶段**就会被检查，必须在代码中显式处理（使用 `try-catch` 或 `throws`）。
+- 例如：
+    - `IOException`
+    - `SQLException`
+    - `FileNotFoundException`
+
+#### （2）Unchecked Exception（未检查异常 / 运行时异常）
+
+- 这些异常发生在**运行时**，编译器不会强制要求开发者处理，但可以选择捕获。
+- 例如：
+    - `NullPointerException`
+    - `ArrayIndexOutOfBoundsException`
+    - `ArithmeticException`
+
+#### （3）Error（错误）
+
+- 这种类型的异常通常表示**JVM 或系统层面**的问题，无法通过代码处理。
+- 例如：
+    - `StackOverflowError`
+    - `OutOfMemoryError`
+
+------
+
+### 2. 异常处理的方式
+
+Java 提供了 **`try-catch-finally`** 机制来处理异常，以及 **`throws`** 关键字用于声明异常。
+
+#### （1）try-catch 语句
+
+```java
+try {
+    int result = 10 / 0; // 可能会发生 ArithmeticException
+} catch (ArithmeticException e) {
+    System.out.println("捕获异常：" + e.getMessage());
+}
+```
+
+#### （2）try-catch-finally
+
+`finally` 语句块无论是否发生异常都会执行，通常用于**关闭资源**。
+
+```java
+try {
+    int[] arr = new int[3];
+    System.out.println(arr[5]); // 访问越界
+} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("捕获异常：" + e.getMessage());
+} finally {
+    System.out.println("执行 finally 代码块");
+}
+```
+
+#### （3）多异常捕获
+
+如果 `try` 代码块可能抛出多种不同类型的异常，可以使用多个 `catch` 语句：
+
+```java
+try {
+    String str = null;
+    System.out.println(str.length()); // NullPointerException
+} catch (NullPointerException e) {
+    System.out.println("空指针异常：" + e.getMessage());
+} catch (Exception e) {
+    System.out.println("其他异常：" + e.getMessage());
+}
+```
+
+也可以使用 **`|`**（管道符）捕获多个异常：
+
+```java
+try {
+    int num = Integer.parseInt("abc"); // NumberFormatException
+} catch (NumberFormatException | NullPointerException e) {
+    System.out.println("格式转换异常：" + e.getMessage());
+}
+```
+
+#### （4）throws 关键字
+
+如果一个方法可能抛出异常，可以在方法声明中使用 `throws` 关键字向上抛出：
+
+```java
+public void readFile() throws IOException {
+    FileReader file = new FileReader("test.txt"); // 可能抛出 FileNotFoundException
+}
+```
+
+调用者必须显式处理：
+
+```java
+try {
+    readFile();
+} catch (IOException e) {
+    System.out.println("文件读取失败：" + e.getMessage());
+}
+```
+
+#### （5）throw 关键字
+
+`throw` 用于**手动抛出异常**：
+
+```java
+public void checkAge(int age) {
+    if (age < 18) {
+        throw new IllegalArgumentException("未成年人禁止入内");
+    }
+}
+```
+
+调用时：
+
+```java
+try {
+    checkAge(16);
+} catch (IllegalArgumentException e) {
+    System.out.println("异常：" + e.getMessage());
+}
+```
+
+------
+
+### 3. 自定义异常
+
+如果 Java 内置异常不满足需求，可以创建自定义异常：
+
+```java
+class MyException extends Exception {
+    public MyException(String message) {
+        super(message);
+    }
+}
+```
+
+使用：
+
+```java
+public void test(int value) throws MyException {
+    if (value < 0) {
+        throw new MyException("值不能为负数");
+    }
+}
+```
+
+------
+
+### 4. 异常处理最佳实践
+
+1. **尽量捕获具体异常**，而不是直接 `catch (Exception e)`，这样可以更精确地定位问题。
+2. **避免过度捕获**，如果异常无法恢复，应该让它继续传播，而不是强行捕获。
+3. **正确使用 `finally` 释放资源**，如关闭数据库连接、文件流等。
+4. **日志记录（Logging）**，使用 `Logger` 记录异常信息，而不是简单地 `System.out.println(e)`。
+
+------
+
+### 5. 总结
+
+| 关键字    | 用途                           |
+| --------- | ------------------------------ |
+| `try`     | 监控可能发生异常的代码块       |
+| `catch`   | 捕获异常并处理                 |
+| `finally` | 代码块无论是否发生异常都会执行 |
+| `throw`   | 手动抛出异常                   |
+| `throws`  | 方法声明抛出异常，由调用者处理 |
+
+Java 的异常机制是保证程序稳定性的关键部分，合理地使用异常处理可以提高代码的健壮性和可维护性。
 
 
 
@@ -1408,7 +1602,250 @@ boolean isMatch = str.matches("\\d+");  // 返回 true
 
 
 
+```java
+import java.util.Scanner;
 
+public class ScannerExample {
+
+    public static void main(String[] args) {
+        // 创建 Scanner 对象
+        Scanner scanner = new Scanner(System.in);
+
+        // 1. 使用 nextLine() 读取一整行字符串
+        System.out.println("Enter a line of text:");
+        String line = scanner.nextLine();  // 读取一整行文本
+        System.out.println("You entered: " + line);
+
+        // 2. 使用 next() 读取单个单词
+        System.out.println("Enter a word:");
+        String word = scanner.next();  // 读取一个单词
+        System.out.println("You entered: " + word);
+
+        // 3. 使用 nextInt() 读取整数
+        System.out.println("Enter an integer:");
+        int integer = scanner.nextInt();  // 读取一个整数
+        System.out.println("You entered integer: " + integer);
+
+        // 4. 使用 nextDouble() 读取浮点数
+        System.out.println("Enter a double:");
+        double doubleValue = scanner.nextDouble();  // 读取一个双精度浮点数
+        System.out.println("You entered double: " + doubleValue);
+
+        // 5. 使用 nextBoolean() 读取布尔值
+        System.out.println("Enter a boolean (true/false):");
+        boolean boolValue = scanner.nextBoolean();  // 读取一个布尔值
+        System.out.println("You entered boolean: " + boolValue);
+
+        // 6. 使用 nextFloat() 读取浮点数
+        System.out.println("Enter a float:");
+        float floatValue = scanner.nextFloat();  // 读取一个浮点数
+        System.out.println("You entered float: " + floatValue);
+
+        // 7. 使用 nextLong() 读取长整型
+        System.out.println("Enter a long number:");
+        long longValue = scanner.nextLong();  // 读取一个长整型
+        System.out.println("You entered long: " + longValue);
+
+        // 8. 使用 hasNext() 检查是否有下一个输入项
+        System.out.println("Do you want to enter another word? (yes/no):");
+        if (scanner.hasNext()) {  // 检查是否有下一个单词
+            String response = scanner.next();  // 读取一个单词
+            System.out.println("You entered: " + response);
+        }
+
+        // 9. 使用 hasNextInt() 检查是否下一个输入是整数
+        System.out.println("Enter a number (int) or a non-integer to quit:");
+        if (scanner.hasNextInt()) {  // 检查下一个输入是否是整数
+            int nextInt = scanner.nextInt();  // 读取整数
+            System.out.println("You entered integer: " + nextInt);
+        } else {
+            System.out.println("You entered a non-integer. Exiting...");
+        }
+
+        // 10. 使用 skip() 跳过输入中的特定字符或模式
+        scanner.nextLine();  // 清除输入缓冲区中的换行符
+        System.out.println("Enter a sentence (we'll skip the first word):");
+        String sentence = scanner.nextLine();
+        scanner.skip(".*? ");  // 跳过句子中的第一个单词及空格
+        System.out.println("Remaining sentence: " + sentence.substring(sentence.indexOf(" ") + 1));
+
+        // 11. 使用 close() 关闭 Scanner
+        scanner.close();  // 关闭 scanner，释放资源
+    }
+}
+
+```
+
+
+
+
+
+
+
+## 2.6.ArrayList
+
+![image-20250326203239721](images/image-20250326203239721.png)
+
+```java
+import java.util.ArrayList; // 引入 ArrayList 类
+
+// 1. 创建一个空的ArrayList
+ArrayList<String> list1 = new ArrayList<>();
+
+// 2. 创建具有初始容量的ArrayList
+ArrayList<Integer> list2 = new ArrayList<>(20);
+
+// 3. 从其他集合创建
+List<String> existingList = Arrays.asList("A", "B", "C");
+ArrayList<String> list3 = new ArrayList<>(existingList);
+```
+
+
+
+```java
+import java.util.ArrayList;
+import java.util.List;
+
+public class ArrayListMethodsExample {
+
+    public static void main(String[] args) {
+        // 创建一个 ArrayList 实例，存储 String 类型的元素
+        ArrayList<String> list = new ArrayList<>();
+
+        // 1. add(E e): 将元素添加到列表的末尾
+        list.add("Java");          // 添加 "Java" 到列表
+        list.add("Python");        // 添加 "Python" 到列表
+        list.add("C++");           // 添加 "C++" 到列表
+        System.out.println("After add() operations: " + list); // 打印添加后的列表
+
+        // 2. add(int index, E element): 在指定位置插入元素
+        list.add(1, "JavaScript");  // 在索引1的位置插入 "JavaScript"
+        System.out.println("After add(index, element): " + list); // 打印插入后的列表
+
+        // 3. get(int index): 获取指定位置的元素
+        String element = list.get(2); // 获取索引为2的元素
+        System.out.println("Element at index 2: " + element); // 打印该元素
+
+        // 4. set(int index, E element): 设置指定位置的元素
+        list.set(1, "Ruby"); // 将索引为1的位置的元素修改为 "Ruby"
+        System.out.println("After set() operation: " + list); // 打印修改后的列表
+
+        // 5. remove(int index): 移除指定位置的元素
+        list.remove(3); // 移除索引为3的元素 "C++"
+        System.out.println("After remove(index): " + list); // 打印移除后的列表
+
+        // 6. remove(Object o): 移除指定元素
+        list.remove("Python"); // 移除 "Python"
+        System.out.println("After remove(element): " + list); // 打印移除后的列表
+
+        // 7. contains(Object o): 判断列表是否包含某个元素
+        boolean contains = list.contains("Ruby"); // 判断列表中是否包含 "Ruby"
+        System.out.println("Contains 'Ruby': " + contains); // 打印结果
+
+        // 8. indexOf(Object o): 获取指定元素第一次出现的位置
+        int index = list.indexOf("Java"); // 获取 "Java" 在列表中的位置
+        System.out.println("Index of 'Java': " + index); // 打印该位置
+
+        // 9. size(): 获取列表中元素的个数
+        int size = list.size(); // 获取列表的大小
+        System.out.println("Size of list: " + size); // 打印列表大小
+
+        // 10. clear(): 清空列表中的所有元素
+        list.clear(); // 清空列表
+        System.out.println("After clear(): " + list); // 打印清空后的列表（空）
+
+        // 11. isEmpty(): 判断列表是否为空
+        boolean isEmpty = list.isEmpty(); // 检查列表是否为空
+        System.out.println("Is list empty? " + isEmpty); // 打印检查结果
+
+        // 12. ensureCapacity(int minCapacity): 确保 ArrayList 至少有指定的容量
+        ArrayList<Integer> numbers = new ArrayList<>();
+        numbers.ensureCapacity(10); // 确保列表有至少10个容量
+        System.out.println("ArrayList with ensured capacity: " + numbers); // 打印确保容量后的列表
+
+        // 13. toArray(): 将 ArrayList 转换为数组
+        list.add("Hello");
+        list.add("World");
+        Object[] array = list.toArray(); // 将 ArrayList 转换为数组
+        System.out.println("ArrayList to Array: ");
+        for (Object obj : array) { // 遍历并打印数组
+            System.out.println(obj);
+        }
+
+        // 14. trimToSize(): 调整 ArrayList 的大小以匹配实际元素的个数
+        list.trimToSize(); // 调整 ArrayList 容量
+        System.out.println("Trimmed ArrayList: " + list); // 打印调整后的列表
+
+        // 15. listIterator(): 获取 ListIterator，用于遍历列表
+        list.add("Java");
+        list.add("Python");
+        list.add("Ruby");
+        var iterator = list.listIterator(); // 获取 ListIterator
+        System.out.println("ListIterator forward traversal:");
+        while (iterator.hasNext()) { // 向前遍历
+            System.out.println(iterator.next());
+        }
+
+        // 16. subList(int fromIndex, int toIndex): 获取从指定位置到另一个位置的子列表
+        List<String> subList = list.subList(0, 2); // 获取索引从 0 到 2（不包括 2）的子列表
+        System.out.println("SubList from index 0 to 2: " + subList);
+
+        // 17. removeAll(Collection<?> c): 从列表中移除指定集合中的所有元素
+        ArrayList<String> toRemove = new ArrayList<>();
+        toRemove.add("Java");
+        list.removeAll(toRemove); // 移除集合中的元素
+        System.out.println("After removeAll() operation: " + list); // 打印移除后的列表
+    }
+}
+
+```
+
+**代码解释**：
+
+1. **add(E e)**: 向列表末尾添加一个元素。
+2. **add(int index, E element)**: 在指定位置插入一个元素。
+3. **get(int index)**: 获取指定位置的元素。
+4. **set(int index, E element)**: 设置指定位置的元素为新的值。
+5. **remove(int index)**: 移除指定位置的元素。
+6. **remove(Object o)**: 移除列表中指定的元素。
+7. **contains(Object o)**: 判断列表中是否包含某个指定的元素。
+8. **indexOf(Object o)**: 返回指定元素第一次出现的位置。如果不存在，返回 -1。
+9. **size()**: 返回列表的元素个数。
+10. **clear()**: 移除列表中的所有元素。
+11. **isEmpty()**: 检查列表是否为空。
+12. **ensureCapacity(int minCapacity)**: 确保列表至少有指定的容量，防止频繁扩容。
+13. **toArray()**: 将列表转换为数组。
+14. **trimToSize()**: 调整列表的大小，去除多余的容量。
+15. **listIterator()**: 返回一个 `ListIterator`，用于遍历列表。
+16. **subList(int fromIndex, int toIndex)**: 获取指定范围的子列表。
+17. **removeAll(Collection<?> c)**: 移除列表中所有与指定集合相同的元素。
+
+**运行结果**：
+
+```txt
+After add() operations: [Java, Python, C++]
+After add(index, element): [Java, JavaScript, Python, C++]
+Element at index 2: Python
+After set() operation: [Java, Ruby, Python, C++]
+After remove(index): [Java, Ruby, Python]
+After remove(element): [Java, Ruby]
+Contains 'Ruby': true
+Index of 'Java': 0
+Size of list: 2
+After clear(): []
+Is list empty? true
+ArrayList with ensured capacity: []
+ArrayList to Array: 
+Hello
+World
+Trimmed ArrayList: [Hello, World]
+ListIterator forward traversal:
+Hello
+World
+SubList from index 0 to 2: [Hello, World]
+After removeAll() operation: [World]
+
+```
 
 
 

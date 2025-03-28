@@ -3400,6 +3400,28 @@ new Vue({
 });
 ```
 
+### 9.监听器（Watch）
+
+```js
+new Vue({
+  el: '#app',
+  data: {
+    someData: 'initial value'
+  },
+  watch: {
+    // 这两种 watch 语法在功能上是完全等价的，只是写法不同
+    someData(newValue, oldValue) {
+      console.log('someData changed from', oldValue, 'to', newValue);
+    },
+    someData: function(newValue, oldValue) {
+      console.log('someData changed from', oldValue, 'to', newValue);
+    }
+  }
+});
+```
+
+
+
 
 
 
@@ -3445,17 +3467,40 @@ Vue 3 延续了 Vue 2 的指令，但在使用时有一些改进和新特性。
 <img :src="imageSrc" alt="Vue logo">
 ```
 
-#### 2.2.`v-if`：条件渲染
+##### Class 与 Style 绑定
 
-`v-if` 用于条件渲染：
+Vue 专门为 `class` 和 `style` 的 `v-bind` 用法提供了特殊的功能增强。除了字符串外，表达式的值也可以是对象或数组。
 
 ```html
-<p v-if="isVisible">显示内容</p>
+<!-- active 是否存在取决于数据属性 isActive 的真假值。-->
+<div :class="{ active: isActive }"></div>
+<!-- :class 指令也可以和一般的 class attribute 共存。-->
+<div
+  class="static"
+  :class="{ active: isActive, 'text-danger': hasError }"
+></div>
+<!-- 也可以直接绑定一个对象 -->
+<div :class="classObject"></div>
+<!-- 给 :class 绑定一个数组来渲染多个 CSS class -->
+<div :class="[activeClassStr, errorClassStr]"></div>
+<!-- 有多个依赖条件的 class 时会有些冗长。因此也可以在数组中嵌套对象 -->
+<div :class="[{ [activeClass]: isActive }, errorClass]"></div>
 ```
 
-#### 2.3.`v-for`：列表渲染
+```html
+<div :style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
+<!-- 尽管推荐使用 camelCase，但 :style 也支持 kebab-cased 形式的 CSS 属性 key (对应其 CSS 中的实际名称) -->
+<div :style="{ 'font-size': fontSize + 'px' }"></div>
 
-`v-for` 用于遍历数组并渲染列表项：
+<!-- 给 :style 绑定一个包含多个样式对象的数组。这些对象会被合并后渲染到同一元素上 -->
+<div :style="[baseStylesObj, overridingStylesObj]"></div>
+```
+
+
+
+#### 2.2.`v-if`：条件渲染
+
+`v-if` , `v-else-if`, `v-else`用于条件渲染：
 
 ```html
 <ul>
@@ -3465,18 +3510,107 @@ Vue 3 延续了 Vue 2 的指令，但在使用时有一些改进和新特性。
 </ul>
 ```
 
+`v-show`：不同之处在于 `v-show` 会在 DOM 渲染中保留该元素；`v-show` 仅切换了该元素上名为 `display` 的 CSS 属性。
+
+```html
+<h1 v-show="ok">Hello!</h1>
+```
+
+##### `v-if` vs. `v-show`
+
+`v-if` 是“真实的”按条件渲染，因为它确保了在切换时，条件区块内的事件监听器和子组件都会被销毁与重建。
+
+`v-if` 也是**惰性**的：如果在初次渲染时条件值为 false，则不会做任何事。条件区块只有当条件首次变为 true 时才被渲染。
+
+相比之下，`v-show` 简单许多，元素无论初始条件如何，始终会被渲染，只有 CSS `display` 属性会被切换。
+
+总的来说，`v-if` 有更高的切换开销，而 `v-show` 有更高的初始渲染开销。因此，如果需要频繁切换，则使用 `v-show` 较好；如果在运行时绑定条件很少改变，则 `v-if` 会更合适。
+
+#### 2.3.`v-for`：列表渲染
+
+ `v-for` 里使用范围值
+
+```html
+<span v-for="n in 10">{{ n }}</span>
+```
+
+`v-for` 用于遍历数组并渲染列表项：
+
+```html
+<li v-for="item in items">
+  {{ item.message }}
+</li>
+<!-- v-for 也支持使用可选的第二个参数表示当前项的位置索引。 -->
+<li v-for="(item, index) in items">
+  {{ parentMessage }} - {{ index }} - {{ item.message }}
+</li>
+
+<!-- 使用 of 作为分隔符来替代 in，这更接近 JavaScript 的迭代器语法 -->
+<div v-for="item of items"></div>
+
+<!-- 也可以在定义 v-for 的变量别名时使用解构，和解构函数参数类似 -->
+<li v-for="({ message }, index) in items">
+  {{ message }} {{ index }}
+</li>
+```
+
+`v-for` 用于遍历对象并渲染列表项：
+
+```html
+<ul>
+  <li v-for="value in myObject">
+    {{ value }}
+  </li>
+</ul>
+
+<li v-for="(value, key) in myObject">
+  {{ key }}: {{ value }}
+</li>
+
+<li v-for="(value, key, index) in myObject">
+  {{ index }}. {{ key }}: {{ value }}
+</li>
+```
+
+##### `v-if` 和 `v-for`
+
+当 `v-if` 和 `v-for` 同时存在于一个元素上的时候，`v-if` 会首先被执行。
+
+**注意**
+
+> 同时使用 `v-if` 和 `v-for` 是**不推荐的**，因为这样二者的优先级不明显。
+>
+> 两种常见的情况可能导致这种用法：
+>
+> - 过滤列表中的项目 (例如，`v-for="user in users" v-if="user.isActive"`)。在这种情况下，可以用一个新的计算属性来替换 `users`，该属性返回过滤后的列表 (例如 `activeUsers`)。
+> - 避免渲染应该隐藏的列表 (例如 `v-for="user in users" v-if="shouldShowUsers"`)。在这种情况下，将 `v-if` 移至容器元素 (如 `ul`、`ol`)。
+
+##### 通过 key 管理状态
+
+Vue 默认按照“就地更新”的策略来更新通过 `v-for` 渲染的元素列表。当数据项的顺序改变时，Vue 不会随之移动 DOM 元素的顺序，而是就地更新每个元素，确保它们在原本指定的索引位置上渲染。
+
+默认模式是高效的，但**只适用于列表渲染输出的结果不依赖子组件状态或者临时 DOM 状态 (例如表单输入值) 的情况**。
+
+为了给 Vue 一个提示，以便它可以跟踪每个节点的标识，从而重用和重新排序现有的元素，你需要为每个元素对应的块提供一个唯一的 `key` attribute：
+
+```html
+<div v-for="item in items" :key="item.id">
+  <!-- 内容 -->
+</div>
+```
+
 #### 2.4.`v-model`：双向数据绑定
 
 Vue 3 对 `v-model` 做了一些改进，支持多个 `v-model` 绑定到同一个组件的不同 prop。默认情况下，它绑定的是 `modelValue`，你可以通过自定义 `modelValue` 来绑定到不同的属性。
 
 ```html
-html<input v-model="message" placeholder="输入内容">
+<input v-model="message" placeholder="输入内容">
 ```
 
 如果你在自定义组件中使用 `v-model`，可以指定绑定的 prop 名：
 
 ```html
-html<MyComponent v-model:myProp="value"></MyComponent>
+<MyComponent v-model:myProp="value"></MyComponent>
 ```
 
 #### 2.5.`v-on`：事件绑定
@@ -3484,7 +3618,12 @@ html<MyComponent v-model:myProp="value"></MyComponent>
 事件绑定依然使用 `v-on`，你可以使用简写 `@` 来绑定事件：
 
 ```html
-html<button @click="handleClick">点击我</button>
+<button @click="handleClick">点击我</button>
+
+<!-- 使用特殊的 $event 变量 -->
+<button @click="warn('Form cannot be submitted yet.', $event)">
+  Submit
+</button>
 ```
 
 Vue 为事件绑定还提供了一些修饰符：
@@ -3733,6 +3872,22 @@ onMounted(() => {
   console.log('组件已挂载');
 });
 </script>
+```
+
+
+
+### 10.监听器（Watch）
+
+```js
+const obj = reactive({ count: 0 })
+
+watch(obj, (newValue, oldValue) => {
+  // 在嵌套的属性变更时触发
+  // 注意：`newValue` 此处和 `oldValue` 是相等的
+  // 因为它们是同一个对象！
+})
+
+obj.count++
 ```
 
 
