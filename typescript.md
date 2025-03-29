@@ -4,7 +4,7 @@
 
 [TOC]
 
-# 1.简介
+## 简介
 
 TypeScript 与 JavaScript 有着不同寻常的关系。TypeScript 提供了 JavaScript 的所有功能，以及在这些功能之上的附加层：TypeScript 的类型系统。
 
@@ -14,11 +14,11 @@ TypeScript 与 JavaScript 有着不同寻常的关系。TypeScript 提供了 Jav
 
 
 
-# 2.基本语法
+## 基本语法
 
 
 
-## 2.1.变量声明
+### 变量声明
 
 ```typescript
 var [variable] : [typre] = value;

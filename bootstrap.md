@@ -1,8 +1,8 @@
 # Bootstrap
 
+[TOC]
 
-
-# 1.简介
+## 简介
 
 **Bootstrap** 是一个开源的前端开发框架，用于创建响应式和移动设备优先的网站和应用程序。它由 Twitter 的开发者 Mark Otto 和 Jacob Thornton 于 2011 年创建，并迅速成为最受欢迎的前端框架之一。
 
@@ -10,11 +10,11 @@ https://v5.bootcss.com/docs/getting-started/introduction/
 
 
 
-# 2.引入 Bootstrap
+## 引入Bootstrap
 
 你可以通过两种方式来引入 Bootstrap：
 
-## 通过 CDN 引入
+### 通过 CDN 引入
 
 这是最快的方法，不需要下载文件，只需要在 HTML 文件的 `<head>` 和 `<body>` 中添加以下代码：
 
@@ -40,15 +40,15 @@ https://v5.bootcss.com/docs/getting-started/introduction/
 </html>
 ```
 
-## 下载文件
+### 下载文件
 
 如果你不想依赖 CDN，可以下载 Bootstrap 框架，解压后将 CSS 和 JS 文件添加到项目中，然后在 HTML 中引入。
 
-# 3. 常见的 Bootstrap 组件
+## 常见的 Bootstrap 组件
 
 Bootstrap 提供了很多现成的组件，可以让你快速构建响应式网页。以下是一些常用的组件和例子：
 
-## 网格系统 (Grid System)
+### 网格系统
 
 Bootstrap 使用 12 栏栅格系统来创建布局。你可以通过类 `col-*` 来设置列的宽度。
 
@@ -62,7 +62,7 @@ Bootstrap 使用 12 栏栅格系统来创建布局。你可以通过类 `col-*` 
 </div>
 ```
 
-## 按钮 (Button)
+### 按钮
 
 Bootstrap 提供了多种样式的按钮。
 
@@ -71,7 +71,7 @@ Bootstrap 提供了多种样式的按钮。
 <button type="button" class="btn btn-secondary">Secondary Button</button>
 ```
 
-## 导航栏 (Navbar)
+### 导航栏
 
 Bootstrap 可以帮助你快速创建响应式导航栏。
 
@@ -97,7 +97,7 @@ Bootstrap 可以帮助你快速创建响应式导航栏。
 </nav>
 ```
 
-## 卡片 (Card)
+### 卡片
 
 卡片是 Bootstrap 中常用的布局组件。
 
@@ -112,9 +112,9 @@ Bootstrap 可以帮助你快速创建响应式导航栏。
 </div>
 ```
 
-# 3.响应式设计
+## 响应式设计
 
-## 断点
+### 断点
 
 Bootstrap 内置了 6 个默认断点，有时也被叫做 *grid tiers*, for building responsively. 如果你使用的是 Bootstrap 的 Sass 源文件，则可以自定义这些断点。
 
@@ -127,7 +127,7 @@ Bootstrap 内置了 6 个默认断点，有时也被叫做 *grid tiers*, for bui
 | Extra large       | `xl`        | ≥1200px    |
 | Extra extra large | `xxl`       | ≥1400px    |
 
-## 媒体查询 
+### 媒体查询 
 
 由于 Bootstrap 是移动设备优先的，因此我们使用了一些 [媒体查询（media queries）](https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries) 功能来为我们的布局和视觉元素创建合理的断点。这些断点主要以最小的视口（viewport）宽度作为基准，并在视口尺寸改变时放大元素。
 
@@ -138,7 +138,7 @@ Bootstrap 提供了响应式设计支持，自动适应不同屏幕尺寸。通�
 - `col-sm-4`：在小屏设备上占 4 列。
 - `col-md-6`：在中等屏设备上占 6 列。
 
-# 4.常见的工具类
+## 常见的工具类
 
 Bootstrap 提供了很多实用的工具类，帮助你快速实现一些常见的样式和功能：
 
