@@ -1849,3 +1849,179 @@ After removeAll() operation: [World]
 
 
 
+## 2.7.File
+
+```java
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Date;
+
+public class FileExample {
+    public static void main(String[] args) {
+        try {
+            // 1. 创建File对象的方式
+            File file1 = new File("example.txt");              // 当前目录下的文件
+            File file2 = new File("C:/test/example.txt");      // 绝对路径
+            File dir = new File("testDir");                    // 目录
+            
+            // 2. 创建文件和目录
+            System.out.println("创建新文件: " + file1.createNewFile());
+            System.out.println("创建目录: " + dir.mkdir());
+            
+            // 3. 文件基本信息获取
+            System.out.println("文件名: " + file1.getName());
+            System.out.println("绝对路径: " + file1.getAbsolutePath());
+            System.out.println("父目录: " + file1.getParent());
+            System.out.println("路径: " + file1.getPath());
+            System.out.println("文件大小: " + file1.length() + " bytes");
+            System.out.println("最后修改时间: " + new Date(file1.lastModified()));
+            
+            // 4. 文件状态检查
+            System.out.println("是否存在: " + file1.exists());
+            System.out.println("是文件吗: " + file1.isFile());
+            System.out.println("是目录吗: " + file1.isDirectory());
+            System.out.println("可读吗: " + file1.canRead());
+            System.out.println("可写吗: " + file1.canWrite());
+            System.out.println("可执行吗: " + file1.canExecute());
+            System.out.println("是隐藏文件吗: " + file1.isHidden());
+            
+            // 5. 文件权限设置
+            System.out.println("设置为只读: " + file1.setReadOnly());
+            System.out.println("设置可写: " + file1.setWritable(true));
+            System.out.println("设置可执行: " + file1.setExecutable(true));
+            
+            // 6. 创建临时文件
+            File tempFile = File.createTempFile("prefix", ".tmp");
+            System.out.println("临时文件路径: " + tempFile.getAbsolutePath());
+            
+            // 7. 文件空间信息
+            System.out.println("总空间: " + file1.getTotalSpace() / 1024 / 1024 + " MB");
+            System.out.println("剩余空间: " + file1.getFreeSpace() / 1024 / 1024 + " MB");
+            System.out.println("可用空间: " + file1.getUsableSpace() / 1024 / 1024 + " MB");
+            
+            // 8. 列出目录内容
+            File rootDir = new File(".");
+            File[] files = rootDir.listFiles();
+            if (files != null) {
+                System.out.println("当前目录文件列表:");
+                for (File f : files) {
+                    System.out.println(f.getName() + (f.isDirectory() ? " [DIR]" : ""));
+                }
+            }
+            
+            // 9. 文件重命名
+            File newFile = new File("example_new.txt");
+            System.out.println("重命名: " + file1.renameTo(newFile));
+            
+            // 10. 删除文件
+            System.out.println("删除临时文件: " + tempFile.delete());
+            
+            // 11. 设置最后修改时间
+            System.out.println("设置修改时间: " + newFile.setLastModified(System.currentTimeMillis()));
+            
+            // 清理示例文件
+            newFile.delete();
+            dir.delete();
+
+        } catch (IOException e) {
+            System.out.println("发生错误: " + e.getMessage());
+        }
+    }
+}
+```
+
+
+
+## 2.8.FileWriter
+
+```java
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class FileWriterExample {
+    public static void main(String[] args) {
+        // 使用 try-with-resources 确保资源自动关闭
+        try (FileWriter writer = new FileWriter("example.txt")) {
+            // 1. 基本写入操作
+            writer.write("这是一个简单的字符串\n");  // 写入字符串
+            System.out.println("写入字符串完成");
+
+            // 2. 写入字符数组
+            char[] charArray = {'H', 'e', 'l', 'l', 'o', '\n'};
+            writer.write(charArray);  // 写入整个字符数组
+            System.out.println("写入字符数组完成");
+
+            // 3. 写入字符数组的一部分
+            writer.write(charArray, 1, 3);  // 从索引1开始，写入3个字符（"ell"）
+            System.out.println("写入字符数组部分完成");
+
+            // 4. 写入单个字符（使用int表示）
+            writer.write(65);  // 写入字符 'A'（ASCII码65）
+            System.out.println("写入单个字符完成");
+
+            // 5. 追加字符串（append方法）
+            writer.append("追加的内容\n");  // 返回Writer对象，支持链式调用
+            System.out.println("追加字符串完成");
+
+            // 6. 追加字符序列
+            CharSequence charSeq = "追加的CharSequence";
+            writer.append(charSeq);  // 追加CharSequence
+            System.out.println("追加CharSequence完成");
+
+            // 7. 追加单个字符
+            writer.append('!');  // 追加单个字符
+            System.out.println("追加单个字符完成");
+
+            // 8. 刷新缓冲区
+            writer.flush();  // 确保所有数据写入文件
+            System.out.println("刷新缓冲区完成");
+
+            // 注意：FileWriter没有close以外的其他特有方法
+            // 以下是从Writer继承的方法
+            // 9. 获取文件描述符（仅在构造时使用FileDescriptor时可用，此处不可用）
+            // writer.getFD();  // 需要使用FileWriter(FileDescriptor)构造
+
+        } catch (IOException e) {
+            System.out.println("发生错误: " + e.getMessage());
+        }
+
+        // 10. 追加模式示例
+        try (FileWriter appendWriter = new FileWriter("example.txt", true)) {
+            appendWriter.write("追加模式写入的新内容\n");
+            System.out.println("追加模式写入完成");
+        } catch (IOException e) {
+            System.out.println("追加模式错误: " + e.getMessage());
+        }
+
+        // 11. 使用不同构造方法示例
+        try {
+            // 使用文件路径字符串构造（覆盖模式）
+            FileWriter fw1 = new FileWriter("example2.txt");
+            fw1.write("使用路径构造\n");
+            fw1.close();
+
+            // 使用文件路径字符串构造（追加模式）
+            FileWriter fw2 = new FileWriter("example2.txt", true);
+            fw2.write("追加模式\n");
+            fw2.close();
+
+            // 使用File对象构造
+            java.io.File file = new java.io.File("example3.txt");
+            FileWriter fw3 = new FileWriter(file);
+            fw3.write("使用File对象构造\n");
+            fw3.close();
+
+            // 使用File对象构造（追加模式）
+            FileWriter fw4 = new FileWriter(file, true);
+            fw4.write("File对象追加模式\n");
+            fw4.close();
+
+            System.out.println("不同构造方法测试完成");
+        } catch (IOException e) {
+            System.out.println("构造方法错误: " + e.getMessage());
+        }
+    }
+}
+```
+

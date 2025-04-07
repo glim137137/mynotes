@@ -2,7 +2,7 @@
 
 
 
-# 1.Modular programming and Makefile
+# Modular programming and Makefile
 
 
 
@@ -359,6 +359,20 @@ clean:
 
 **覆盖范围**：尽量覆盖所有代码行，注重合理性而非穷尽。
 
+### Testing Data
+
+**正常值 Normal values**：标准输入数据。
+
+**边界/角落用例 Edge/corner cases**：如最大值、最小值、零、空字符串等。
+
+**鲁棒性测试  robustness**：意外值 **unexpected values**（如超出范围的值）和无效值 **invalid data**（如类型不匹配）。
+
+### Testing Strategies
+
+
+
+
+
 
 
 
@@ -430,23 +444,54 @@ OK
 
 
 
-## Testing Data
-
-**正常值 Normal values**：标准输入数据。
-
-**边界/角落用例 Edge/corner cases**：如最大值、最小值、零、空字符串等。
-
-**鲁棒性测试  robustness**：意外值 **unexpected values**（如超出范围的值）和无效值 **invalid data**（如类型不匹配）。
 
 
 
 
+## Automated Testing 
+
+**Automated testing** means running the tests and  checking their results automatically.
+
+
+
+### Testing frameworks
+
+**测试框架**是用于支持和简化软件测试过程的工具和库。它们提供了一套预定义的功能和规范，用于组织和执行测试，报告测试结果，确保测试的一致性和可维护性。
+
+这些框架主要用于单元测试，即对单个功能模块或代码片段进行验证。
+
+- **JUnit**（Java）：广泛用于Java应用的单元测试。
+- **PyTest**（Python）：用于Python程序的测试，支持简单的单元测试和更复杂的集成测试。
+
+### Regression Testing
+
+Once you have test automation, it’s very important  to rerun your tests when you modify your code. 
+
+修改后的再测试。
 
 
 
 
 
+# Debugging
 
+## Avoid Dedugging
+
+### First Defence: Make Bugs Impossible
+
+Static checking：
+
+Static checking eliminates many bugs by catching them at  compile time.
+
+Dynamic checking：
+
+Check for errors at runtime
+
+### Second Defence: Localise Bugs
+
+If we can’t prevent bugs, we can try to localise them  to **a small part of the program**, so that we don't have  to look too hard to find the cause of a bug.
+
+### Defensive programming
 
 
 

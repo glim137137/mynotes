@@ -188,7 +188,7 @@ Vandermonde’s Identity 说明：
 
 ## 1.4.The Pigeonhole Principle
 
-#### 1. 直观理解
+### 1.Directive Understanding
 
 鸽巢原理（Pigeonhole Principle）是一个简单但非常有用的组合数学原理。它的基本思想是：
 
@@ -200,7 +200,7 @@ Vandermonde’s Identity 说明：
 
 ------
 
-#### 2. 基本形式
+### 2. Basic Format
 
 **简单版**：
 $$
@@ -213,7 +213,7 @@ $$
 
 ------
 
-#### 3. 强版（Generalized Pigeonhole Principle）
+### 3. Generalized Pigeonhole Principle
 
 **扩展版**：
 $$
@@ -224,6 +224,12 @@ $$
     - **假设 31 个人被分配到 7 个不同的星期几出生**，那么至少有 **$\lceil 31/7 \rceil = 5$ 个人在同一天出生**。
 
 
+
+# 2.Probability Theory
+
+
+
+## 2.1.
 
 
 

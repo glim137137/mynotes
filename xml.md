@@ -2,6 +2,8 @@
 
 （可扩展标记语言，Extensible Markup Language）
 
+
+
 [TOC]
 
 ## 介绍
@@ -150,4 +152,117 @@ XML由**元素, 实体与属性**构成。没有什么规矩可以告诉我们�
 | &quot; | "    | quotation mark |
 
 **注释：**在 XML 中，只有字符 "<" 和 "&" 确实是非法的。大于号是合法的，但是用实体引用来代替它是一个好习惯。
+
+
+
+
+
+# KML
+
+
+
+## 什么是KML
+
+KML，即Keyhole markup language，最初为[Google定义的文件格式](https://developers.google.com/kml/documentation/kml_tut)，用以描述地图中的关键数据，如路径、标记位置、叠加图层等信息。因此，使用KML文件可以记录一个简单的只包含街道、路径、多边形、标记位置等信息的简单地图，不包含高程、地形地貌等复杂信息。KML文件最终被[OGC组织](https://zhida.zhihu.com/search?content_id=227579647&content_type=Article&match_order=1&q=OGC组织&zhida_source=entity)采纳为国际通行标准。
+
+但KML文件本质上是一个XML文件，完全遵循XML文件格式。
+
+## 文件结构
+
+1. **XML 头部**：这是每个 KML 文件的第一行。在这一行之前不能有空格或其他字符。
+
+    ```xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    ```
+
+2. **KML 命名空间声明**：这是每个 KML 2.2 文件的第二行。它定义了该文件使用的 KML 标准的命名空间。
+
+    ```xml
+    <kml xmlns="http://www.opengis.net/kml/2.2"></kml>
+    ```
+
+3. **Placemark 对象**：这是 KML 文件中的一个元素，包含以下部分：
+
+    - **name**：用于作为 Placemark（标记点）的标签，通常是该位置的名称。
+    - **description**：在标记点的“气泡”中显示的描述内容，通常包含有关该位置的更多信息。
+    - **若干地理位置元素标签**
+
+    ```xml
+    <Placemark>
+        <name>Simple placemark</name>
+        <description>Attached to the ground. Intelligently places itself 
+           at the height of the underlying terrain.</description>
+    	.....................
+      </Placemark>
+    ```
+
+    
+
+## 地理位置元素标签
+
+
+
+### 地点标记
+
+地点位置是用`<Point>`标签，其中`<coordinates>`标签定义了地理元素的具体位置，是许多几何标签的核心部分。其格式为**经度**在前，**纬度**在后，**高度**可选，默认为 0。
+
+```xml
+<Placemark>
+  <name>简单地点标记</name>
+  <description>这是一个简单的地点标记示例。</description>
+  <Point>
+    <coordinates>-122.0822035425683,37.42228990140251,0</coordinates>
+  </Point>
+</Placemark>
+```
+
+### 绘制路径
+
+`<LineString>`可以绘制一条线（比如道路或边界）。
+
+```xml
+<Placemark>
+  <name>一条路径</name>
+  <LineString>
+    <coordinates>
+      -112.081423,36.106965,0
+      -112.087846,36.090176,0
+    </coordinates>
+  </LineString>
+</Placemark>
+```
+
+### 描述区域
+
+想要描述一片闭合区域可以使用`<Polygon>`。`<coordinates>`坐标点序列，首尾必须相同以闭合。
+
+```xml
+<Placemark>
+  <name>一个多边形</name>
+  <Polygon>
+    <outerBoundaryIs>
+      <LinearRing>
+        <coordinates>
+          -122.366278,37.818844,0
+          -122.365248,37.819267,0
+          -122.365640,37.819861,0
+          -122.366278,37.818844,0
+        </coordinates>
+      </LinearRing>
+    </outerBoundaryIs>
+  </Polygon>
+</Placemark>
+```
+
+
+
+
+
+
+
+
+
+
+
+
 

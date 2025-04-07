@@ -1,6 +1,6 @@
 # Bash
 
-文章来自于[freeCodeCamp](https://www.freecodecamp.org/chinese/news/bash-scripting-tutorial-linux-shell-script-and-command-line-for-beginners/)
+文章参考：[freeCodeCamp](https://www.freecodecamp.org/chinese/news/bash-scripting-tutorial-linux-shell-script-and-command-line-for-beginners/)
 
 [TOC]
 
@@ -802,7 +802,7 @@ echo "This is some text." > output.txt
 echo "More text." >> output.txt
 ```
 
-这会将文本 "More text." 追加到 `output.txt` 文件的末尾。
+这会将文本 "More text." **追加**到 `output.txt` 文件的末尾。
 
 4. 重定向输出：
 
@@ -810,7 +810,7 @@ echo "More text." >> output.txt
 ls > files.txt
 ```
 
-这会列出当前目录中的文件并将输出写入名为 `files.txt` 的文件。您可以通过这种方式将任何命令的输出重定向到文件。
+这会列出当前目录中的文件并将输出写入名为 `files.txt` 的文件。您可以通过这种方式将任何命令的输出**重定向**到文件。
 
 #### 使用 ANSI 颜色码
 
@@ -908,6 +908,13 @@ read num
 来看一下它的运行情况 🚀
 
 ![test-odd](https://www.freecodecamp.org/news/content/images/2023/03/test-odd.gif)
+
+#### 0代表true
+
+这和大多数编程语言的惯例不同。在Bash中，`0` 被认为是 **true**。
+
+- `if` 语句检查条件，如果返回 `0`（即成功），它被视为 true，并且执行 `then` 块中的代码。
+- 如果你写 `if [ 1 ]`，Bash会认为1是 false，`else` 块中的代码将被执行。
 
 #### test命令
 
@@ -1121,7 +1128,79 @@ Case 语句示例
 
 
 
-## 调试和排除 Bash 脚本的故障
+### 函数
+
+Bash函数是Bash脚本中可重复使用的一段代码块。你可以将常用的操作封装成函数，以便在脚本中多次调用。下面是一个Bash函数的基本语法和示例。
+
+```bash
+function function_name {
+    # 函数内容
+}
+# 或者
+function_name() {
+    # 函数内容
+}
+```
+
+#### 带参数的函数
+
+`bash`的函数接受参数不像其他编程语言声明在`()`中，而是依旧以命令行参数的形式。
+
+```bash
+#!/bin/bash
+
+# 定义一个带参数的函数
+greet() {
+    echo "Hello, \$1!"
+}
+
+# 调用函数并传递参数
+greet "Alice"
+
+```
+
+#### 返回值
+
+Bash函数不能直接返回值，通常使用`echo`来输出返回值并通过命令替换来接收结果。
+
+```bash
+#!/bin/bash
+
+# 定义一个返回值的函数
+add() {
+    result=$(( \$1 + \$2 ))
+    echo $result
+}
+
+# 调用函数并接收返回值
+sum=$(add 5 10)
+echo "The sum is: $sum"
+
+```
+
+#### 局部变量
+
+在函数内部，你可以使用`local`关键字来定义局部变量，以防止与外部变量冲突。
+
+```bash
+#!/bin/bash
+
+# 定义一个使用局部变量的函数
+calculate_area() {
+    local width=\$1
+    local height=\$2
+    local area=$(( width * height ))
+    echo "The area is: $area"
+}
+
+# 调用函数
+calculate_area 5 10
+
+```
+
+
+
+## 调试 Bash 脚本
 
 调试和排除故障是任何 Bash 脚本编写者的重要技能。虽然 Bash 脚本可以非常强大，但它们也容易出现错误和意外行为。在本节中，我们将讨论一些调试和排除 Bash 脚本故障的技巧和技术。
 
