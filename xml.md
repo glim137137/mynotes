@@ -1,8 +1,4 @@
-# XML
-
-（可扩展标记语言，Extensible Markup Language）
-
-
+# XML（Extensible Markup Language）可扩展标记语言
 
 [TOC]
 

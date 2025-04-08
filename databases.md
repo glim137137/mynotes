@@ -1,4 +1,4 @@
-# Databases
+# Databases 数据库
 
 
 
@@ -2135,6 +2135,10 @@ Functional dependency describes relationship between attributes.
 ![image-20250319144117772](images/image-20250319144117772.png)
 
 ![image-20250319144103168](images/image-20250319144103168.png)
+
+
+
+# 9.Logical Databases Design
 
 
 

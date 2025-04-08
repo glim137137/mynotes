@@ -33,11 +33,11 @@
 
 [TOC]
 
-# 1.基本语法
+# 基本语法
 
 
 
-## 1.1.基本数据类型
+## 基本数据类型
 
 Java语言提供了八种基本类型。六种数字类型（四个整数型，两个浮点型），一种字符类型，还有一种布尔型。
 
@@ -128,7 +128,7 @@ Java语言提供了八种基本类型。六种数字类型（四个整数型，�
 
 
 
-## 1.2.对象和类
+## 对象和类
 
 ### 类（Class）
 
@@ -398,7 +398,7 @@ public class Puppy {
 
 
 
-## 1.3.源文件声明规则
+## 源文件声明规则
 
 ### 源文件声明规则
 
@@ -419,7 +419,7 @@ public class Puppy {
 
 
 
-## 1.4.变量
+## 变量
 
 ### 命名规则
 
@@ -484,7 +484,7 @@ char x = 'x';        // 声明变量 x 的值是字符 'x'。
 
 
 
-## 1.5.修饰符
+## 修饰符
 
 ### 访问修饰符（Access Modifiers）
 
@@ -525,7 +525,7 @@ public static final int MAX_VALUE = 100; // 公共的、静态的、常量
 
 
 
-## 1.6.运算符
+## 运算符
 
 ### 算术运算符
 
@@ -645,7 +645,7 @@ boolean result = name instanceof String; // 由于 name 是 String 类型，所�
 
 
 
-## 1.7.控制语句
+## 控制语句
 
 同js
 
@@ -707,7 +707,7 @@ switch(expression){
 
 
 
-## 1.8.数组
+## 数组
 
 ### 声明与创建
 
@@ -731,7 +731,7 @@ String[][] str = new String[3][4];
 
 
 
-## 1.9.Java包机制
+## Java包机制
 
 在 Java 中，**包（package）** 是一种组织和管理代码的机制，用于将相关的类和接口分组，避免命名冲突，并提供访问控制。包是 Java 面向对象编程中的重要概念，尤其在大型项目中起到模块化的作用。以下是对 Java 包的详细说明：
 
@@ -748,7 +748,7 @@ String[][] str = new String[3][4];
 
 ---
 
-### 2. 包的语法
+### 包的语法
 #### 声明包
 在 Java 文件的开头使用 `package` 关键字声明包名：
 ```java
@@ -766,7 +766,7 @@ public class MyClass {
 
 ---
 
-### 3. 导入包
+### 导入包
 #### 使用 `import`
 要使用其他包中的类，需要通过 `import` 语句引入：
 ```java
@@ -800,7 +800,7 @@ public class Test {
 
 ---
 
-### 4. Java 中的常见包
+### Java 中的常见包
 Java 标准库（Java API）包含许多内置包，例如：
 - **`java.lang`**：核心类（如 `String`, `Math`, `System`），无需显式导入。
 - **`java.util`**：实用工具类（如 `ArrayList`, `HashMap`, `Date`, `Scanner`）。
@@ -810,7 +810,7 @@ Java 标准库（Java API）包含许多内置包，例如：
 
 ---
 
-### 5. 包的访问控制
+### 包的访问控制
 包与 Java 的访问修饰符密切相关：
 - **`public`**：类或成员对所有包可见。
 - **`protected`**：对同一包内的类或子类可见。
@@ -837,7 +837,7 @@ public class PublicClass {
 
 ---
 
-### 6. 包的物理结构
+### 包的物理结构
 包名对应于文件系统的目录结构。例如：
 ```
 src/
@@ -867,7 +867,7 @@ com/example/myapp/MyClass.class
 
 ---
 
-### 7. 包的作用
+### 包的作用
 1. **命名冲突解决**：
    - 不同包中的同名类不会冲突。
 2. **代码组织**：
@@ -879,7 +879,7 @@ com/example/myapp/MyClass.class
 
 ---
 
-### 8. Java 9+ 的模块化（Module System）
+### Java 9+ 的模块化（Module System）
 从 Java 9 开始，引入了 **模块系统（Java Platform Module System, JPMS）**，通过 `module-info.java` 文件进一步增强包的管理：
 ```java
 module com.example.myapp {
@@ -892,7 +892,7 @@ module com.example.myapp {
 
 ---
 
-### 9. 实际示例
+### 实际示例
 假设一个简单的项目：
 ```
 src/
@@ -960,7 +960,7 @@ Log: User created: Alice
 
 
 
-## 1.10.异常处理
+## 异常处理
 
 ![image-20250327082213358](images/image-20250327082213358.png)
 

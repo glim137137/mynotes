@@ -1,10 +1,10 @@
-# VUE
+# VUE3（View）
 
 [TOC]
 
 
 
-# 1.简介
+# 简介
 
 - 2020年9月18日，`Vue.js`发布版`3.0`版本，代号：`One Piece`（n
 - 经历了：[4800+次提交](https://github.com/vuejs/core/commits/main)、[40+个RFC](https://github.com/vuejs/rfcs/tree/master/active-rfcs)、[600+次PR](https://github.com/vuejs/vue-next/pulls?q=is%3Apr+is%3Amerged+-author%3Aapp%2Fdependabot-preview+)、[300+贡献者](https://github.com/vuejs/core/graphs/contributors)
@@ -13,7 +13,7 @@
 
   <img src="images/1695089947298-161c1b47-eb86-42fb-b1f8-d6a4fcab8ee2.png" alt="image.png" style="zoom:30%;" /> 
 
-## 1.1.性能的提升
+## 性能的提升
 
 - 打包大小减少`41%`。
 
@@ -22,19 +22,19 @@
 - 内存减少`54%`。
 
   
-## 1.2.源码的升级
+## 源码的升级
 
 - 使用`Proxy`代替`defineProperty`实现响应式。
 
 - 重写虚拟`DOM`的实现和`Tree-Shaking`。
 
   
-## 1.3.拥抱TypeScript
+## 拥抱TypeScript
 
 - `Vue3`可以更好的支持`TypeScript`。
 
   
-## 1.4.新的特性
+## 新的特性
 
 1. `Composition API`（组合`API`）：
    - `setup`
@@ -59,7 +59,7 @@
 
 
 
-## 1.5.源码典型结构
+## 源码典型结构
 
 ```
 src/
@@ -77,9 +77,9 @@ src/
 
 
 
-# 2.创建工程
+# 创建工程
 
-## 2.1.基于 vue-cli 创建
+## 基于 vue-cli 创建
 点击查看[官方文档](https://cli.vuejs.org/zh/guide/creating-a-project.html#vue-create)
 
 > 备注：目前`vue-cli`已处于维护模式，官方推荐基于 `Vite` 创建项目。
@@ -106,7 +106,7 @@ npm run serve
 
 ---
 
-## 2.2.基于 vite 创建
+## 基于 vite 创建
 `vite` 是新一代前端构建工具，官网地址：[https://vitejs.cn](https://vitejs.cn/)，`vite`的优势如下：
 
 - 轻量快速的热重载（`HMR`），能实现极速的服务启动。
@@ -187,7 +187,7 @@ src\App.vue
 
 
 
-## 2.3.基于 CDN 创建
+## 基于 CDN 创建
 
 ### 使用全局构建版本[](https://cn.vuejs.org/guide/quick-start.html#using-the-global-build)
 
@@ -254,8 +254,8 @@ src\App.vue
 
 
 
-# 3.核心语法
-## 3.1.OptionsAPI 与 CompositionAPI
+# 核心语法
+## OptionsAPI 与 CompositionAPI
 
 - `Vue2`的`API`设计是`Options`（配置）风格的。
 - `Vue3`的`API`设计是`Composition`（组合）风格的。
@@ -273,7 +273,7 @@ src\App.vue
 
 > 说明：以上四张动图原创作者：大帅老猿
 
-## 3.2.setup语法糖
+## setup语法糖
 ### setup 概述
 `setup`是`Vue3`中一个新的配置项，值是一个函数，它是 `Composition API` **“表演的舞台**_**”**_，组件中所用到的：数据、方法、计算属性、监视......等等，均配置在`setup`中。
 
@@ -391,7 +391,7 @@ export default defineConfig({
 ```
 
 3. 第三步：`<script setup lang="ts" name="Person">`
-## 3.3.ref: 基本类型的响应式数据
+## ref: 基本类型的响应式数据
 
 - **作用：**定义响应式变量。
 - **语法：**`let xxx = ref(初始值)`。
@@ -492,7 +492,7 @@ function test(){
 
 
 
-## 3.4.reactive: 对象类型的响应式数据
+## reactive: 对象类型的响应式数据
 
 - **作用：**定义一个**响应式对象**（基本类型不要用它，要用`ref`，否则报错）
 - **语法：**`let 响应式对象= reactive(源对象)`。
@@ -3203,223 +3203,6 @@ const Child = defineAsyncComponent(()=>import('./Child.vue'))
 
 # 9.模板语法
 
-## 9.1.Vue2
-
-### 1.插值表达式（Mustache Syntax）
-
-插值语法用于将 Vue 实例的数据绑定到模板中的 HTML 元素：
-
-```html
-<!-- 单向数据绑定 -->
-<div id="app">
-  <p>{{ message }}</p> <!-- 输出 message 的值 -->
-</div>
-
-<script>
-  new Vue({
-    el: '#app',
-    data: {
-      message: 'Hello, Vue!'
-    }
-  });
-</script>
-```
-
-这里，`{{ message }}` 会被 Vue 实例中的 `message` 属性的值替换。
-
-### 2.指令（Directives）
-
-Vue 提供了多个指令用于在 DOM 中绑定数据、控制渲染等。指令通常以 `v-` 开头。
-
-#### 2.1.`v-bind`：动态绑定属性
-
-`v-bind` 用于动态绑定 HTML 属性：
-
-```html
-<img v-bind:src="imageSrc" alt="Vue logo">
-```
-
-上述代码会将 `imageSrc` 变量的值绑定到 `src` 属性。
-
-#### 2.2.`v-if`：条件渲染
-
-`v-if` 用于基于条件来渲染 DOM 元素：
-
-```html
-<p v-if="seen">现在你看到我了！</p>
-```
-
-`v-if` 会根据表达式的布尔值决定是否渲染该元素。
-
-#### 2.3.`v-for`：列表渲染
-
-`v-for` 用于渲染列表：
-
-```html
-<ul>
-  <li v-for="item in items" :key="item.id">{{ item.text }}</li>
-</ul>
-```
-
-这里，`v-for` 会根据 `items` 数组渲染出列表项。每个项目需要一个唯一的 `key` 来帮助 Vue 跟踪元素的变动。
-
-#### 2.4.`v-model`：双向数据绑定
-
-`v-model` 用于实现表单元素和数据的双向绑定：
-
-```html
-<input v-model="message" placeholder="输入内容">
-<p>你输入的内容是：{{ message }}</p>
-```
-
-`v-model` 绑定了一个输入框的值和 Vue 实例中的 `message` 数据，实现了双向绑定。
-
-### 3.事件绑定（`v-on`）
-
-`v-on` 用于监听 DOM 事件并执行一些方法。
-
-```html
-<button v-on:click="sayHello">点击我</button>
-```
-
-上面的代码将会在点击按钮时触发 `sayHello` 方法。你也可以使用简写 `@` 来绑定事件：
-
-```html
-<button @click="sayHello">点击我</button>
-```
-
-### 4.计算属性（Computed Properties）
-
-计算属性是基于其依赖进行缓存的，并且在相关依赖发生变化时才会重新计算。
-
-```html
-<div id="app">
-  <p>{{ reversedMessage }}</p>
-</div>
-
-<script>
-  new Vue({
-    el: '#app',
-    data: {
-      message: 'Hello, Vue!'
-    },
-    computed: {
-      reversedMessage: function() {
-        return this.message.split('').reverse().join('');
-      }
-    }
-  });
-</script>
-```
-
-在这个例子中，`reversedMessage` 会返回 `message` 的反转值，且只有当 `message` 改变时，`reversedMessage` 才会重新计算。
-
-### 5.方法（Methods）
-
-你可以通过 `methods` 来处理事件或执行其他操作。
-
-```html
-<div id="app">
-  <button @click="greet">点击我</button>
-</div>
-
-<script>
-  new Vue({
-    el: '#app',
-    methods: {
-      greet() {
-        alert('你好，Vue!');
-      }
-    }
-  });
-</script>
-```
-
-### 6.样式绑定（`v-bind:style` 和 `v-bind:class`）
-
-Vue 支持动态绑定样式和类。
-
-#### 6.1.`v-bind:style` 动态样式
-
-```html
-<div v-bind:style="{ color: activeColor, fontSize: fontSize + 'px' }">
-  动态样式
-</div>
-```
-
-#### 6.2.`v-bind:class` 动态类
-
-```html
-<div v-bind:class="{ active: isActive, 'text-danger': hasError }">
-  动态类
-</div>
-```
-
-这里，`v-bind:class` 允许你动态地给元素添加或移除类。
-
-### 7.组件插槽（Slots）
-
-Vue 允许你在父组件中定义插槽，并将子组件内容传递给父组件的插槽。
-
-#### 父组件：
-
-```html
-<child-component>
-  <template #default>
-    <p>这是父组件插槽的内容！</p>
-  </template>
-</child-component>
-```
-
-#### 子组件：
-
-```html
-<template>
-  <div>
-    <slot></slot>
-  </div>
-</template>
-```
-
-### 8.生命周期钩子
-
-Vue 实例提供了多种生命周期钩子，在不同的阶段执行不同的操作。
-
-```
-new Vue({
-  el: '#app',
-  data: {
-    message: 'Hello, Vue!'
-  },
-  created() {
-    console.log('Vue 实例已创建');
-  },
-  mounted() {
-    console.log('Vue 实例已挂载到 DOM');
-  }
-});
-```
-
-### 9.监听器（Watch）
-
-```js
-new Vue({
-  el: '#app',
-  data: {
-    someData: 'initial value'
-  },
-  watch: {
-    // 这两种 watch 语法在功能上是完全等价的，只是写法不同
-    someData(newValue, oldValue) {
-      console.log('someData changed from', oldValue, 'to', newValue);
-    },
-    someData: function(newValue, oldValue) {
-      console.log('someData changed from', oldValue, 'to', newValue);
-    }
-  }
-});
-```
-
 
 
 
@@ -3707,6 +3490,8 @@ Vue 为事件绑定还提供了一些修饰符：
 <!-- 仅当没有按下任何系统按键时触发 -->
 <button @click.exact="onClick">A</button>
 ```
+
+
 
 
 

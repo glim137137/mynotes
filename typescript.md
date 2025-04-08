@@ -1,4 +1,4 @@
-# TypeScript (JavaScript with syntax for types)
+# TypeScript（JavaScript with syntax for types）
 
 
 
