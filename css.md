@@ -4,7 +4,7 @@
 
 
 
-# 1.简介
+# 简介
 
 一种用于网页设计的样式表语言。它用于控制 HTML 或 XML 文档的视觉表现，包括布局、颜色、字体等，使网页的内容与样式分离。
 
@@ -32,11 +32,11 @@ p
 
 
 
-# 2.基础样式
+# 基础样式
 
-## 2.1.选择器
+## 选择器
 
-### id选择器
+### id 选择器
 
 ```css
 #para1 {
@@ -47,7 +47,7 @@ p
 
 
 
-### class选择器
+### 类选择器
 
 ```css
 .address {
@@ -100,6 +100,10 @@ ul > li {
 /*
 3.相邻兄弟选择器
 选择紧邻目标元素之后的兄弟元素，使用 + 表示。
+<h2>标题</h2>
+<p>这是段落 1</p>
+<p>这是段落 2</p>
+只有紧跟在 h2 后面的第一个 p 元素会获得样式。
 */
 
 h2 + p {
@@ -123,6 +127,11 @@ h2 + p {
 input[type="text"] {
   border: 1px solid gray;
 }
+/* 选择所有 src 属性以 '.jpg' 结尾的 <img> 元素 */
+img[src$=".jpg"] {
+  border: 2px solid red;
+}
+
 ```
 
 
@@ -168,6 +177,10 @@ li:nth-child(2) {
 
 ```
 
+`::before` & `::after`
+
+![image-20250411103854755](images/image-20250411103854755.png)
+
 **伪元素**：
 
 | 选择器                                                       | 示例             | 示例说明                                                     |
@@ -177,17 +190,17 @@ li:nth-child(2) {
 | [:active](https://www.runoob.com/cssref/sel-active.html)     | a:active         | 选择正在活动链接                                             |
 | [:hover](https://www.runoob.com/cssref/sel-hover.html)       | a:hover          | 把鼠标放在链接上的状态                                       |
 | [:focus](https://www.runoob.com/cssref/sel-focus.html)       | input:focus      | 选择元素输入后具有焦点                                       |
-| [:first-letter](https://www.runoob.com/cssref/sel-firstletter.html) | p:first-letter   | 选择每个<p> 元素的第一个字母                                 |
-| [:first-line](https://www.runoob.com/cssref/sel-firstline.html) | p:first-line     | 选择每个<p> 元素的第一行                                     |
-| [:first-child](https://www.runoob.com/cssref/sel-firstchild.html) | p:first-child    | 选择器匹配属于任意元素的第一个子元素的 <p> 元素              |
-| :nth-child(n)                                                | div:nth-child(n) | 选择父元素的第 N 个子元素。它允许你通过数学表达式来选择特定的子元素。这个伪类可以接受多种形式的参数。 |
-| [::before](https://www.runoob.com/cssref/sel-before.html)    | p::before        | 其将成为匹配选中的元素的第一个子元素。常通过content属性来为一个元素添加修饰性的内容。此元素默认为行内元素。 |
-| [::after](https://www.runoob.com/cssref/sel-after.html)      | p::after         | 用来创建一个伪元素，作为已选中元素的最后一个子元素。通常会配合content属性来为该元素添加装饰内容。这个虚拟元素默认是行内元素。 |
-| [:lang(*language*)](https://www.runoob.com/cssref/sel-lang.html) | p:lang(it)       | 为<p>元素的lang属性选择一个开始值                            |
+| [:first-letter](https://www.runoob.com/cssref/sel-firstletter.html) | p:first-letter   | 选择每个`<p>` 元素的第一个字母                               |
+| [:first-line](https://www.runoob.com/cssref/sel-firstline.html) | p:first-line     | 选择每个`<p>` 元素的第一行                                   |
+| [:first-child](https://www.runoob.com/cssref/sel-firstchild.html) | p:first-child    | 选择器匹配属于**当前元素的父元素**的第一个子元素的 `<p>` 元素 |
+| **:nth-child(n)**                                            | div:nth-child(n) | 选择**当前元素的父元素的**第 N 个子元素。它允许你通过数学表达式来选择特定的子元素。这个伪类可以接受多种形式的参数。 |
+| [::before](https://www.runoob.com/cssref/sel-before.html)    | p::before        | 其将成为匹配选中的元素的**前一个兄弟元素**。常通过content属性来为一个元素添加修饰性的内容。此元素默认为行内元素。 |
+| [::after](https://www.runoob.com/cssref/sel-after.html)      | p::after         | 用来创建一个伪元素，作为已选中元素的**后一个兄弟元素**。通常会配合content属性来为该元素添加装饰内容。这个虚拟元素默认是行内元素。 |
+| [:lang(*language*)](https://www.runoob.com/cssref/sel-lang.html) | p:lang(it)       | 为`<p>`元素的lang属性选择一个开始值                          |
 
 
 
-## 2.2.背景
+## 背景
 
 - **background-attachment**：背景图像是否固定或者随着页面的其余部分滚动。
 
@@ -259,11 +272,7 @@ body {
 
 
 
-
-
-
-
-## 2.3.文字
+## 文字
 
 ### 文本
 
@@ -411,9 +420,9 @@ table, th, td {
 
 
 
-## 2.4.布局
+## 布局
 
-### display属性
+### display 属性
 
 #### 1. **`block`**
 
@@ -769,7 +778,7 @@ img {
 
 
 
-### 弹性盒子flex
+### 弹性盒子 flex
 
 一种当页面需要适应不同的屏幕大小以及设备类型时确保元素拥有恰当的行为的布局方式。
 
@@ -818,7 +827,7 @@ img {
 
 
 
-### 网格gird
+### 网格 gird
 
 
 
@@ -883,7 +892,7 @@ img {
 
 
 
-## 2.5.自定义属性
+## 自定义属性
 
 自定义属性（有时候也被称作CSS 变量或者级联变量）是由 CSS 作者定义的，它包含的值可以在整个文 档中重复使用。由自定义属性标记设定值（比如：  值（比如：  color: var(--main-color); ）。
 
@@ -910,11 +919,9 @@ element {
 
 
 
-# 3.高级样式
+# 高级样式
 
-## 3.1转换
-
-
+## 转换
 
 ```css
 div {
@@ -922,8 +929,6 @@ div {
 	transform-origin:20% 40%;
 }
 ```
-
-
 
 **2D 转换方法**
 
@@ -940,8 +945,6 @@ div {
 | skew(*x-angle*,*y-angle*)       | 定义 2D 倾斜转换，沿着 X 和 Y 轴。       |
 | skewX(*angle*)                  | 定义 2D 倾斜转换，沿着 X 轴。            |
 | skewY(*angle*)                  | 定义 2D 倾斜转换，沿着 Y 轴。            |
-
-
 
 **3D 转换方法**
 
@@ -962,8 +965,6 @@ div {
 | rotateZ(*angle*)                                             | 定义沿 Z 轴的 3D 旋转。                   |
 | perspective(*n*)                                             | 定义 3D 转换元素的透视视图。              |
 
-
-
 | 属性                                                         | 描述                                 | CSS  |
 | :----------------------------------------------------------- | :----------------------------------- | :--- |
 | [transform](https://www.runoob.com/cssref/css3-pr-transform.html) | 向元素应用 2D 或 3D 转换。           | 3    |
@@ -975,7 +976,7 @@ div {
 
 
 
-## 3.2过渡
+## 过渡
 
 ```css
 .gramma {
@@ -987,8 +988,6 @@ div {
 }
 ```
 
-
-
 | 属性                                                         | 描述                                         | CSS  |
 | :----------------------------------------------------------- | :------------------------------------------- | :--- |
 | [transition](https://www.runoob.com/cssref/css3-pr-transition.html) | 简写属性，用于在一个属性中设置四个过渡属性。 | 3    |
@@ -999,7 +998,7 @@ div {
 
 
 
-## 3.3动画
+## 动画
 
 ```css
 .gramma {
@@ -1018,8 +1017,6 @@ to {top:200px;}
 
 ```
 
-
-
 | 属性                                                         | 描述                                                         | CSS  |
 | :----------------------------------------------------------- | :----------------------------------------------------------- | :--- |
 | [@keyframes](https://www.runoob.com/cssref/css3-pr-animation-keyframes.html) | 规定动画。                                                   | 3    |
@@ -1035,11 +1032,7 @@ to {top:200px;}
 
 
 
-
-
-
-
-# 4.技巧
+# 技巧
 
 
 
@@ -1052,8 +1045,6 @@ to {top:200px;}
 </div>
 
 ```
-
-
 
 ```css
 .banner {
@@ -1086,7 +1077,7 @@ to {top:200px;}
 :nth-child(n)
 ```
 
-- `n` 是一个表达式，表示子元素的位置，可以是数字、关键词（odd, even…），甚至是包含 `n` 的公式（n从0开始）。
+- `n` 是一个表达式，表示子元素的位置，可以是**数字**、**关键词（odd, even…）**，甚至是**包含 `n` 的公式（n从0开始）**。
 
 ```html
 <div class="seat-area">
@@ -1109,10 +1100,6 @@ to {top:200px;}
 ```
 
 ![image-20250302135232738](images/image-20250302135232738.png)
-
-
-
-
 
 
 

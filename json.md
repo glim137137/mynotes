@@ -126,8 +126,6 @@ for (i in myObj.cars) {
 
 
 
-
-
 ## 解析
 
 ### 普通解析 `JSON.parse()`
@@ -177,7 +175,7 @@ document.getElementById("demo").innerHTML = obj.name + ", " + obj.birth;
 
 
 
-### 在Ajax中解析 `response.json()`
+### 在 `fetch()` 中解析 `response.json()`
 
 ```js
 // 使用 fetch() 发起 GET 请求

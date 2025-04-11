@@ -4,9 +4,9 @@ JS全称JavaScript，是一种轻量级的面向对象的编程语言，既能�
 
 [TOC]
 
-# 1.基本语法
+# 基本语法
 
-## 1.1.数据类型
+## 数据类型
 
 JavaScript 拥有**动态类型**。这意味着相同的变量可用作不同的类型：
 
@@ -20,199 +20,30 @@ typeof {name:'John', age:34} // 返回 object
 
 
 
+### 字符串（String）
 
+#### 创建字符串
 
-### 值类型
-
-#### 字符串（String）
+在js中，单引号和双引号没有本质区别，主要选择取决于个人或团队的编码规范。
 
 ```js
-// 可以使用单引号或双引号
-var carname = "Volvo XC60";
-var carname = 'Volvo XC60';
-
-// 使用索引位置来访问字符串中的每个字符
-var character = carname[7];
-
-// 使用内置属性 length 来计算字符串的长度
-var txt = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-var str_len = txt.length;
+let str1 = 'Hello, World!';
+let str2 = "Hello, World!";
 ```
 
-1. **创建字符串**
+你还可以用模板字符串：
 
-- **字面量**
+```js
+let name = 'John';
+let greeting = `Hello, ${name}!`;
 
-  ```javascript
-  const str = "Hello, world!";
-  ```
+let multilineStr = `Hello,
+World!`;
+```
 
-- **构造函数**
+#### 字符串方法
 
-  ```javascript
-  const strObj = new String("Hello, world!");
-  ```
-
-2. **字符串属性**
-
-- `length`
-
-  ：获取字符串的长度。
-
-  ```javascript
-  const length = str.length; // 13
-  ```
-
-3. **常用字符串方法**
-
-- **`charAt(index)`**：返回指定位置的字符。
-
-  ```javascript
-  const char = str.charAt(0); // 'H'
-  ```
-
-- **`charCodeAt(index)`**：返回指定位置字符的 Unicode 编码。
-
-  ```javascript
-  const code = str.charCodeAt(0); // 72
-  ```
-
-- **`concat(...strings)`**：连接一个或多个字符串。
-
-  ```javascript
-  const newStr = str.concat(" How are you?"); // "Hello, world! How are you?"
-  ```
-
-- **`includes(searchString)`**：判断字符串是否包含某个子字符串。
-
-  ```javascript
-  const hasHello = str.includes("Hello"); // true
-  ```
-
-- **`indexOf(searchString)`**：返回子字符串首次出现的位置，未找到时返回 -1。
-
-  ```javascript
-  const index = str.indexOf("world"); // 7
-  ```
-
-- **`lastIndexOf(searchString)`**：返回子字符串最后一次出现的位置，未找到时返回 -1。
-
-  ```javascript
-  const lastIndex = str.lastIndexOf("o"); // 8
-  ```
-
-- **`slice(start, end)`**：提取字符串的一个片段。
-
-  ```javascript
-  const sliced = str.slice(0, 5); // "Hello"
-  ```
-
-- **`substring(start, end)`**：提取字符串的一个子字符串。
-
-  ```javascript
-  const subStr = str.substring(7, 12); // "world"
-  ```
-
-- **`substr(start, length)`**：从指定位置开始提取指定长度的子字符串（不推荐使用）。
-
-  ```javascript
-  const sub = str.substr(7, 5); // "world"
-  ```
-
-- **`toLowerCase()`**：将字符串转换为小写。
-
-  ```javascript
-  const lower = str.toLowerCase(); // "hello, world!"
-  ```
-
-- **`toUpperCase()`**：将字符串转换为大写。
-
-  ```javascript
-  const upper = str.toUpperCase(); // "HELLO, WORLD!"
-  ```
-
-- **`trim()`**：去除字符串两端的空白字符。
-
-  ```javascript
-  const trimmed = "   Hello!   ".trim(); // "Hello!"
-  ```
-
-4. **分割和连接字符串**
-
-- **`split(separator)`**：将字符串分割成数组。
-
-  ```javascript
-  const words = str.split(", "); // ["Hello", "world!"]
-  ```
-
-- **`join(separator)`**：将数组元素连接成字符串（与数组方法一起使用）。
-
-  ```javascript
-  const joined = words.join(" - "); // "Hello - world!"
-  ```
-
-5. **替换和重复**
-
-- **`replace(searchValue, newValue)`**：替换第一个匹配的子字符串。
-
-  ```javascript
-  const replaced = str.replace("world", "everyone"); // "Hello, everyone!"
-  ```
-
-- **`replaceAll(searchValue, newValue)`**：替换所有匹配的子字符串。
-
-  ```javascript
-  const allReplaced = "I like cats and cats are cute.".replaceAll("cats", "dogs"); // "I like dogs and dogs are cute."
-  ```
-
-- **`repeat(count)`**：返回一个新字符串，表示将原字符串重复指定次数。
-
-  ```javascript
-  const repeated = "ha".repeat(3); // "hahaha"
-  ```
-
-6. **模板字符串**
-
-- 模板字符串
-
-  （使用**反引号`**）可以包含变量和表达式：
-
-  ```javascript
-  const name = "Alice";
-  const greeting = `Hello, ${name}!`; // "Hello, Alice!"
-  ```
-
-7. **查找和匹配**
-
-- **`match(regexp)`**：用正则表达式匹配字符串。
-
-  ```javascript
-  const matches = str.match(/o/g); // ['o', 'o']
-  ```
-
-- **`search(regexp)`**：返回正则表达式匹配的第一个位置。
-
-  ```javascript
-  const position = str.search("world"); // 7
-  ```
-
-- **`startsWith(searchString)`**：判断字符串是否以指定字符串开头。
-
-  ```javascript
-  const starts = str.startsWith("Hello"); // true
-  ```
-
-- **`endsWith(searchString)`**：判断字符串是否以指定字符串结尾。
-
-  ```javascript
-  const ends = str.endsWith("!"); // true
-  ```
-
-
-
-**示例**
-
-大多数方法是String对象原型的方法，即`String.prototype.methodFunc()`；此外的是**静态方法**`String.methodFunc()`
+大多数方法是`String`对象原型的方法，即`String.prototype.methodFunc()`；此外的是**静态方法**`String.methodFunc()`。
 
 ```js
 // 示例字符串
@@ -367,11 +198,29 @@ console.log("raw:", String.raw`Hi\nWorld`); // 输出: "Hi\\nWorld"
 // 注释: 静态方法，常用于模板字面量
 ```
 
+#### 常用方法
+
+str.includes
+
+str.match(reg)
+
+str.replace
+
+str.split
+
+str.splice
+
+str.substring
+
+str.concat
+
+str.repeat
 
 
 
+### 数字（Number）
 
-#### 数字（Number）
+#### 创建数字
 
 ```js
 // 数字可以带小数点，也可以不带
@@ -383,130 +232,9 @@ var y=123e5;      // 12300000
 var z=123e-5;     // 0.00123
 ```
 
-1. **`Number.isFinite(value)`**
+#### 数字方法
 
-   - 用于判断一个值是否是有限的数字（不是 `Infinity`、`-Infinity` 或 `NaN`）。
-   - **返回值**: 布尔值 `true` 或 `false`。
-
-   ```javascript
-   console.log(Number.isFinite(123));       // true
-   console.log(Number.isFinite(Infinity));  // false
-   console.log(Number.isFinite(NaN));       // false
-   console.log(Number.isFinite('123'));     // false
-   ```
-
-2. **`Number.isInteger(value)`**
-
-   - 判断一个值是否为整数。
-   - **返回值**: 布尔值 `true` 或 `false`。
-
-   ```javascript
-   console.log(Number.isInteger(123));       // true
-   console.log(Number.isInteger(123.45));    // false
-   console.log(Number.isInteger('123'));     // false
-   ```
-
-3. **`Number.isNaN(value)`**
-
-   - 判断一个值是否是 `NaN`（Not-a-Number）。
-   - **返回值**: 布尔值 `true` 或 `false`。
-
-   ```javascript
-   console.log(Number.isNaN(NaN));           // true
-   console.log(Number.isNaN(123));           // false
-   console.log(Number.isNaN('123'));         // false
-   ```
-
-4. **`Number.isSafeInteger(value)`**
-
-   - 判断一个值是否是一个“安全整数”（在 `-(2^53 - 1)` 到 `2^53 - 1` 之间的整数）。
-   - **返回值**: 布尔值 `true` 或 `false`。
-
-   ```javascript
-   console.log(Number.isSafeInteger(123));       // true
-   console.log(Number.isSafeInteger(9007199254740991)); // true
-   console.log(Number.isSafeInteger(9007199254740992)); // false
-   ```
-
-5. **`Number.parseFloat(string)`**
-
-   - 将一个字符串解析为浮动点数（`float`）。与 `parseFloat` 相同。
-   - **返回值**: 解析后的浮动点数。
-   - **解析规则**：
-       - `parseFloat()` 会从字符串的开头开始解析，直到遇到一个不是数字字符或者小数点的字符为止。在遇到非数字字符时，解析会停止。
-       - 如果字符串的开头不是数字或者没有有效的小数部分，返回 `NaN`。
-       - `parseFloat()` 会处理字符串中的数字，包括整数、小数和科学计数法。
-
-   ```javascript
-   console.log(Number.parseFloat('3.14abc'));   // 3.14
-   console.log(Number.parseFloat('123abc'));    // 123
-   console.log(Number.parseFloat('abc123'));    // NaN
-   ```
-
-6. **`Number.parseInt(string, radix)`**
-
-   - 将一个字符串解析为整数，`radix` 是一个可选的参数，用来指定解析的进制。
-   - **返回值**: 解析后的整数。
-   - **解析规则**：
-       - `parseInt()` 会从字符串的开头开始解析，直到遇到一个不是数字的字符为止。在遇到非数字字符时，解析会停止。
-       - 如果字符串的开头不是数字，则返回 `NaN`。
-
-   ```javascript
-   console.log(Number.parseInt('10'));         // 10
-   console.log(Number.parseInt('10', 2));      // 2  (二进制 10)
-   console.log(Number.parseInt('10.5'));       // 10
-   console.log(Number.parseInt('abc'));        // NaN
-   ```
-
-7. **`Number.toFixed(digits)`**
-
-   - 将数字格式化为指定小数位数的字符串。
-   - **返回值**: 格式化后的字符串。
-
-   ```javascript
-   let num = 123.456;
-   console.log(num.toFixed(2)); // "123.46"
-   console.log(num.toFixed(0)); // "123"
-   console.log(num.toFixed(4)); // "123.4560"
-   ```
-
-8. **`Number.toExponential(digits)`**
-
-   - 返回数字的指数表示法，并且可以指定小数点后保留的位数。
-   - **返回值**: 格式化后的字符串（指数表示法）。
-
-   ```javascript
-   let num = 12345;
-   console.log(num.toExponential(2));  // "1.23e+4"
-   console.log(num.toExponential(4));  // "1.2345e+4"
-   ```
-
-9. **`Number.toPrecision(precision)`**
-
-   - 将数字格式化为指定精度的字符串。
-   - **返回值**: 格式化后的字符串。
-
-   ```javascript
-   let num = 12345.6789;
-   console.log(num.toPrecision(4));  // "12350"
-   console.log(num.toPrecision(6));  // "12345.7"
-   ```
-
-10. **`Number.prototype.valueOf()`**
-
-    - 返回数字的原始值（通常与 `Number` 本身相同）。
-    - **返回值**: 数字的原始值。
-
-    ```javascript
-    let num = new Number(123);
-    console.log(num.valueOf());  // 123
-    ```
-
-
-
-**示例**
-
-大多数方法是Number对象原型的方法，即`Number.prototype.methodFunc()`；此外的是**静态方法**`Number.methodFunc()`
+大多数方法是Number对象原型的方法**[实例方法]**，即`Number.prototype.methodFunc()`；此外的是**[静态方法]**`Number.methodFunc()`
 
 ```js
 // 示例数字
@@ -592,42 +320,72 @@ console.log("parseInt 'abc':", Number.parseInt("abc")); // 输出: NaN
 console.log("parseFloat '12.3.4':", Number.parseFloat("12.3.4")); // 输出: 12.3
 ```
 
+#### 常用方法
+
+num.toFixed([digits])
+
+num.toPercesion([percesion])
+
+num.toString([radix])
+
+Number.parseInt(string[, radix])
+
+Number.parseFloat(string)
 
 
 
+### 布尔（Boolean）
 
-#### 布尔（Boolean）
+#### 创建布尔值
 
 ```js
-// 布尔（逻辑）只能有两个值：true 或 false。
-var x=true;
-var y=false;
+let isTrue = true;  // 布尔值 true
+let isFalse = false;  // 布尔值 false
+```
 
+#### 布尔转换
+
+你可以使用 `Boolean()` 函数将其他类型的值转换为布尔值。JavaScript 中的其他数据类型会根据某些规则转换为 `true` 或 `false`。
+
+```js
+Boolean(1);        // true (非零数字转换为 true)
+Boolean("Hello");  // true (非空字符串转换为 true)
+Boolean([]);       // true (空数组转换为 true)
+Boolean({});       // true (空对象转换为 true)
+
+Boolean(0);        // false (0 被转换为 false)
+Boolean("");       // false (空字符串转换为 false)
+Boolean(null);     // false (null 转换为 false)
+Boolean(undefined); // false (undefined 转换为 false)
 ```
 
 
 
-#### 空（Null）
+### 空（Null）与 未定义（Undefined）
 
 ```js
-cars=null;
-person=null;
+console.log(null == undefined);  // true，非严格比较时相等
+console.log(null === undefined); // false，严格比较时不相等
 ```
 
+**`null`** 用于：
+
+- **初始化变量**，表示该变量暂时没有值。
+- 函数返回空值或没有找到数据时返回 `null`。
+
+**`undefined`** 用于：
+
+- 变量声明但未赋值时的默认值。
+- 函数没有显式返回值时，默认返回 `undefined`。
+- **访问对象中不存在的属性**时，返回 `undefined`。
 
 
-#### 未定义（Undefined）
 
-```js
-var x;               // x 为 undefinedvar 
-x = 5;               // 现在 x 为数字
-var x = "John";      // 现在 x 为字符串
+### 符号（Symbol）
 
-```
+在 JavaScript 中，**符号（Symbols）**是一种原始数据类型，表示唯一且不可变的值。
 
-
-
-#### 符号（Symbol）
+#### 创建符号
 
 ```js
 // 使用 Symbol 函数创建一个新的符号。可以选择性地传入一个描述字符串，用于调试：
@@ -643,30 +401,37 @@ const myObject = {
 
 console.log(myObject[sym1]); // 'value1'
 console.log(myObject[sym2]); // undefined，因为 sym2 是不同的 Symbol
-
 ```
 
+#### 符号方法
 
+Symbol对象原型的**[实例方法]**
 
+```
+symbol.toString()
+symbol.ofValue()
+```
 
-
-
-
-### 对象类型
-
-#### 对象（Object）
+Symbol对象原型的**[静态方法]**`Symbol.methodFunc()`。
 
 ```js
-var person={firstname:"John", lastname:"Doe", id:5566};
+// Symbol.for()：在全局符号注册表中查找符号，如果没有找到，则创建一个新的符号，并将其注册到全局符号注册表中。
+const sym1 = Symbol.for('global');
+const sym2 = Symbol.for('global');
 
-// 对象属性有两种寻址方式：
-name=person.lastname;
-name=person["lastname"];
+console.log(sym1 === sym2); // true，符号是相同的，因为它们在全局注册表中
+
+const sym3 = Symbol('local');
+// Symbol.keyFor()：返回全局符号注册表中符号的键（即描述）。如果符号没有在全局符号注册表中注册，返回 undefined。
+console.log(Symbol.keyFor(sym1)); // 'global'
+console.log(Symbol.keyFor(sym3)); // undefined，sym3 不在全局符号注册表中
 ```
 
 
 
-1. **创建对象**
+### 对象（Object）
+
+#### 创建对象
 
 - **字面量方式**
 
@@ -702,130 +467,21 @@ name=person["lastname"];
   const Alice = new Person('Alice', 30);
   ```
 
-2. **访问和修改属性**
+#### 访问和修改属性
 
 - **点符号**
 
   ```javascript
-  console.log(person.name); // 'Alice'
   person.age = 31;
   ```
-
+  
 - **方括号符号**
 
   ```javascript
-  console.log(person['age']); // 30
   person['name'] = 'Bob';
   ```
 
-3. **对象方法**
-
-- **`Object.keys(obj)`**：返回对象自身可枚举属性的数组。
-
-  ```javascript
-  const keys = Object.keys(person); // ['name', 'age']
-  ```
-
-- **`Object.values(obj)`**：返回对象自身可枚举属性值的数组。
-
-  ```javascript
-  const values = Object.values(person); // ['Bob', 31]
-  ```
-
-- **`Object.entries(obj)`**：返回对象自身可枚举属性的 [key, value] 数组。
-
-  ```javascript
-  const entries = Object.entries(person); // [['name', 'Bob'], ['age', 31]]
-  ```
-
-4. **属性描述符**
-
-- **`Object.defineProperty(obj, prop, descriptor)`**：在对象上定义一个新属性或修改现有属性。
-
-  ```javascript
-  Object.defineProperty(person, 'gender', {
-      value: 'female',
-      writable: false // 该属性不可修改
-  });
-  ```
-
-- **`Object.getOwnPropertyDescriptor(obj, prop)`**：返回对象中某个属性的描述符。
-
-  ```javascript
-  const descriptor = Object.getOwnPropertyDescriptor(person, 'age');
-  ```
-
-5. **合并和克隆对象**
-
-- **`Object.assign(target, ...sources)`**：将源对象的所有可枚举属性复制到目标对象。
-
-  ```javascript
-  const obj1 = { a: 1 };
-  const obj2 = { b: 2 };
-  const merged = Object.assign(obj1, obj2); // { a: 1, b: 2 }
-  ```
-
-- **浅拷贝和深拷贝**
-
-  ```javascript
-  const shallowCopy = { ...person }; // 浅拷贝
-  ```
-
-  对于深拷贝，通常使用 `JSON.parse` 和 `JSON.stringify`：
-
-  ```javascript
-  const deepCopy = JSON.parse(JSON.stringify(person));
-  ```
-
-6. **遍历对象**
-
-- **`for...in` 循环**：用于遍历对象的可枚举属性。
-
-  ```javascript
-  for (const key in person) {
-      console.log(`${key}: ${person[key]}`);
-  }
-  ```
-
-- **使用 `Object.keys` 与 `forEach`**
-
-  ```javascript
-  Object.keys(person).forEach(key => {
-      console.log(`${key}: ${person[key]}`);
-  });
-  ```
-
-7. **检查属性**
-
-- **`hasOwnProperty(prop)`**：检查对象是否具有指定的自身属性。
-
-  ```javascript
-  const hasName = person.hasOwnProperty('name'); // true
-  ```
-
-- **`in` 操作符**：检查属性是否在对象或其原型链中。
-
-  ```javascript
-  const hasGender = 'gender' in person; // true
-  ```
-
-8. **其他方法**
-
-- **`Object.freeze(obj)`**：冻结对象，防止修改其属性。
-
-  ```javascript
-  Object.freeze(person);
-  ```
-
-- **`Object.seal(obj)`**：封闭对象，防止添加新属性，但可以修改现有属性。
-
-  ```javascript
-  Object.seal(person);
-  ```
-
-
-
-**示例**
+#### 对象方法
 
 所有方法全是Object对象原型的**静态方法**`Object.methodFunc()`
 
@@ -847,7 +503,7 @@ const extraInfo = {
   age: 26 // 将覆盖 person 中的 age
 };
 
-// 1. Object.assign() - 将一个或多个源对象的属性复制到目标对象
+// 1. Object.assign(target, ...sources) - 将一个或多个源对象的属性复制到目标对象
 const mergedObject = Object.assign({}, person, extraInfo);
 console.log('Object.assign:', mergedObject);
 // 输出: { name: 'Alice', age: 26, hobbies: ['reading', 'gaming'], address: { city: 'New York', zip: 10001 }, job: 'Engineer' }
@@ -968,164 +624,24 @@ console.log('Object.values:', values);
 
 
 
-#### 数组（Array）
+### 数组（Array）
+
+#### 创建数组
+
+使用数组字面量
 
 ```js
 const fruits = ['apple', 'banana', 'cherry'];
-const numbers = new Array(1, 2, 3, 4, 5);
-const emptyArray = new Array(5); // 创建一个长度为5的空数组
-
 ```
 
-1. **添加和删除元素**：
+使用 `Array` 构造函数
 
-   - **`push()`**：在数组末尾添加元素。
+```
+const numbers = new Array(1, 2, 3, 4, 5);
+const emptyArray = new Array(5); // 创建一个长度为5的空数组
+```
 
-   ```javascript
-   fruits.push('mango'); // ['apple', 'orange', 'cherry', 'mango']
-   ```
-
-   - **`pop()`**：删除并返回数组末尾的元素。
-
-   ```javascript
-   const lastFruit = fruits.pop(); // 'mango'
-   ```
-
-   - **`shift()`**：删除并返回数组开头的元素。
-
-   ```javascript
-   const firstFruit = fruits.shift(); // 'apple'
-   ```
-
-   - **`unshift()`**：在数组开头添加元素。
-
-   ```javascript
-   fruits.unshift('kiwi'); // ['kiwi', 'orange', 'cherry']
-   ```
-
-2. **查找和排序**：
-
-   - **`indexOf()`**：查找元素的索引。
-
-   ```javascript
-   const index = fruits.indexOf('cherry'); // 2
-   ```
-
-   - **`includes()`**：判断数组是否包含某个元素。
-
-   ```javascript
-   const hasBanana = fruits.includes('banana'); // false
-   ```
-
-   - **`find()`**：用于查找数组中第一个满足指定条件的元素。
-
-   ```js
-   const users = [
-     { id: 1, name: 'Alice' },
-     { id: 2, name: 'Bob' },
-     { id: 3, name: 'Charlie' }
-   ];
-   
-   const user = users.find(function(user) {
-     return user.name === 'Bob';
-   });
-   
-   const user = users.find(user => user.name === 'Bob');
-   ```
-
-   - **`sort(compareFunction)`**：对数组进行排序。
-     - 返回负值表示第一个元素应该排在第二个元素之前。
-     - 返回正值表示第一个元素应该排在第二个元素之后。
-     - 返回 0 表示两个元素相等。
-
-   ```javascript
-   let fruits = ["banana", "apple", "cherry", "date"];
-   fruits.sort();  // 按字母顺序排序
-   console.log(fruits);  // 输出: ['apple', 'banana', 'cherry', 'date']
-   
-   
-   let numbers = [10, 3, 5, 1, 4];
-   numbers.sort((a, b) => a - b);
-   console.log(numbers);  // 输出: [1, 3, 4, 5, 10]
-   
-   let people = [
-     { name: "John", age: 25 },
-     { name: "Jane", age: 30 },
-     { name: "Jack", age: 20 }
-   ];
-   people.sort((a, b) => a.age - b.age);
-   ```
-
-3. **遍历数组**：
-
-   - **`forEach()`**：对数组的每个元素执行一个函数。
-
-   ```javascript
-   fruits.forEach((fruit) => {
-     console.log(fruit);
-   });
-   ```
-
-   - **`map()`**：返回一个新数组，数组中的元素为原数组元素调用函数处理后的值。
-
-   ```javascript
-   const upperFruits = fruits.map(fruit => fruit.toUpperCase()); // ['KIWI', 'ORANGE', 'CHERRY']
-   ```
-
-   - **`filter()`**：创建一个新数组，包含所有通过测试的元素。
-
-   ```javascript
-   const longFruits = fruits.filter(fruit => fruit.length > 5); // ['orange']
-   ```
-
-4. **合并和切割**：
-
-   - **`concat()`**：合并两个或多个数组。
-
-   ```javascript
-   const moreFruits = ['grape', 'pear'];
-   const allFruits = fruits.concat(moreFruits); // ['kiwi', 'orange', 'cherry', 'grape', 'pear']
-   ```
-
-   - **`slice()`**：返回数组的一个片段。
-
-   ```javascript
-   const citrus = fruits.slice(1, 3); // ['orange', 'cherry']
-   ```
-
-   - **`splice()`**：添加或删除数组中的元素。
-
-   ```javascript
-   fruits.splice(1, 1, 'lemon'); // 在索引1处删除1个元素并添加'lemon'
-   ```
-
-5. **其他常用方法：**
-
-   - **`every(callback)`**：测试所有元素是否都通过指定的函数。
-
-     ```javascript
-     const allLong = fruits.every(fruit => fruit.length > 3); // false
-     ```
-
-   - **`some(callback)`**：测试是否至少有一个元素通过指定的函数。
-
-     ```javascript
-     const hasLong = fruits.some(fruit => fruit.length > 5); // false
-     ```
-
-   - **`reduce(callback, initialValue)`**：从左到右应用函数，减少数组为单个值。
-
-     ```javascript
-     const sum = [1, 2, 3].reduce((acc, val) => acc + val, 0); // 6
-     ```
-
-   - **`reduceRight(callback, initialValue)`**：从右到左应用函数，减少数组为单个值。
-
-     ```javascript
-     const reversedSum = [1, 2, 3].reduceRight((acc, val) => acc + val, 0); // 6
-     ```
-
-**示例**
+#### 数组方法
 
 大多数方法是Array对象原型的方法，即`Array.prototype.methodFunc()`；此外的是**静态方法**`Array.methodFunc()`
 
@@ -1300,9 +816,37 @@ console.log("from:", arrFrom);
 
 ```
 
+#### 常用方法
 
+arr.push()
 
-**多维数组**
+arr.pop()
+
+arr.sort()
+
+arr.reverse()
+
+arr.join()
+
+arr.includes()
+
+arr.find()
+
+arr.findIndex()
+
+arr.map()
+
+arr.fillter()
+
+arr.forEach()
+
+arr.entries()
+
+arr.slice()
+
+arr.splice()
+
+#### 多维数组
 
 JavaScript 也支持多维数组（数组中的数组）：
 
@@ -1314,7 +858,7 @@ const matrix = [
 ];
 ```
 
-**伪数组与数组的区别**
+#### 伪数组与数组的区别
 
 | 特性              | 数组（Array）                              | 伪数组（Array-like）                            |
 | ----------------- | ------------------------------------------ | ----------------------------------------------- |
@@ -1327,11 +871,10 @@ const matrix = [
 
 
 
-#### 函数（Function）
+### 函数（Function）
 
 ```js
-function myFunction(var1, var2)
-{
+function myFunction(var1, var2) {
     var x = var1 + var2;
     return x;
 }
@@ -1339,53 +882,68 @@ function myFunction(var1, var2)
 
 
 
-#### 正则（RegExp）
+### 正则（RegExp）
 
-- **JavaScript**：内置的 `RegExp` 对象
+**JavaScript**：内置的 `RegExp` 对象
 
-**创建 `RegExp` 对象**
+#### 创建 `RegExp` 对象
 
 可以通过两种方式来创建 `RegExp` 对象：
 
-1. **字面量方式**：
+**字面量方式**：
 
-    ```javascript
-    const regex = /pattern/;
-    ```
+```javascript
+const regex = /pattern/;
+```
 
-    例如，匹配数字：
+例如，匹配数字：
 
-    ```javascript
-    const regex = /\d+/;
-    ```
+```javascript
+const regex = /\d+/;
+```
 
-2. **构造函数方式**：
+**构造函数方式**：
 
-    ```javascript
-    const regex = new RegExp("pattern", "flags");
-    ```
+你可以使用“模板”+“标志”的方式创建正则表达式`RegExp(pattern[, flags])`
 
-    例如，匹配数字并设置全局标志：
+```javascript
+const stopWord = ['a', 'b', 'c']
+const regStopWords = new RegExp([...stopWords, '\w', '\s', '[（：、，。）]'].join`|`);
+```
 
-    ```javascript
-    const regex = new RegExp("\\d+", "g");
-    ```
+生成的正则表达式将是：
 
-**属性**
+```txt
+/a|b|c|\w|\s|[（：、，。）]/
+```
+
+例如，匹配数字并设置全局标志：
+
+```javascript
+const regex = new RegExp("\\d+", "g");
+```
+
+#### 正则属性
 
 - `regex.source`：返回正则表达式的源字符串。
 - `regex.flags`：返回正则表达式的标志字符串（如 "g", "i", "m"）。
 - `regex.lastIndex`：返回或设置下次匹配开始的索引。
 
-**常用标志**
+#### 常用标志
 
 - `g`：全局匹配（查找所有匹配项，而不是只匹配第一个）。
+
 - `i`：忽略大小写。
+
 - `m`：多行匹配。
+
 - `u`：启用 Unicode 匹配。
+
 - `y`：粘性匹配，要求匹配从 `lastIndex` 位置开始。
 
-**常用正则表达式方法**
+#### 正则方法
+
+以下都是**[实例方法]**
 
 1. `test()` - 测试字符串是否匹配正则表达式
 
@@ -1409,29 +967,46 @@ console.log(result);  // ["abc", "bc"]
 
 如果没有匹配，`exec()` 返回 `null`。
 
-**常用字符串方法**
+#### 字符串方法
 
-1. `match()` - 在字符串中执行匹配（正则在字符串里的）
+以下都是**[实例方法]**
 
-`String.prototype.match()` 方法用于匹配正则表达式，返回匹配的结果。
+`match()` - 在字符串中执行匹配（正则在字符串里的），方法用于匹配正则表达式，返回匹配的结果。
 
 ```javascript
-let str = "hello world";
-let result = str.match(/world/);
-console.log(result);  // ["world"]
+// 不带 g 的 match()：返回第一个匹配项的数组，包含完整匹配 + 所有捕获组，所以你看到 3 个元素。
+const str = "2021-05-01 100, 2022-06-02 200, 2023-07-03 300";
+const regex = /(\d{4}-\d{2}-\d{2}) (\d+)/;
+const result = str.match(regex);
+console.log(result);
+
+// ['2021-05-01 100', '2021-05-01', '100']
 ```
+
+> 捕获组是用括号 `()` 包裹起来的正则表达式的一部分，匹配到的内容会被单独保存下来，可以通过编号或名称引用。
 
 - 如果使用全局标志 `g`，它会返回一个所有匹配项的数组。
 
 ```javascript
-let str = "abc abc abc";
-let result = str.match(/abc/g);
-console.log(result);  // ["abc", "abc", "abc"]
+// 带 g 的 match()：返回所有完整匹配项的数组，但不包含捕获组。
+const regex = /(\d{4}-\d{2}-\d{2}) (\d+)/g;
+const result = str.match(regex);
+console.log(result);
+
+// ["2021-05-01 100", "2022-06-02 200", "2023-07-03 300"]
 ```
 
-2. `replace()` - 替换匹配的内容
+- 如果使用 `matchAll()`，则会在全局匹配中保留捕获组。
 
-`String.prototype.replace()` 用于查找匹配的部分并替换成指定的内容。
+```
+[
+  ["2021-05-01 100", "2021-05-01", "100"],
+  ["2022-06-02 200", "2022-06-02", "200"],
+  ["2023-07-03 300", "2023-07-03", "300"]
+]
+```
+
+`replace()` - 替换匹配的内容，用于查找匹配的部分并替换成指定的内容。
 
 ```javascript
 let str = "hello world";
@@ -1447,9 +1022,7 @@ let result = str.replace(/abc/g, "xyz");
 console.log(result);  // "xyz xyz xyz"
 ```
 
-3. `split()` - 按匹配分割字符串
-
-`String.prototype.split()` 将字符串按匹配的正则表达式分割成数组。
+`split()` - 按匹配分割字符串，将字符串按匹配的正则表达式分割成数组。
 
 ```javascript
 let str = "apple,banana,orange";
@@ -1459,87 +1032,89 @@ console.log(result);  // ["apple", "banana", "orange"]
 
 
 
-#### 日期（Date）
+### 日期（Date）
 
-1. **当前日期和时间**
+#### 创建一个日期
 
-   ```javascript
-   const now = new Date();
-   ```
+当前日期和时间
 
-2. **特定日期和时间**
+```javascript
+const now = new Date();
+```
 
-   ```javascript
-   const specificDate = new Date('2024-11-01T10:00:00');
-   ```
+特定日期和时间
 
-3. **使用时间戳**
+```javascript
+const specificDate = new Date('2024-11-01T10:00:00');
+```
 
-   ```javascript
-   const timestampDate = new Date(1633046400000); // 代表特定的时间戳
-   ```
+使用时间戳
 
-**常用方法**
+```javascript
+const timestampDate = new Date(1633046400000); // 代表特定的时间戳
+```
 
-1. **获取日期和时间组件**
+#### 日期常用方法
 
-   - `getFullYear()`：获取四位年份。
-   - `getMonth()`：获取月份（0-11）。
-   - `getDate()`：获取一个月中的日期（1-31）。
-   - `getHours()`：获取小时（0-23）。
-   - `getMinutes()`：获取分钟（0-59）。
-   - `getSeconds()`：获取秒（0-59）。
-   - `getMilliseconds()`：获取毫秒（0-999）。
-   - `getTime()`：返回自1970年1月1日00:00:00 UTC以来的毫秒数。
+**获取日期和时间组件**
 
-   ```javascript
-   const date = new Date();
-   console.log(date.getFullYear()); // 2024
-   console.log(date.getMonth()); // 10 (11月)
-   ```
+- `getFullYear()`：获取四位年份。
+- `getMonth()`：获取月份（0-11）。
+- `getDate()`：获取一个月中的日期（1-31）。
+- `getHours()`：获取小时（0-23）。
+- `getMinutes()`：获取分钟（0-59）。
+- `getSeconds()`：获取秒（0-59）。
+- `getMilliseconds()`：获取毫秒（0-999）。
+- `getTime()`：返回自1970年1月1日00:00:00 UTC以来的毫秒数。
 
-2. **设置日期和时间组件**
+```javascript
+const date = new Date();
+console.log(date.getFullYear()); // 2024
+console.log(date.getMonth()); // 10 (11月)
+```
 
-   - `setFullYear(year)`：设置年份。
-   - `setMonth(month)`：设置月份（0-11）。
-   - `setDate(date)`：设置日期（1-31）。
-   - `setHours(hours)`：设置小时（0-23）。
-   - `setMinutes(minutes)`：设置分钟（0-59）。
-   - `setSeconds(seconds)`：设置秒（0-59）。
-   - `setMilliseconds(milliseconds)`：设置毫秒（0-999）。
+**设置日期和时间组件**
 
-   ```javascript
-   const date = new Date();
-   date.setFullYear(2025);
-   date.setMonth(11); // 12月
-   ```
+- `setFullYear(year)`：设置年份。
+- `setMonth(month)`：设置月份（0-11）。
+- `setDate(date)`：设置日期（1-31）。
+- `setHours(hours)`：设置小时（0-23）。
+- `setMinutes(minutes)`：设置分钟（0-59）。
+- `setSeconds(seconds)`：设置秒（0-59）。
+- `setMilliseconds(milliseconds)`：设置毫秒（0-999）。
 
-3. **格式化日期**
+```javascript
+const date = new Date();
+date.setFullYear(2025);
+date.setMonth(11); // 12月
+```
 
-   - `toString()`：返回日期对象的字符串表示。
-   - `toISOString()`：返回 ISO 格式的字符串（YYYY-MM-DDTHH:mm:ss.sssZ）。
-   - `toLocaleDateString()`：返回本地日期字符串。
-   - `toLocaleTimeString()`：返回本地时间字符串。
-   - `toUTCString()`：返回 UTC 字符串表示。
+**格式化日期**
 
-   ```javascript
-   const date = new Date();
-   console.log(date.toISOString()); // 2024-11-01T10:00:00.000Z
-   console.log(date.toLocaleDateString()); // 根据本地设置格式化日期
-   ```
+- `toString()`：返回日期对象的字符串表示。
+- `toISOString()`：返回 ISO 格式的字符串（YYYY-MM-DDTHH:mm:ss.sssZ）。
+- `toLocaleDateString()`：返回本地日期字符串。
+- `toLocaleTimeString()`：返回本地时间字符串。
+- `toUTCString()`：返回 UTC 字符串表示。
 
-4. **比较和计算日期**
+```javascript
+const date = new Date();
+console.log(date.toISOString()); // 2024-11-01T10:00:00.000Z
+console.log(date.toLocaleDateString()); // 根据本地设置格式化日期
+```
 
-   - 可以直接使用比较运算符（如 `<`、`>`）来比较日期对象。
-   - 可以通过时间戳进行计算。
+**比较和计算日期**
 
-   ```javascript
-   const date1 = new Date('2024-11-01');
-   const date2 = new Date('2025-01-01');
-   console.log(date1 < date2); // true
-   ```
+- 可以直接使用比较运算符（如 `<`、`>`）来比较日期对象。
+- 可以通过时间戳进行计算。
 
-## 1.2.运算符
+```javascript
+const date1 = new Date('2024-11-01');
+const date2 = new Date('2025-01-01');
+console.log(date1 < date2); // true
+```
+
+## 运算符
 
 ### 算数运算符
 
@@ -1578,37 +1153,31 @@ console.log(result);  // ["apple", "banana", "orange"]
 | \|\|   | or   | (x == 5 \|\| y == 5) 为 false |
 | !      | not  | !(x==y) 为 true               |
 
-
-
 ### 条件运算符
 
 ```js
-variablename = (condition)?value1:value2 
+variablename = (condition) ? value1 : value2 
 ```
-
-
 
 ### typeof 运算符
 
 `typeof`运算符返回一个字符串，表示操作数的类型。
 
-| 变量类型    | `typeof` 返回值 |
-| ----------- | --------------- |
-| `undefined` | `"undefined"`   |
-| `null`      | `"object"`      |
-| `Boolean`   | `"boolean"`     |
-| `Number`    | `"number"`      |
-| `BigInt`    | `"bigint"`      |
-| `String`    | `"string"`      |
-| `Symbol`    | `"symbol"`      |
-| `Function`  | `"function"`    |
-| `Object`    | `"object"`      |
-| `Array`     | `"object"`      |
-| `Date`      | `"object"`      |
-| `RegExp`    | `"object"`      |
-| `Error`     | `"object"`      |
-
-
+| 变量类型      | `typeof` 返回值 |
+| ------------- | --------------- |
+| `undefined`   | `"undefined"`   |
+| `null`        | **`"object"`**  |
+| `Boolean**`** | **`"boolean"`** |
+| `Number`      | **`"number"`**  |
+| `BigInt`      | `"bigint"`      |
+| `String`      | **`"string"`**  |
+| `Symbol**`**  | **`"symbol"`**  |
+| `Function`    | `"function"`    |
+| `Object`      | `"object"`      |
+| `Array`       | **`"object"`**  |
+| `Date`        | `"object"`      |
+| `RegExp`      | **`"object"`**  |
+| `Error`       | `"object"`      |
 
 ### instanceof 运算符
 
@@ -1638,6 +1207,7 @@ function Person(name) {
 const person1 = new Person("Alice");
 
 console.log(person1 instanceof Person);  // true
+console.log(Person instanceof Object);  // true
 console.log(person1 instanceof Object);  // true
 console.log(person1 instanceof Array);   // false
 ```
@@ -1661,11 +1231,7 @@ o3 instanceof D; // true
 o3 instanceof C; // true 因为 C.prototype 现在在 o3 的原型链上
 ```
 
-
-
-
-
-## 1.3.判断，循环
+## 判断 & 循环
 
 **同C**
 
@@ -1788,7 +1354,7 @@ try {
 
 
 
-## 1.4.函数
+## 函数
 
 ```js
 function myFunction(var1, var2)
@@ -1797,48 +1363,6 @@ function myFunction(var1, var2)
     return x;
 }
 ```
-
-
-
-
-
-### filter()
-
-`filter()` 是一个用于数组的高阶函数，它可以用来根据特定条件过滤数组中的元素，并返回一个新数组。这个新数组包含了所有符合条件的元素，原数组不会被修改。
-
-```js
-array.filter(callback(element, index, array))
-```
-
-- **`callback`**：这是一个回调函数，用来定义过滤的条件。这个回调函数会对数组中的每一个元素执行一次。
-  - **`element`**：当前处理的元素。
-  - **`index`**：当前元素在数组中的索引（可选）。
-  - **`array`**：调用 `filter()` 的原数组（可选）。
-- **返回值**：`filter()` 返回一个新数组，这个数组包含所有满足条件的元素。如果没有任何元素满足条件，则返回一个空数组。
-
-**例子**：
-
-假设我们有一个电影对象数组，想要过滤出所有评分大于 8 的电影：
-
-```js
-const films = [
-  { title: 'Inception', rating: 8.8 },
-  { title: 'Titanic', rating: 7.8 },
-  { title: 'The Dark Knight', rating: 9.0 },
-  { title: 'Avatar', rating: 7.9 }
-];
-
-const highRatedFilms = films.filter(film => film.rating > 8);
-
-console.log(highRatedFilms);
-// 输出：
-// [
-//   { title: 'Inception', rating: 8.8 },
-//   { title: 'The Dark Knight', rating: 9.0 }
-// ]
-```
-
-
 
 ### eval()
 
@@ -2059,11 +1583,7 @@ console.log(x);  // 15
 
 
 
-
-
-
-
-## 1.5.输入输出
+## 输入输出
 
 **输入**
 
@@ -2087,7 +1607,7 @@ console.log('console-print')
 
 
 
-## 1.6.ES6
+# ES6 语法
 
 ES6（也称为 ECMAScript 2015）是 ECMAScript 标准的第 6 版，它引入了许多重要的新特性和改进，使得 JavaScript 更加强大、灵活且易于使用。以下是 ES6 的一些关键特性：
 
@@ -2095,7 +1615,7 @@ ES6（也称为 ECMAScript 2015）是 ECMAScript 标准的第 6 版，它引入�
 
 JavaScript 是大家所了解的语言名称，但是这个语言名称是商标（ Oracle 公司注册的商标）。因此，JavaScript 的正式名称是 ECMAScript 。1996年11月，JavaScript 的创造者网景公司将 JS 提交给国际化标准组织 ECMA（European computer manufactures association，欧洲计算机制造联合会），希望这种语言能够成为国际标准，随后 ECMA 发布了规定浏览器脚本语言的标准，即 ECMAScript。这也有利于这门语言的开放和中立。
 
-### 变量与常量的声明
+## 变量与常量的声明
 
 ```js
 // 1.常量
@@ -2106,24 +1626,13 @@ let i = 0;
 i++;
 ```
 
-
-
-### 模板字符串
-
-```js
-const name = 'Peter';
-const greeting = `I'm ${name}`
-```
-
-
-
-### 闭包
+## 闭包
 
 在 JavaScript 中，**闭包（Closure）** 是一个函数与其词法作用域（即函数声明时所在的作用域）的组合。换句话说，闭包允许一个函数访问并操作它外部函数的变量，即使外部函数已经返回。
 
 简而言之，闭包可以理解为：**函数被定义时的作用域**，而不仅仅是它执行时的作用域  <==>  **内层函数 + 外层函数的变量**
 
-#### 闭包的工作原理
+### 闭包的工作原理
 
 闭包的实现依赖于 **词法作用域**。当一个函数被定义时，它会记住外部函数的作用域，这就是闭包的核心。
 
@@ -2144,9 +1653,9 @@ const closureFunc = outer();
 closureFunc();  // 输出 "I'm an outer variable"
 ```
 
-#### 闭包的使用场景
+### 闭包的使用场景
 
-##### 1. 模拟私有变量
+#### 模拟私有变量
 
 在 JavaScript 中，我们可以通过闭包来模拟私有变量的行为。通过将变量封装在函数内部，只暴露需要的函数来操作这些私有变量。
 
@@ -2177,7 +1686,7 @@ console.log(counter.decrement()); // 1
 
 在上面的例子中，`count` 是 `createCounter` 函数的私有变量，它无法直接访问，但是通过闭包暴露了 `increment`、`decrement` 和 `getCount` 等方法，可以访问和修改它。
 
-##### 2. 延迟执行或回调函数
+#### 延迟执行或回调函数
 
 闭包常用于异步编程，例如，回调函数、定时器等，可以在不同的时间点使用外部函数的变量。
 
@@ -2196,13 +1705,122 @@ setTimeout(delayedHello, 1000);  // 1秒后输出 "Hello, World!"
 
 
 
+## 拓展
+
+### 数组的拓展
+
+#### 扩展运算符 `...`
+
+扩展运算符 (`...`) 可以用于数组，来快速复制、合并或提取元素。
+
+数组合并：
+
+```javascript
+let arr1 = [1, 2];
+let arr2 = [3, 4];
+
+let mergedArr = [...arr1, ...arr2];
+console.log(mergedArr); // [1, 2, 3, 4]
+```
+
+数组复制：
+
+```javascript
+let arr = [1, 2, 3];
+let copiedArr = [...arr];
+
+console.log(copiedArr); // [1, 2, 3]
+```
+
+插入元素：
+
+```javascript
+let arr = [1, 2, 3];
+let extendedArr = [0, ...arr, 4];
+
+console.log(extendedArr); // [0, 1, 2, 3, 4]
+```
+
+####  `Array.from()`
+
+`Array.from()` 方法可以将类似数组的对象（如字符串、Set、Map等）转换为数组。
+
+**语法**：
+
+```javascript
+Array.from(arrayLike, mapFn, thisArg)
+```
+
+- **arrayLike**：类数组对象或可迭代对象（如 `String`、`Set`、`Map`、`NodeList` 等）。
+- **mapFn**（可选）：一个映射函数，用于对每个元素进行处理。在创建新数组时，它会应用于每个元素。
+- **thisArg**（可选）：用于执行映射函数时的 `this` 值。
+
+**返回值**：
+
+返回一个新的数组，包含由 `arrayLike` 中的元素组成的值，经过 `mapFn` 处理后（如果提供了该函数）。
+
+```javascript
+let str = "hello";
+let arr = Array.from(str);
+
+console.log(arr); // ['h', 'e', 'l', 'l', 'o']
+```
+
+### 对象的拓展
+
+#### 扩展运算符 `...`
+
+同样，扩展运算符也可以用于对象的合并、复制和提取属性。
+
+对象合并：
+
+```javascript
+let obj1 = { a: 1, b: 2 };
+let obj2 = { b: 3, c: 4 };
+
+let mergedObj = { ...obj1, ...obj2 };
+console.log(mergedObj); // { a: 1, b: 3, c: 4 }
+```
+
+对象复制：
+
+```javascript
+let obj = { a: 1, b: 2 };
+
+let copiedObj = { ...obj };
+console.log(copiedObj); // { a: 1, b: 2 }
+```
+
+####  `Object.assign()`
+
+`Object.assign()` 方法用于将一个或多个源对象的可枚举属性复制到目标对象中。
+
+**语法**：
+
+```javascript
+Object.assign(target, ...sources)
+```
+
+- **target**：目标对象，`Object.assign()` 会将源对象的属性复制到这个目标对象中。
+- **sources**：一个或多个源对象，其属性会被复制到目标对象中。如果有多个源对象，它们的属性会依次复制到目标对象。
+
+**返回值**：
+
+返回目标对象 `target`，其中包含所有源对象的属性。
+
+```javascript
+let obj1 = { a: 1 };
+let obj2 = { b: 2 };
+
+let mergedObj = Object.assign({}, obj1, obj2);
+console.log(mergedObj); // { a: 1, b: 2 }
+```
 
 
 
+## 解构赋值
 
-### 解构赋值
-
-#### 1.数组的解构赋值
+### 数组的解构赋值
 
 ```js
 // 1.解构赋值
@@ -2241,9 +1859,7 @@ console.log(b);     // 2
 console.log(rest);  // [3, 4, 5]
 ```
 
-
-
-#### 2.对象的解构赋值
+### 对象的解构赋值
 
 ```js
 // 1.解构赋值
@@ -2289,9 +1905,7 @@ console.log(name);  // Alice
 console.log(otherInfo);  // { age: 25, gender: 'female' }
 ```
 
-
-
-#### 3.解构赋值可以直接用在函数参数中
+### 解构赋值可以直接用在函数参数中
 
 ```js
 // 1.
@@ -2312,130 +1926,7 @@ greet({ name: 'Alice', age: 25 }); // Hello, Alice. You are 25 years old.
 
 
 
-### 拓展
-
-#### 1.数组的拓展
-
-
-
-##### 1. 扩展运算符 `...`
-
-扩展运算符 (`...`) 可以用于数组，来快速复制、合并或提取元素。
-
-数组合并：
-
-```javascript
-let arr1 = [1, 2];
-let arr2 = [3, 4];
-
-let mergedArr = [...arr1, ...arr2];
-console.log(mergedArr); // [1, 2, 3, 4]
-```
-
-数组复制：
-
-```javascript
-let arr = [1, 2, 3];
-let copiedArr = [...arr];
-
-console.log(copiedArr); // [1, 2, 3]
-```
-
-插入元素：
-
-```javascript
-let arr = [1, 2, 3];
-let extendedArr = [0, ...arr, 4];
-
-console.log(extendedArr); // [0, 1, 2, 3, 4]
-```
-
-
-
-##### 2. `Array.from()`
-
-`Array.from()` 方法可以将类似数组的对象（如字符串、Set、Map等）转换为数组。
-
-**语法**：
-
-```javascript
-Array.from(arrayLike, mapFn, thisArg)
-```
-
-- **arrayLike**：类数组对象或可迭代对象（如 `String`、`Set`、`Map`、`NodeList` 等）。
-- **mapFn**（可选）：一个映射函数，用于对每个元素进行处理。在创建新数组时，它会应用于每个元素。
-- **thisArg**（可选）：用于执行映射函数时的 `this` 值。
-
-**返回值**：
-
-返回一个新的数组，包含由 `arrayLike` 中的元素组成的值，经过 `mapFn` 处理后（如果提供了该函数）。
-
-```javascript
-let str = "hello";
-let arr = Array.from(str);
-
-console.log(arr); // ['h', 'e', 'l', 'l', 'o']
-```
-
-
-
-
-
-#### 2.对象的拓展
-
-##### 1. 扩展运算符 `...`
-
-同样，扩展运算符也可以用于对象的合并、复制和提取属性。
-
-对象合并：
-
-```javascript
-let obj1 = { a: 1, b: 2 };
-let obj2 = { b: 3, c: 4 };
-
-let mergedObj = { ...obj1, ...obj2 };
-console.log(mergedObj); // { a: 1, b: 3, c: 4 }
-```
-
-对象复制：
-
-```javascript
-let obj = { a: 1, b: 2 };
-
-let copiedObj = { ...obj };
-console.log(copiedObj); // { a: 1, b: 2 }
-```
-
-
-
-##### 2. `Object.assign()`
-
-`Object.assign()` 方法用于将一个或多个源对象的可枚举属性复制到目标对象中。
-
-**语法**：
-
-```javascript
-Object.assign(target, ...sources)
-```
-
-- **target**：目标对象，`Object.assign()` 会将源对象的属性复制到这个目标对象中。
-- **sources**：一个或多个源对象，其属性会被复制到目标对象中。如果有多个源对象，它们的属性会依次复制到目标对象。
-
-**返回值**：
-
-返回目标对象 `target`，其中包含所有源对象的属性。
-
-```javascript
-let obj1 = { a: 1 };
-let obj2 = { b: 2 };
-
-let mergedObj = Object.assign({}, obj1, obj2);
-console.log(mergedObj); // { a: 1, b: 2 }
-```
-
-
-
-### 原型
+## 原型
 
 在 JavaScript 中，**原型**`.prototype`是每个**构造函数**（实质是对象）都有的一个内部属性，它指向另一个对象，称为“原型对象”。原型是 JavaScript 实现继承和共享方法、属性的基础。每个 Java式对象都有一个原型对象（通过`__proto__` 或者 `Object.getPrototypeOf()` 访问），原型对象也可以有自己的原型对象，从而形成一个链式结构，叫做**原型链**。
 
@@ -2445,11 +1936,8 @@ console.log(mergedObj); // { a: 1, b: 2 }
 
 在 JavaScript 中，`.prototype`、`__proto__` 和 `.constructor` 是与对象和原型链密切相关的概念，它们之间的关系有点像“家族树”里的角色分工。让我用通俗的方式一步步讲解它们是什么，以及它们如何关联。
 
----
+#### 构造函数原型 `.prototype`
 
-#### `.prototype`、`__proto__` 和 `.constructor` 
-
-##### (1) `.prototype`
 - **是什么**：`.prototype` 是**函数**的一个属性（普通对象没有这个属性）。当你用 `new` 创建实例时，这个属性决定了新对象的原型。
 - **特点**：它是一个对象，包含了实例可以继承的属性和方法。
 - **谁有它**：只有函数（包括构造函数）有 `.prototype`。
@@ -2464,7 +1952,8 @@ Person.prototype.sayHello = function() {
 };
 ```
 
-##### (2) `__proto__`
+#### 对象原型 `__proto__`
+
 - **是什么**：`__proto__` 是**对象**的一个隐藏属性（准确说是 `[[Prototype]]` 的 getter/setter），指向该对象的原型。
 - **特点**：它是原型链的“连接线”，告诉你这个对象从哪里继承属性。
 - **谁有它**：几乎所有对象都有（通过原型链最终指向 `Object.prototype`）。
@@ -2473,9 +1962,11 @@ Person.prototype.sayHello = function() {
 ```javascript
 let person = new Person("Alice");
 console.log(person.__proto__ === Person.prototype); // true
+console.log(person.__proto__ === Object.getPrototypeOf(person)); // true
 ```
 
-##### (3) `.constructor`
+#### 构造器 `.constructor`
+
 - **是什么**：`.constructor` 是对象的一个属性，指向创建这个对象的构造函数。
 - **特点**：它是通过原型继承来的，默认情况下存在于 `.prototype` 上。
 - **谁有它**：实例对象通过原型链访问到。
@@ -2484,54 +1975,10 @@ console.log(person.__proto__ === Person.prototype); // true
 ```javascript
 let person = new Person("Alice");
 console.log(person.constructor === Person); // true
+console.log(Person.prototype.constructor === Person); // true
 ```
 
----
-
-#### 代码示例
-```javascript
-function Person(name) {
-    this.name = name;
-}
-Person.prototype.sayHello = function() {
-    console.log("Hello, " + this.name);
-};
-
-let alice = new Person("Alice");
-
-// 检查关系
-console.log(alice.__proto__ === Person.prototype);        // true
-console.log(alice.constructor === Person);                // true
-console.log(Person.prototype.constructor === Person);     // true
-console.log(alice.__proto__.constructor === Person);      // true
-
-alice.sayHello(); // 输出 "Hello, Alice"
-```
-
-**解释**：
-
-- `alice.__proto__` 是 `Person.prototype`，因为 `alice` 是通过 `Person` 创建的，继承了它的原型。
-- `Person.prototype.constructor` 默认指向 `Person`，表示这个原型对象是由 `Person` 构造函数管理的。
-- `alice.constructor` 通过原型链从 `Person.prototype` 继承，指向 `Person`。
-
----
-
-#### 细节与注意点
-##### (1) `.prototype` 和 `__proto__` 的区别
-- `.prototype` 是构造函数的属性，用来设置实例的原型。
-- `__proto__` 是实例的属性，指向它的原型（通常是构造函数的 `.prototype`）。
-- **类比**：`.prototype` 是“父母辈的模板”，`__proto__` 是“孩子找父母的指针”。
-
-##### (2) `.constructor` 的动态性
-`.constructor` 是可以被修改的，因为它只是原型上的一个属性：
-```javascript
-function Person() {}
-let p = new Person();
-Person.prototype.constructor = function Fake() {};
-console.log(p.constructor === Person); // false，变成了 Fake
-```
-
-##### (3) 原型链的终点
+#### 原型链的终点
 所有对象的 `__proto__` 最终会指向 `Object.prototype`，而 `Object.prototype.__proto__` 是 `null`，这是原型链的尽头：
 ```javascript
 let obj = {};
@@ -2539,14 +1986,7 @@ console.log(obj.__proto__ === Object.prototype);      // true
 console.log(Object.prototype.__proto__ === null);     // true
 ```
 
----
-
-#### 三者的关系
-- **`.prototype`** 是构造函数的“蓝图”，定义了实例的共享属性和方法。
-- **`__proto__`** 是实例的“指针”，指向它的原型（通常是构造函数的 `.prototype`）。
-- **`.constructor`** 是原型上的“标签”，告诉实例它是由哪个构造函数创建的。
-
-##### 简单公式
+#### 简单公式
 
 - `实例.__proto__ === 构造函数.prototype`
 - `实例.constructor === 构造函数`（通过原型继承）
@@ -2570,11 +2010,9 @@ person (实例)
    | .constructor (通过 __proto__ 继承) 指向 Person
 ```
 
----
-
 #### 原型方法
 
-##### Object.create(proto)
+Object.create(proto)
 
 - **作用**：以指定对象作为原型创建新对象。
 
@@ -2591,7 +2029,7 @@ carl.greet(); // hello!
 console.log(Carl.__proto__ === personPrototype); // true
 ```
 
-##### Object.getPrototypeOf(object)
+Object.getPrototypeOf(object)
 
 用于获取对象的原型（即该对象的构造函数的 `prototype` 对象）。
 
@@ -2602,7 +2040,7 @@ console.log(Object.getPrototypeOf(obj) === Object.prototype);  // true
 
 ```
 
-##### Object.setPrototypeOf()
+Object.setPrototypeOf()
 
 用于设置对象的原型（即指定对象的 `[[Prototype]]`）。
 
@@ -2615,7 +2053,7 @@ obj.greet();  // 输出：Hello!
 
 ```
 
-##### obj.isPrototypeOf(obj2)
+obj.isPrototypeOf(obj2)
 
 - **作用**：检查当前对象是否在另一个对象的原型链中。
 - **返回值**：true（在原型链中）或 false（不在）。
@@ -2627,7 +2065,7 @@ console.log(Person.prototype.isPrototypeOf(p)); // true
 console.log(Object.prototype.isPrototypeOf(p)); // true（更上层的原型）
 ```
 
-##### obj.hasOwnProperty(prop)
+obj.hasOwnProperty(prop)
 
 - **作用**：检查对象**自身**是否具有某个属性，不包括原型链上的属性。
 - **返回值**：true（有该属性）或 false（没有）。
@@ -2646,7 +2084,7 @@ console.log(obj.hasOwnProperty("toString")); // false（toString 是原型上的
 
 
 
-### class类
+## 类 `class`
 
 在 JavaScript 中，`class` 是一种定义对象和构造函数的语法糖，它使得创建和管理对象更加简洁和直观。`class` 语法引入了面向对象编程（OOP）的概念，如构造函数、方法和继承等。
 
@@ -2674,7 +2112,7 @@ class ClassName {
 2. **实例方法**：可以在类中定义方法，这些方法会成为类的实例的属性。
 3. **静态方法**：静态方法使用 `static` 关键字定义，不能通过实例调用，而是通过类本身调用。
 
-#### 示例
+这是一个实例：
 
 ```javascript
 class Person {
@@ -2707,7 +2145,7 @@ console.log(Person.species()); // 输出: Homo sapiens
 2. **实例方法**：是定义在类中的普通方法。实例化该类时，所有实例都会继承这些方法。
 3. **静态方法**：通过 `static` 关键字定义的静态方法与类本身关联，而不是与实例关联。因此，静态方法只能通过类来访问，而不能通过实例访问。
 
-#### 继承
+#### 继承 `extends`
 
 JavaScript 中的类支持继承，可以通过 `extends` 关键字继承父类的功能。子类可以继承父类的属性和方法，也可以重写父类的方法。
 
@@ -2741,7 +2179,7 @@ dog.speak(); // 输出: Rex barks.
 - **`extends`**：用于继承父类。`Dog` 类继承自 `Animal` 类。
 - **`super()`**：在子类的构造函数中调用父类的构造函数，通常用来初始化继承的属性。
 
-#### 自定义行为
+#### 自定义行为 `get` & `set`
 
 JavaScript 中的类还支持 getter 和 setter，允许你定义访问和设置对象属性时的自定义行为。
 
@@ -2781,7 +2219,7 @@ console.log(circle.area()); // 输出: 706.8583470577034
 - **getter**：定义了一个获取属性的自定义方法。
 - **setter**：定义了一个设置属性时的自定义行为。
 
-#### ES6 对象方法简写
+### ES6 对象方法简写
 
 ```javascript
 const obj = {
@@ -2811,7 +2249,7 @@ console.log(obj.greet("Alice")); // Hello, Alice
 
 
 
-### this关键字
+## this关键字
 
 JavaScript `this` 关键词指的是**它所属的对象**。
 
@@ -2831,15 +2269,11 @@ JavaScript `this` 关键词指的是**它所属的对象**。
   console.log(person.fullName());  // 输出: "John Doe"
   ```
 
-  
-
 - 单独的情况下，`this` 指的是**全局对象window**。
 
   ```js
   var x = this;
   ```
-
-  
 
 - 在普通函数中，`this` 指的是**全局对象window**。
 
@@ -2858,8 +2292,6 @@ JavaScript `this` 关键词指的是**它所属的对象**。
   }
   ```
 
-  
-
 - 在事件中，`this` 指的是接收事件的元素。
 
   ```js
@@ -2870,7 +2302,8 @@ JavaScript `this` 关键词指的是**它所属的对象**。
   
   ```
 
-  
+
+### 将 this 引用到任何对象
 
 像 `call()` 和 `apply()` 这样的方法可以将 this 引用到任何对象。
 
@@ -2884,15 +2317,11 @@ JavaScript `this` 关键词指的是**它所属的对象**。
   
   ```
 
-  
-
 - `apply()`：与 `call` 类似，区别在于 `apply` 接收的是一个数组作为参数。
 
   ```javascript
   func.apply(thisArg, [arg1, arg2, ...]);
   ```
-
-  
 
 - `bind()`：`bind` 返回一个新函数，绑定了指定的 `this` 值。
 
@@ -2903,8 +2332,6 @@ JavaScript `this` 关键词指的是**它所属的对象**。
   var max=Math.max.bind(null,arr[0],arr[1],arr[2],arr[3])
   console.log(max(arr[4])); //12，分两次传参
   ```
-  
-  
   
   ```js
   // call()
@@ -2940,9 +2367,9 @@ JavaScript `this` 关键词指的是**它所属的对象**。
 
 
 
-### 自执行函数
+## 自执行函数 & 箭头函数
 
-自执行函数（**Immediately Invoked Function Expression**，简称 IIFE）是一种 JavaScript 函数，它在定义时立即执行。这种模式常常用来创建一个独立的作用域，避免全局作用域污染，尤其在模块化编程中非常常见。
+**自执行函数（Immediately Invoked Function Expression，简称 IIFE）**是一种 JavaScript 函数，它在定义时立即执行。这种模式常常用来创建一个独立的作用域，避免全局作用域污染，尤其在模块化编程中非常常见。
 
 **IIFE 的基本形式**
 
@@ -2966,11 +2393,9 @@ IIFE 的语法是将一个函数表达式包裹在圆括号中，然后在末尾
 2. 外面的圆括号 `( ... )` 是将函数表达式包装起来，使其成为一个表达式，而不是声明。
 3. 函数的末尾 `()` 表示立即调用该函数。
 
+<hr>
 
-
-### 箭头函数
-
-箭头函数（Arrow Function）是 JavaScript 中的一种简化函数表达式的语法。它在 ES6（ECMAScript 2015）中引入，提供了比传统函数表达式更简洁的写法，并且在函数内部的 `this` 行为上有所不同。
+**箭头函数（Arrow Function）**是 JavaScript 中的一种简化函数表达式的语法。它在 ES6（ECMAScript 2015）中引入，提供了比传统函数表达式更简洁的写法，并且在函数内部的 `this` 行为上有所不同。
 
 **语法**
 
@@ -3090,9 +2515,7 @@ const functionName = (parameters) => {
 
 
 
-
-
-### 异步
+## 异步
 
 在 JavaScript 中，异步编程允许你执行时间较长的操作（如网络请求、文件读取等）而不会阻塞主线程，从而保持用户界面的响应性。**异步任务会在当前存在的同步任务都执行完毕后再触发。**
 
@@ -3116,7 +2539,7 @@ const functionName = (parameters) => {
 | **代码复杂性**   | 简单易懂                                     | 需要处理回调函数、`Promise` 等，代码较复杂 |
 | **常见应用场景** | 计算密集型任务，顺序操作                     | I/O密集型任务，网络请求，文件操作等        |
 
-#### 1. Callback
+### 回调函数 Callback
 
 回调函数是最基本的异步编程方式。当异步操作完成时，传入的回调函数会被调用。
 
@@ -3164,9 +2587,9 @@ let intervalId = setInterval(() => {
 
 
 
-#### 2. Promise
+### `Promise`
 
-在 JavaScript 中，**`Promise`** 是一种用于表示**异步操作最终完成（或失败）及其结果值的对象**。它可以帮助你管理异步操作，避免回调地狱（callback hell），使得异步代码更加简洁、可读。
+在 JavaScript 中，**`Promise`** 是一种用于表示**异步操作最终完成（或失败）及其结果值的对象**。它可以帮助你管理异步操作，避免**回调地狱（callback hell）**，使得异步代码更加简洁、可读。
 
 **Promise 的三种状态**
 
@@ -3252,7 +2675,7 @@ promise
 2. **错误处理**：可以通过 `.catch()` 来捕获和处理异步操作中的错误。
 3. **避免回调地狱**：相比于传统的回调函数，`Promise` 使异步代码更加清晰和可维护。
 
-**`async`和`await`**
+### `async` 和 `await`
 
 - **`async`**：用于声明一个函数为异步函数，异步函数总是返回一个 `Promise` 对象。如果函数中有返回值，`Promise` 会自动被解析为该值。如果函数抛出错误，`Promise` 会变为拒绝状态。
 - **`await`**：只能在 `async` 函数内部使用。它会等待一个 `Promise` 完成，并返回该 `Promise` 的结果。如果 `Promise` 被拒绝（即失败），`await` 会抛出错误。
@@ -3351,17 +2774,15 @@ fetchData();
 
 
 
-
-
-### Proxy
+## 代理 Proxy
 
 在 JavaScript 中，`Proxy` 是一个非常强大的工具，它允许你定义自定义的行为来拦截和修改对对象的基本操作，比如属性访问、赋值、函数调用等。
 
-#### 1. Proxy 的基本概念
+### 基本概念
 
 `Proxy` 是一种用于创建对象代理的机制，允许你拦截和定义对象的基本操作，如属性读取、写入、函数调用等。这对于调试、日志记录、性能监控、数据绑定等场景非常有用。
 
-#### 2. Proxy 的构造函数
+### Proxy 的构造函数
 
 `Proxy` 是通过构造函数创建的，接受两个参数：
 
@@ -3377,7 +2798,7 @@ let proxy = new Proxy(target, handler);
 - **target**：原始对象。
 - **handler**：一个对象，它包含拦截方法，定义了如何处理对 `target` 的操作。
 
-#### 3. 常用的拦截操作
+### 常用的拦截操作
 
 `Proxy` 的 `handler` 对象可以包含多个方法，每个方法对应一种对象操作的拦截。这些方法被称为“陷阱”（traps）。以下是一些常见的陷阱方法：
 
@@ -3388,9 +2809,9 @@ let proxy = new Proxy(target, handler);
 - **apply**：拦截函数调用。
 - **construct**：拦截构造函数的调用。
 
-#### 4. 示例代码
+### 示例代码
 
-##### 1. 基本使用示例
+1. 基本使用示例
 
 ```javascript
 const target = {
@@ -3415,7 +2836,7 @@ console.log(proxy.nonExistent); // "Property nonExistent does not exist"
 
 在这个例子中，`handler.get` 方法定义了如何处理属性的读取。它检查目标对象是否有该属性，如果有则返回相应的值，如果没有则返回自定义的消息。
 
-##### 2. 拦截 `set` 操作
+2. 拦截 `set` 操作
 
 ```javascript
 const target = { name: 'John' };
@@ -3434,7 +2855,7 @@ console.log(target.name); // "Alice"
 
 在这个例子中，`set` 方法在每次给属性赋值时被调用。
 
-##### 3. 拦截 `delete` 操作
+3. 拦截 `delete` 操作
 
 ```javascript
 const target = { name: 'John', age: 30 };
@@ -3459,21 +2880,17 @@ console.log(target); // { age: 30 }
 
 这里，`deleteProperty` 用于拦截 `delete` 操作，确保我们能够在删除属性时做一些额外的操作。
 
-#### 5. 应用场景
+### 应用场景
 
 - **数据验证**：通过 `set` 陷阱，可以在属性赋值时进行验证，确保数据的正确性。
 - **属性访问监控**：通过 `get` 陷阱，可以监控对象的属性访问，记录日志或进行性能分析。
 - **虚拟属性**：通过拦截访问不存在的属性，`Proxy` 可以实现虚拟属性或动态计算属性。
 
-#### 6. 总结
-
-`Proxy` 是一个非常灵活且强大的工具，允许你以非常细粒度的方式控制对对象的操作。它使得 JavaScript 对象的行为可以变得更加灵活、可定制，非常适用于各种高级的编程任务。
 
 
+## 模块 Module
 
-### Module
-
-#### 1. CommonJS
+### CommonJS
 
 CommonJS 是 Node.js 最早采用的模块系统，它在服务器端 JavaScript 中广泛使用。CommonJS 模块的主要特点是同步加载，它适用于服务器端环境。
 
@@ -3509,7 +2926,7 @@ console.log(myModule.greet('World')); // 输出: Hello, World!
 
 ------
 
-#### 2. ESM (ECMAScript Modules)
+### ESM (ECMAScript Modules)
 
 ESM 是现代 JavaScript 模块化的标准，逐步被现代浏览器和 Node.js 所支持。ESM 是基于浏览器原生的模块化支持，并且使用了静态分析的方式进行模块加载，因此它的性能在某些场景下优于 CommonJS。
 
@@ -3550,7 +2967,7 @@ console.log(greet(name)); // 输出: Hello, Peter!
 
 ------
 
-#### 3. **CommonJS vs ESM 比较**
+### CommonJS vs ESM
 
 | 特性                  | CommonJS                               | ESM (ECMAScript Modules)                |
 | --------------------- | -------------------------------------- | --------------------------------------- |
@@ -3565,11 +2982,11 @@ console.log(greet(name)); // 输出: Hello, Peter!
 
 
 
-### 新数据类型
+## 新数据类型
 
 
 
-#### Symbol()
+### Symbol()
 
 `Symbol` 是 JavaScript 中的一种原始数据类型，最早在 ECMAScript 6（ES6）中引入。它代表一个独一无二且不可变的值，通常用于作为对象属性的标识符。`Symbol` 主要用来创建唯一的对象属性键，从而避免不同属性之间发生命名冲突。
 
@@ -3700,7 +3117,7 @@ console.log(user[uniqueKey]);  // 输出: 12345
 
 
 
-#### Set()
+### Set()
 
 `Set` 是 JavaScript 中的一种集合数据结构，它存储唯一的值（即去重）。不同于数组，`Set` 中的值是无序的，且不允许重复的元素。
 
@@ -3765,7 +3182,7 @@ console.log(mySet);  // Set {}
 
 
 
-#### Map()
+### Map()
 
 `Map()` 是 JavaScript 中的一个内置对象，它用于存储键值对。与普通的 JavaScript 对象（Object）不同，`Map` 的键可以是任何类型（例如：对象、函数、任何原始类型），而不仅限于字符串或符号。
 
@@ -3862,9 +3279,13 @@ console.log([...myMap.values()]);  // ['Bob', 25, 'Los Angeles']
 - 可以通过 `forEach()` 或 `for...of` 遍历 `Map`。
 - `Map` 中的键是有序的。
 
-# 2.文档对象模型（DOM）
+# 文档对象模型 DOM
 
-## 2.1.DOM树
+**文档对象模型**（Document Object Model，DOM）是一种用于表示任何基于 [HTML](https://developer.mozilla.org/zh-CN/docs/Glossary/HTML) 或 [XML](https://developer.mozilla.org/zh-CN/docs/Glossary/XML) 的标记语言文档并能与之交互的 [API](https://developer.mozilla.org/zh-CN/docs/Glossary/API)。它是加载在[浏览器](https://developer.mozilla.org/zh-CN/docs/Glossary/Browser)中的文档模型，可以将文档表示为[节点](https://developer.mozilla.org/zh-CN/docs/Glossary/Node/DOM)树，或称 **DOM 树**，其中每个节点代表文档的一部分（例如，[元素](https://developer.mozilla.org/zh-CN/docs/Glossary/Element)、文本字符串或注释）。
+
+DOM 是 [Web](https://developer.mozilla.org/zh-CN/docs/Glossary/World_Wide_Web) 上最常用的 [API](https://developer.mozilla.org/zh-CN/docs/Glossary/API) 之一，因为它允许在浏览器中运行的代码访问文档中的每个节点并与之交互。可以创建、移动和更改节点，还可以将事件监听器添加到节点，并在特定事件发生时触发。
+
+## DOM 树
 
 ```js
 Document
@@ -3880,70 +3301,264 @@ Document
 
 ```
 
-## 2.2.DOM元素
+## DOM 节点
+
+在 **DOM (文档对象模型)** 中，**节点 (Node)** 是构成网页的基本元素。DOM将网页结构表示为一个树形结构，每个部分（如标签、文本、属性等）都是一个节点。通过DOM API，我们可以操作这些节点，修改网页内容和结构。
+
+### 节点分类
+
+- **元素节点（Element Node）**：代表HTML标签元素。例如，`<div>`, `<p>`, `<a>` 等都是元素节点。
+    - 使用 `nodeType === 1` 判断。
+- **文本节点（Text Node）**：代表HTML标签中的文本内容。例如，`<p>Hello World</p>` 中的 "Hello World" 是一个文本节点。
+    - 使用 `nodeType === 3` 判断。
+- **属性节点（Attribute Node）**：代表HTML元素的属性。例如，`<a href="https://example.com">` 中的 `href="https://example.com"` 就是一个属性节点。现有的DOM标准（如HTML5）不再使用单独的属性节点，它们通常作为元素节点的属性来访问。
+- **注释节点（Comment Node）**：代表HTML中的注释。例如，`<!-- This is a comment -->` 是一个注释节点。
+    - 使用 `nodeType === 8` 判断。
+- **文档节点（Document Node）**：代表整个HTML文档。文档节点是DOM树的根节点。
+    - 使用 `nodeType === 9` 判断。
+- **文档片段节点（DocumentFragment Node）**：是一个轻量级的文档容器，可以包含多个节点，用来暂时存储节点，操作后再批量添加到DOM中。
+    - 使用 `nodeType === 11` 判断。
+- **文档类型节点（DocumentType Node）**：表示文档类型声明（如 `<!DOCTYPE html>`）。
+    - 使用 `nodeType === 10` 判断。
 
 
 
-### 查找 HTML 元素
+![image-20241106113429440](images/image-20241106113429440.png)
 
-| 方法                                       | 描述                                |
-| :----------------------------------------- | :---------------------------------- |
-| **element.getElementById(*id*)**           | 通过元素 id 来查找元素              |
-| **element.getElementsByTagName(*name*)**   | 通过标签名来查找元素                |
-| **element.getElementsByClassName(*name*)** | 通过类名来查找元素                  |
-| element.querySelector(name)                | 通过 CSS 选择器查找元素**(第一个)** |
-| **element.querySelectorAll(name)**         | 通过 CSS 选择器查找元素**(所有)**   |
+### 节点属性
+
+DOM节点提供了许多属性和方法，常见的有：
+
+#### 普通属性
+
+- **`nodeName`**：返回节点的名称（如 `div`、`p`、`#text`）。
+- **`nodeValue`**：返回节点的值（如文本节点的文本内容）。
+- **`nodeType`**：返回节点的类型。
+
+**nodeName**
+
+`nodeName` 属性规定节点的名称。
+
+- nodeName 是只读的
+- 元素节点的 nodeName 等同于标签名
+- 属性节点的 nodeName 是属性名称
+- 文本节点的 nodeName 总是 #text
+- 文档节点的 nodeName 总是 #document
 
 ```html
-<!DOCTYPE html>
-<html>
-<head>
-    <style>
-        .intro {
-            color: red;
-            font-size: 20px;
-        }
-    </style>
-</head>
-    
-<body>
-	<h1>example</h1>
-    <!-- 3.4. -->
-	<p class="intro"></p>
-    <!-- 1. -->
-	<div id="main">
-		<p>DOM 很有用</p>
-		<p>本例演示<b>查找 HTML 元素</b>方法</p>
-	</div>
+<h1 id="id01">我的第一张网页</h1>
+<p id="id02">Hello!</p>
 
-	<p id="demo"></p>
-    
-    <!-- 5. -->
-    <form id="frm1" action="/demo/demo_form.asp">
-  	First name: <input type="text" name="fname" value="Bill"><br>
-  	Last name: <input type="text" name="lname" value="Gates"><br><br>
-  	<input type="submit" value="提交">
-	</form> 
-
-	<p>单击“试一试”按钮，显示表单中每个元素的值。</p>
-
-	<button onclick="myFunction()">试一试</button>
-</body>
-</html>
+<script>
+document.getElementById("id02").innerHTML = document.getElementById("id01").nodeName;
+</script>
 ```
+
+**nodeValue** 
+
+`nodeValue` 属性规定节点的值。
+
+- 元素节点的 nodeValue 是 undefined
+- 文本节点的 nodeValue 是文本文本
+- 属性节点的 nodeValue 是属性值
+
+```html
+<h1 id="id01">我的第一张页面</h1>
+<p id="id02">Hello!</p>
+
+<script>
+document.getElementById("id02").innerHTML = document.getElementById("id01").firstChild.nodeValue;
+</script>
+```
+
+**nodeType** 
+
+`nodeType` 属性返回节点的类型。`nodeType` 是只读的。
+
+```html
+<h1 id="id01">我的第一张网页</h1>
+<p id="id02">Hello!</p>
+
+<script>
+document.getElementById("id02").innerHTML  = document.getElementById("id01").nodeType;
+</script>
+```
+
+| 节点               | 类型 | 例子                              |
+| :----------------- | :--- | :-------------------------------- |
+| ELEMENT_NODE       | 1    | <h1 class="heading">W3School</h1> |
+| ATTRIBUTE_NODE     | 2    | class = "heading" （弃用）        |
+| TEXT_NODE          | 3    | W3School                          |
+| COMMENT_NODE       | 8    | <!-- 这是注释 -->                 |
+| DOCUMENT_NODE      | 9    | HTML 文档本身（<html> 的父）      |
+| DOCUMENT_TYPE_NODE | 10   | <!Doctype html>                   |
+
+#### 节点的导航
+
+**主要操作的是元素节点**
+
+使用以下节点属性在节点之间导航：
+
+- **`parentNode`**：返回当前节点的父节点。
+- **`childNodes[nodeNumber]`**：返回当前节点的所有子节点（包括元素节点、文本节点、注释节点等）。
+- **`children`：**返回的是一个 HTMLCollection 对象（类数组对象），包含了所有该元素的子元素节点。
+- **`firstChild`** 和 **`lastChild`**：分别返回当前节点的第一个和最后一个子节点。
+- **`previousSibling`** 和 **`nextSibling`**：返回当前节点的前一个或后一个兄弟节点。
+
+### 节点操作
+
+| 操作类别                     | 方法及描述                                                   |
+| ---------------------------- | ------------------------------------------------------------ |
+| **创建新 HTML 元素（节点）** | `appendChild()`：将一个节点追加为目标节点的最后一个子节点。  |
+|                              | `document.createElement()`：创建一个新的 HTML 元素节点。     |
+|                              | `createTextNode()`：创建一个新的文本节点。                   |
+|                              | `parentNode.insertBefore(newNode, referenceNode)`：在指定的参考节点前插入新节点。 |
+| **删除已有 HTML 元素**       | `removeChild()`：删除指定的子节点。                          |
+| **替换 HTML 元素**           | `replaceChild()`：替换目标节点的指定子节点。                 |
+| **克隆 HTML 元素**           | `cloneNode(deep)`：克隆一个节点，支持深度克隆（包括子节点）。`deep: true / false` |
+
+### 节点列表
+
+1. **定义**
+
+- **`NodeList`**：是一个类数组对象，表示一组 DOM 节点。它可以包含任何类型的节点，如元素节点、文本节点、注释节点等。
+- **`HTMLCollection`**：是一个专门的类数组对象，表示一组 **HTML 元素节点**（即 `Element` 节点），它只包含 DOM 树中的元素节点。
+
+2. **包含的内容**
+
+- **`NodeList`**：可以包含任何类型的节点（包括元素节点、文本节点、注释节点等）。
+
+    - 例如，通过 `document.querySelectorAll()` 获取的返回值就是一个 `NodeList`，它可以包含各种类型的节点。
+
+    ```javascript
+    const nodes = document.querySelectorAll('*');  // NodeList 包含所有节点，包括元素、文本等
+    ```
+
+- **`HTMLCollection`**：只包含 **元素节点**，即 DOM 中的 `<div>`, `<span>`, `<p>` 等 HTML 标签。
+
+    - 例如，`document.getElementsByTagName()` 或 `document.getElementsByClassName()` 返回的就是 `HTMLCollection`。
+
+    ```javascript
+    const elements = document.getElementsByTagName('div');  // HTMLCollection 只包含 <div> 元素
+    ```
+
+3. **实时性（Live vs Non-Live）**
+
+- **`HTMLCollection`**：通常是 **实时的（live）**，这意味着当 DOM 中的元素发生变化时，`HTMLCollection` 会自动更新。例如，如果你向 DOM 中添加或删除元素，`HTMLCollection` 会反映这些变化。
+
+    ```javascript
+    let divs = document.getElementsByTagName('div');
+    console.log(divs.length);  // 初始 div 的数量
+    // 假设动态添加或删除了 div 元素
+    divs = document.getElementsByTagName('div');
+    console.log(divs.length);  // div 的数量会自动更新
+    ```
+
+- **`NodeList`**：取决于方法的不同，可以是实时的，也可以是非实时的（静态的）。
+
+    - 例如，`document.querySelectorAll()` 返回的是 **非实时的（static）** `NodeList`，它不会随着 DOM 的变化而自动更新。
+    - 但某些方法返回的 `NodeList`（例如 `childNodes`）是 **实时的**。
+
+    ```javascript
+    const nodes = document.querySelectorAll('div');  // 返回非实时 NodeList
+    console.log(nodes.length);  // 初始数量
+    // 添加/删除 div 后，nodes 不会自动更新
+    ```
+
+4. **访问方式**
+
+- **`NodeList` 和 `HTMLCollection`** 都是类数组对象，意味着它们都可以通过索引访问单个元素（如 `nodeList[0]`）。
+
+    - **`NodeList`**：
+
+        ```javascript
+        let node = document.querySelectorAll('div');
+        console.log(node[0]);  // 获取第一个 <div>
+        ```
+
+    - **`HTMLCollection`**：
+
+        ```javascript
+        let divs = document.getElementsByTagName('div');
+        console.log(divs[0]);  // 获取第一个 <div>
+        ```
+
+- **`NodeList`**：通常支持 `forEach()` 方法来遍历所有节点，但并不是所有 `NodeList` 对象都支持。
+
+    **语法**：
+
+    ```javascript
+    array.forEach(function(element, index, array) {
+      // 执行操作
+    });
+    
+    array.forEach((element, index, array) => {
+      // 执行操作
+    });
+    ```
+
+    **参数说明**：
+
+    - `element`：当前遍历的元素。
+    - `index`：当前元素的索引（可选）。
+    - `array`：原始数组（可选）。
+
+    **示例**：
+
+    ```javascript
+    const nodes = document.querySelectorAll('div');
+    nodes.forEach(node => console.log(node));  // 可以直接使用 forEach() 遍历
+    ```
+
+    **注意**：`HTMLCollection` 不支持 `forEach()` 方法（在早期的浏览器中），但现代浏览器（如 Chrome 和 Firefox）现在支持 `forEach()`。
+
+    ```javascript
+    const divs = document.getElementsByTagName('div');
+    Array.from(divs).forEach(div => console.log(div));  // 通过转换为数组使用 forEach()
+    ```
+
+
+5. **常见方法**
+
+- **`NodeList`** 通常由 `document.querySelectorAll()` 或 `parentNode.childNodes` 等方法返回。
+- **`HTMLCollection`** 通常由 `document.getElementsByTagName()`, `document.getElementsByClassName()` 或 `parentNode.getElementsByTagName()` 等方法返回。
+
+| **特性**           | **NodeList**                                                 | **HTMLCollection**                                           |
+| ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| **包含的内容**     | 可以是任何类型的节点（元素、文本、注释等）。                 | 只包含 HTML 元素节点。                                       |
+| **实时性**         | 可以是实时的（如 `childNodes`），也可以是非实时的（如 `querySelectorAll()`）。 | 是实时的（即会随着 DOM 的变化而更新）。                      |
+| **支持的遍历方法** | 支持 `forEach()` 遍历（大部分浏览器）。                      | 只支持通过索引访问元素，不支持 `forEach()`，但可以转为数组遍历。 |
+| **返回的方式**     | 由 `document.querySelectorAll()`, `parentNode.childNodes` 等返回。 | 由 `document.getElementsByTagName()`, `document.getElementsByClassName()` ，`parentNode.getElementsByTagName()`等返回。 |
+
+
+
+
+
+### DOM 元素
+
+#### 查找 HTML 元素
+
+| 方法                                 | 描述                                |
+| :----------------------------------- | :---------------------------------- |
+| **element.getElementById(id)**       | 通过元素 id 来查找元素              |
+| element.getElementsByTagName(name)   | 通过标签名来查找元素                |
+| element.getElementsByClassName(name) | 通过类名来查找元素                  |
+| **element.querySelector(name)**      | 通过 CSS 选择器查找元素**(第一个)** |
+| **element.querySelectorAll(name)**   | 通过 CSS 选择器查找元素**(所有)**   |
 
 ```js
 // 1.通过 id 查找 HTML 元素
-const x = document.getElementById("main");
+const main = document.getElementById("main");
 
 // 2.通过标签名查找 HTML 元素。
-const y = x.getElementsByTagName("p");
+const passage = x.getElementsByTagName("p");
 
 // 3.通过类名查找 HTML 元素
-const i = document.getElementsByClassName("intro");
+const intro = document.getElementsByClassName("intro");
 
 // 4.通过 CSS 选择器查找 HTML 元素
-var x = document.querySelectorAll(".intro");
+const intro = document.querySelectorAll(".intro");
+const main = document.querySelectorAll("#main");
 
 // 5.通过 HTML 对象选择器查找 HTML 对象
 function myFunction() {
@@ -3970,9 +3585,7 @@ document.title
 */
 ```
 
-
-
-### 改变 HTML 元素
+#### 改变 HTML 元素
 
 | 方法                                       | 描述                                  |
 | :----------------------------------------- | :------------------------------------ |
@@ -4009,11 +3622,7 @@ document.getElementById("myImage").setAttribute('src', 'landscape.jpg');
 document.getElementById("myText").style.color = 'red';
 ```
 
-
-
-
-
-### 添加和删除元素
+#### 添加和删除元素
 
 | 方法                                 | 描述             |
 | :----------------------------------- | :--------------- |
@@ -4024,17 +3633,15 @@ document.getElementById("myText").style.color = 'red';
 | **element.replaceChild(*element*)**  | 替换 HTML 元素   |
 | **element.write(*text*)**            | 写入 HTML 输出流 |
 
-
-
-### Document 对象属性
+#### Document 对象属性
 
 | 属性                                                         | 描述                                                         |
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
-| [document.activeElement](https://www.runoob.com/jsref/prop-document-activeelement.html) | 返回当前获取焦点元素                                         |
+| **[document.activeElement](https://www.runoob.com/jsref/prop-document-activeelement.html)** | 返回当前获取焦点元素                                         |
 | [document.anchors](https://www.runoob.com/jsref/coll-doc-anchors.html) | 返回对文档中所有 Anchor 对象的引用。                         |
 | document.applets                                             | 返回对文档中所有 Applet 对象的引用。**注意:** HTML5 已不支持 <applet> 元素。 |
 | [document.baseURI](https://www.runoob.com/jsref/prop-doc-baseuri.html) | 返回文档的绝对基础 URI                                       |
-| [document.body](https://www.runoob.com/jsref/prop-doc-body.html) | 返回文档的body元素                                           |
+| **[document.body](https://www.runoob.com/jsref/prop-doc-body.html)** | 返回文档的body元素                                           |
 | [document.cookie](https://www.runoob.com/jsref/prop-doc-cookie.html) | 设置或返回与当前文档有关的所有 cookie。                      |
 | [document.doctype](https://www.runoob.com/jsref/prop-document-doctype.html) | 返回与文档相关的文档类型声明 (DTD)。                         |
 | [document.documentElement](https://www.runoob.com/jsref/prop-document-documentelement.html) | 返回文档的根节点                                             |
@@ -4044,7 +3651,7 @@ document.getElementById("myText").style.color = 'red';
 | document.domConfig                                           | **已废弃**。返回 normalizeDocument() 被调用时所使用的配置。  |
 | [document.embeds](https://www.runoob.com/jsref/coll-doc-embeds.html) | 返回文档中所有嵌入的内容（embed）集合                        |
 | [document.forms](https://www.runoob.com/jsref/coll-doc-forms.html) | 返回对文档中所有 Form 对象引用。                             |
-| [document.images](https://www.runoob.com/jsref/coll-doc-images.html) | 返回对文档中所有 Image 对象引用。                            |
+| **[document.images](https://www.runoob.com/jsref/coll-doc-images.html)** | 返回对文档中所有 Image 对象引用。                            |
 | [document.implementation](https://www.runoob.com/jsref/prop-document-implementation.html) | 返回处理该文档的 DOMImplementation 对象。                    |
 | [document.inputEncoding](https://www.runoob.com/jsref/prop-document-inputencoding.html) | 返回用于文档的编码方式（在解析时）。                         |
 | [document.lastModified](https://www.runoob.com/jsref/prop-doc-lastmodified.html) | 返回文档被最后修改的日期和时间。                             |
@@ -4053,14 +3660,10 @@ document.getElementById("myText").style.color = 'red';
 | [document.referrer](https://www.runoob.com/jsref/prop-doc-referrer.html) | 返回载入当前文档的文档的 URL。                               |
 | [document.scripts](https://www.runoob.com/jsref/coll-doc-scripts.html) | 返回页面中所有脚本的集合。                                   |
 | [document.strictErrorChecking](https://www.runoob.com/jsref/prop-document-stricterrorchecking.html) | 设置或返回是否强制进行错误检查。                             |
-| [document.title](https://www.runoob.com/jsref/prop-doc-title.html) | 返回当前文档的标题。                                         |
+| **[document.title](https://www.runoob.com/jsref/prop-doc-title.html)** | 返回当前文档的标题。                                         |
 | [document.URL](https://www.runoob.com/jsref/prop-doc-url.html) | 返回文档完整的URL                                            |
 
-
-
-
-
-### Element 对象属性
+#### Element 对象属性
 
 | 属性                                                         | 描述                                                         |
 | :----------------------------------------------------------- | :----------------------------------------------------------- |
@@ -4095,18 +3698,18 @@ document.getElementById("myText").style.color = 'red';
 | [*element*.scrollWidth](https://www.runoob.com/jsref/prop-element-scrollwidth.html) | 返回元素的整个宽度（包括带滚动条的隐蔽的地方）               |
 | [***element*.style**](https://www.runoob.com/jsref/prop-element-style.html) | 设置或返回元素的样式属性                                     |
 | [*element*.tabIndex](https://www.runoob.com/jsref/prop-html-tabindex.html) | 设置或返回元素的标签顺序。                                   |
-| [*element*.tagName](https://www.runoob.com/jsref/prop-element-tagname.html) | 作为一个字符串返回某个元素的标记名（大写）                   |
+| **[*element*.tagName](https://www.runoob.com/jsref/prop-element-tagname.html)** | 作为一个字符串返回某个元素的标记名（大写）e.g. \<p> -> P     |
 | [*element*.textContent](https://www.runoob.com/jsref/prop-node-textcontent.html) | 设置或返回一个节点和它的文本内容                             |
 | [*element*.title](https://www.runoob.com/jsref/prop-html-title.html) | 设置或返回元素的title属性                                    |
-| [*nodelist*.length](https://www.runoob.com/jsref/prop-nodelist-length.html) | 返回节点列表的节点数目。                                     |
+| **[*nodelist*.length](https://www.runoob.com/jsref/prop-nodelist-length.html)** | 返回节点列表的节点数目。                                     |
 
 
 
+## DOM 事件
 
+DOM 事件（Document Object Model 事件）是指在网页上的元素发生某些操作时触发的事件，允许我们对网页上的交互进行响应。事件可以是用户的操作，如点击按钮、输入文本或鼠标移动等，也可以是浏览器或文档本身的事件，如页面加载、窗口调整大小等。
 
-## 2.3.DOM事件
-
-### 事件
+### 事件类型
 
 | 事件                  | 描述                                                         |
 | --------------------- | ------------------------------------------------------------ |
@@ -4170,10 +3773,6 @@ element.addEventListener(event, handler, options);
 element.removeEventListener(event, handler, options);
 ```
 
-
-
-
-
 ### 事件对象
 
 事件对象（`event`）包含了与事件相关的所有信息。你可以通过该对象访问关于事件的详细信息，比如：
@@ -4198,8 +3797,6 @@ element.removeEventListener(event, handler, options);
 
 ```
 
-
-
 ### 事件捕获与冒泡
 
 在浏览器中，事件会按层级结构传播。事件传播有两种模式：**捕获阶段**和**冒泡阶段**。
@@ -4217,8 +3814,6 @@ element.addEventListener('click', function(event) {
 }, false); // 冒泡阶段（默认）
 
 ```
-
-
 
 ### 默认事件
 
@@ -4245,8 +3840,6 @@ element.addEventListener('click', function(event) {
     - 默认行为：跳转到图片的 `href` 链接（如果有）。
     - 示例：`<a href="https://www.example.com"><img src="image.jpg" /></a>`
 
-
-
 ### 阻止冒泡与默认事件
 
 1. `stopPropagation()`，阻止冒泡，默认事件仍会执行 
@@ -4263,233 +3856,9 @@ element.addEventListener('click', function(event) {
 
 
 
-## 2.4.DOM节点
 
-![image-20241106113429440](images/image-20241106113429440.png)
 
-**主要操作的是元素节点**
-
-### 节点导航
-
-使用以下节点属性在节点之间导航：
-
-- **parentNode**
-- **childNodes[*nodenumber*]**
-- **children**
-- **firstChild**
-- **lastChild**
-- **nextSibling**
-- **previousSibling**
-
-
-
-**nodeName**
-
-`nodeName` 属性规定节点的名称。
-
-- nodeName 是只读的
-- 元素节点的 nodeName 等同于标签名
-- 属性节点的 nodeName 是属性名称
-- 文本节点的 nodeName 总是 #text
-- 文档节点的 nodeName 总是 #document
-
-```html
-<h1 id="id01">我的第一张网页</h1>
-<p id="id02">Hello!</p>
-
-<script>
-document.getElementById("id02").innerHTML = document.getElementById("id01").nodeName;
-</script>
-```
-
-
-
-**nodeValue** 
-
-`nodeValue` 属性规定节点的值。
-
-- 元素节点的 nodeValue 是 undefined
-- 文本节点的 nodeValue 是文本文本
-- 属性节点的 nodeValue 是属性值
-
-```html
-<h1 id="id01">我的第一张页面</h1>
-<p id="id02">Hello!</p>
-
-<script>
-document.getElementById("id02").innerHTML = document.getElementById("id01").firstChild.nodeValue;
-</script>
-```
-
-
-
-**nodeType** 
-
-`nodeType` 属性返回节点的类型。`nodeType` 是只读的。
-
-```html
-<h1 id="id01">我的第一张网页</h1>
-<p id="id02">Hello!</p>
-
-<script>
-document.getElementById("id02").innerHTML  = document.getElementById("id01").nodeType;
-</script>
-```
-
-| 节点               | 类型 | 例子                              |
-| :----------------- | :--- | :-------------------------------- |
-| ELEMENT_NODE       | 1    | <h1 class="heading">W3School</h1> |
-| ATTRIBUTE_NODE     | 2    | class = "heading" （弃用）        |
-| TEXT_NODE          | 3    | W3School                          |
-| COMMENT_NODE       | 8    | <!-- 这是注释 -->                 |
-| DOCUMENT_NODE      | 9    | HTML 文档本身（<html> 的父）      |
-| DOCUMENT_TYPE_NODE | 10   | <!Doctype html>                   |
-
-
-
-### 节点操作
-
-**创建新 HTML 元素（节点）**
-
-appendChild()
-
-createElement()
-
-creatTextNode()
-
-parentNode.**insertBefore**(newNode, referenceNode);
-
-**删除已有 HTML 元素**
-
-removeChild()
-
-**替换 HTML 元素**
-
-replaceChild()
-
-**克隆 HTML 元素**
-
-cloneNode()
-
-### 节点列表
-
-1. **定义**
-
-- **`NodeList`**：是一个类数组对象，表示一组 DOM 节点。它可以包含任何类型的节点，如元素节点、文本节点、注释节点等。
-- **`HTMLCollection`**：是一个专门的类数组对象，表示一组 **HTML 元素节点**（即 `Element` 节点），它只包含 DOM 树中的元素节点。
-
-2. **包含的内容**
-
-- **`NodeList`**：可以包含任何类型的节点（包括元素节点、文本节点、注释节点等）。
-
-  - 例如，通过 `document.querySelectorAll()` 获取的返回值就是一个 `NodeList`，它可以包含各种类型的节点。
-
-  ```javascript
-  const nodes = document.querySelectorAll('*');  // NodeList 包含所有节点，包括元素、文本等
-  ```
-
-- **`HTMLCollection`**：只包含 **元素节点**，即 DOM 中的 `<div>`, `<span>`, `<p>` 等 HTML 标签。
-
-  - 例如，`document.getElementsByTagName()` 或 `document.getElementsByClassName()` 返回的就是 `HTMLCollection`。
-
-  ```javascript
-  const elements = document.getElementsByTagName('div');  // HTMLCollection 只包含 <div> 元素
-  ```
-
-3. **实时性（Live vs Non-Live）**
-
-- **`HTMLCollection`**：通常是 **实时的（live）**，这意味着当 DOM 中的元素发生变化时，`HTMLCollection` 会自动更新。例如，如果你向 DOM 中添加或删除元素，`HTMLCollection` 会反映这些变化。
-
-  ```javascript
-  let divs = document.getElementsByTagName('div');
-  console.log(divs.length);  // 初始 div 的数量
-  // 假设动态添加或删除了 div 元素
-  divs = document.getElementsByTagName('div');
-  console.log(divs.length);  // div 的数量会自动更新
-  ```
-
-- **`NodeList`**：取决于方法的不同，可以是实时的，也可以是非实时的（静态的）。
-
-  - 例如，`document.querySelectorAll()` 返回的是 **非实时的（static）** `NodeList`，它不会随着 DOM 的变化而自动更新。
-  - 但某些方法返回的 `NodeList`（例如 `childNodes`）是 **实时的**。
-
-  ```javascript
-  const nodes = document.querySelectorAll('div');  // 返回非实时 NodeList
-  console.log(nodes.length);  // 初始数量
-  // 添加/删除 div 后，nodes 不会自动更新
-  ```
-
-4. **访问方式**
-
-- **`NodeList` 和 `HTMLCollection`** 都是类数组对象，意味着它们都可以通过索引访问单个元素（如 `nodeList[0]`）。
-
-  - **`NodeList`**：
-
-    ```javascript
-    let node = document.querySelectorAll('div');
-    console.log(node[0]);  // 获取第一个 <div>
-    ```
-
-  - **`HTMLCollection`**：
-
-    ```javascript
-    let divs = document.getElementsByTagName('div');
-    console.log(divs[0]);  // 获取第一个 <div>
-    ```
-
-- **`NodeList`**：通常支持 `forEach()` 方法来遍历所有节点，但并不是所有 `NodeList` 对象都支持。
-
-  **语法**：
-  
-  ```javascript
-  array.forEach(function(element, index, array) {
-    // 执行操作
-  });
-  
-  array.forEach((element, index, array) => {
-    // 执行操作
-  });
-  ```
-  
-  **参数说明**：
-  
-  - `element`：当前遍历的元素。
-  - `index`：当前元素的索引（可选）。
-  - `array`：原始数组（可选）。
-  
-  **示例**：
-  
-  ```javascript
-  const nodes = document.querySelectorAll('div');
-  nodes.forEach(node => console.log(node));  // 可以直接使用 forEach() 遍历
-  ```
-  
-  **注意**：`HTMLCollection` 不支持 `forEach()` 方法（在早期的浏览器中），但现代浏览器（如 Chrome 和 Firefox）现在支持 `forEach()`。
-  
-  ```javascript
-  const divs = document.getElementsByTagName('div');
-  Array.from(divs).forEach(div => console.log(div));  // 通过转换为数组使用 forEach()
-  ```
-  
-  
-
-5. **常见方法**
-
-- **`NodeList`** 通常由 `document.querySelectorAll()` 或 `parentNode.childNodes` 等方法返回。
-- **`HTMLCollection`** 通常由 `document.getElementsByTagName()`, `document.getElementsByClassName()` 或 `parentNode.getElementsByTagName()` 等方法返回。
-
-| **特性**           | **NodeList**                                                 | **HTMLCollection**                                           |
-| ------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **包含的内容**     | 可以是任何类型的节点（元素、文本、注释等）。                 | 只包含 HTML 元素节点。                                       |
-| **实时性**         | 可以是实时的（如 `childNodes`），也可以是非实时的（如 `querySelectorAll()`）。 | 是实时的（即会随着 DOM 的变化而更新）。                      |
-| **支持的遍历方法** | 支持 `forEach()` 遍历（大部分浏览器）。                      | 只支持通过索引访问元素，不支持 `forEach()`，但可以转为数组遍历。 |
-| **返回的方式**     | 由 `document.querySelectorAll()`, `parentNode.childNodes` 等返回。 | 由 `document.getElementsByTagName()`, `document.getElementsByClassName()` ，`parentNode.getElementsByTagName()`等返回。 |
-
-
-
-
-
-# 3.浏览器对象模型（BOM）
+# 浏览器对象模型 BOM
 
 **BOM**（Browser Object Model，浏览器对象模型）是浏览器中用于表示和管理浏览器窗口及其相关功能的一组对象和接口。通过 BOM，开发者可以与浏览器的窗口、历史记录、位置、屏幕等进行交互，以实现动态网页和更复杂的用户体验。
 
@@ -4615,7 +3984,7 @@ function checkCookie() {
 
 
 
-# 4.jQuery库
+# jQuery
 
 **jQuery** 是一个快速、简洁的 JavaScript 库，旨在简化 HTML 文档遍历、事件处理、动画效果和 Ajax 操作等常见任务的处理。它使得网页开发变得更加简便，并且具有很好的跨浏览器兼容性。jQuery 是基于 JavaScript 语言的，提供了简化的语法，使得开发者无需编写复杂的 JavaScript 代码即可实现许多功能。
 
@@ -4824,7 +4193,7 @@ function checkCookie() {
 
 
 
-# 5.技巧
+# 技巧
 
 
 
@@ -4883,7 +4252,7 @@ function toFunction(scrollTopVal) {
 
 
 
-```
+```js
 // TODO：请补充代码
 function startGame() {
     let score = 0
@@ -4992,7 +4361,7 @@ function getRandomBetween(n, m) {
 
 ## 可选链操作符
 
-**可选链操作符**（Optional Chaining Operator）`?.` 是 JavaScript 中的一种新语法，它允许你在访问对象的深层嵌套属性时安全地避免出现 `TypeError` 错误。如果在访问某个属性或方法时，目标对象是 `null` 或 `undefined`，则表达式会短路并返回 `undefined`，而不会抛出错误。
+**可选链操作符**（Optional Chaining Operator）`?.` 是 JavaScript 中的一种新语法，它允许你在访问对象的深层嵌套属性时安全地避免出现 `TypeError` 错误。如果在访问某个属性或方法时，目标对象是 `null` 或 `undefined`，则表达式会短路并返回 `undefined`，而不会抛出错误。:star: 通常用来做判断
 
 ### 语法：
 
@@ -5161,4 +4530,136 @@ wordSegmentation(stopWord);
 ["人工智能","缩写","英文名","研究","开发用于模拟","延伸","扩展人","智能","理论","方法","技术",
 "应用系统","一门新技术科学"];
 ```
+
+
+
+## 浅拷贝 & 深拷贝
+
+### 数组
+
+**浅拷贝（Shallow Copy）**
+
+对于数组的浅拷贝，当数组中的元素是基本数据类型（如数字、字符串等）时，浅拷贝会创建一个新的数组，包含原数组的值。若数组中的元素是引用类型（如对象或其他数组），那么浅拷贝只会复制它们的引用地址，导致新数组与原数组共享这些引用类型的元素。
+
+1. **`slice()` 方法**：
+
+```js
+let arr1 = [1, 2, { a: 3 }];
+let arr2 = arr1.slice();  // 使用 slice() 方法创建浅拷贝
+
+arr2[0] = 10;  // 修改 arr2 中的第一个元素
+arr2[2].a = 20;  // 修改 arr2 中对象元素的属性
+
+console.log(arr1);  // [1, 2, { a: 20 }]  --> arr1 的第 2 个元素被修改
+console.log(arr2);  // [10, 2, { a: 20 }]  --> arr2 中的元素发生了变化
+```
+
+2. **扩展运算符 (`...`)**：
+
+```js
+let arr1 = [1, 2, 3];
+let arr2 = [...arr1];  // 创建浅拷贝
+```
+
+3. **`concat()` 方法**：
+
+```js
+let arr1 = [1, 2, 3];
+let arr2 = arr1.concat();  // 创建浅拷贝
+```
+
+**深拷贝（Deep Copy）**
+
+深拷贝会创建一个新的数组，并递归地复制数组中的所有元素（包括嵌套的数组或对象），确保新数组与原数组完全独立。修改新数组中的任何元素（包括引用类型元素）不会影响原数组。
+
+1. **`JSON.parse(JSON.stringify())`**：
+
+```js
+let arr1 = [1, 2, { a: 3 }];
+let arr2 = JSON.parse(JSON.stringify(arr1));  // 使用 JSON 方法进行深拷贝
+
+arr2[0] = 10;  // 修改 arr2 中的第一个元素
+arr2[2].a = 20;  // 修改 arr2 中对象元素的属性
+
+console.log(arr1);  // [1, 2, { a: 3 }]  --> arr1 保持不变
+console.log(arr2);  // [10, 2, { a: 20 }]  --> arr2 中的元素发生了变化
+```
+
+2. **递归实现深拷贝**： 如果需要支持更多复杂的数据类型，可以手动实现递归深拷贝。
+
+```js
+function deepCopyArray(arr) {
+  return arr.map(item => (typeof item === 'object' && item !== null) ? deepCopyArray(item) : item);
+}
+
+let arr1 = [1, 2, [3, 4], { a: 5 }];
+let arr2 = deepCopyArray(arr1);  // 自定义深拷贝函数
+```
+
+### 对象
+
+**浅拷贝（Shallow Copy）**
+
+浅拷贝是指创建一个新的对象，但对象的属性仍然指向原始对象中的值。
+
+- 如果对象的属性是基本数据类型（如字符串、数字、布尔值），则会复制其值。
+- 如果对象的属性是引用类型（如数组或对象），则会复制其引用，导致原始对象和新对象共享对这些引用类型的访问。
+
+1. **`Object.assign()` 方法**：
+
+```js
+// 示例：浅拷贝基本数据类型
+let obj1 = { a: 1, b: 2 };
+let obj2 = Object.assign({}, obj1);  // 浅拷贝
+```
+
+2. **扩展运算符 (`...`)**：
+
+```js
+let obj1 = { a: 1, b: { c: 2 } };
+let obj2 = { ...obj1 };  // 使用对象扩展运算符进行浅拷贝
+
+obj2.a = 10;  // 修改 obj2 的 a 属性
+obj2.b.c = 20;  // 修改 obj2 中 b 对象的 c 属性
+
+console.log(obj1);  // { a: 1, b: { c: 20 } }
+console.log(obj2);  // { a: 10, b: { c: 20 } }
+```
+
+**深拷贝 (Deep Copy)**
+
+深拷贝是指创建一个新对象，并且递归地拷贝对象的所有属性，包括嵌套的对象。深拷贝后的对象与原对象完全独立，修改新对象的任何属性不会影响原对象，反之亦然。
+
+1. **`JSON.parse(JSON.stringify())`**：
+
+```js
+let obj1 = { a: 1, b: { c: 2 } };
+
+// 使用 JSON 方法实现深拷贝
+let obj2 = JSON.parse(JSON.stringify(obj1));
+
+obj2.a = 10;  // 修改 obj2 的 a 属性
+obj2.b.c = 20;  // 修改 obj2 中 b 对象的 c 属性
+
+console.log(obj1);  // { a: 1, b: { c: 2 } }
+console.log(obj2);  // { a: 10, b: { c: 20 } }
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

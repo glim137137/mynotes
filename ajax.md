@@ -4,13 +4,13 @@
 
 AJAX（Asynchronous JavaScript and XML）是一种在网页上与服务器进行异步交互的技术，使得网页可以在不重新加载整个页面的情况下与服务器交换数据并更新部分网页内容。AJAX 是基于 JavaScript、XML（或 JSON）以及一些额外的浏览器功能（如 `XMLHttpRequest` 或 `Fetch API`）实现的。
 
-# 1.原生AJAX
+# 原生AJAX
 
 原生AJAX 允许你向服务器发送请求（如 GET、POST 请求），然后异步接收响应并处理结果，常用于实现动态网页加载和用户交互。
 
 
 
-## 1.1.GET请求
+## GET请求
 
 ```js
 // 1. 创建 XMLHttpRequest 对象
@@ -36,7 +36,7 @@ xhr.send();
 
 
 
-## 1.2.POST请求
+## POST请求
 
 ```js
 const xhr = new XMLHttpRequest();
@@ -63,7 +63,7 @@ xhr.send(JSON.stringify(data));
 
 
 
-## 常用的 `readyState` 状态值：
+## 常用的 `readyState` 状态值
 
 - `0` - 请求未初始化
 - `1` - 服务器连接已建立
@@ -71,14 +71,14 @@ xhr.send(JSON.stringify(data));
 - `3` - 请求处理中
 - `4` - 请求已完成，且响应已就绪
 
-## 常用的 `status` 状态码：
+## 常用的 `status` 状态码
 
 - `200` - 请求成功
 - `400` - 错误请求
 - `404` - 请求的资源未找到
 - `500` - 服务器内部错误
 
-## 如何在 JavaScript 中使用 JSON 对象：
+## 如何在 JavaScript 中使用 JSON 对象
 
 1. **解析 JSON 字符串**：使用 `JSON.parse()` 将 JSON 字符串转换为 JavaScript 对象。
 
@@ -98,11 +98,11 @@ xhr.send(JSON.stringify(data));
 
 
 
-# 2.Axios
+# Axios
 
 https://www.axios-http.cn/docs/instance
 
-## 2.1.导入
+## 导入 `axios`
 
 使用 npm:
 
@@ -145,9 +145,7 @@ ES6 模块引入方式（适用于前端或使用 ES6 模块的项目）
 import axios from 'axios';
 ```
 
-
-
-## 2.2.GET请求
+## GET请求
 
 ```js
 // 发起一个 GET 请求
@@ -196,9 +194,7 @@ async function getUser() {
 
 >**注意:** 由于`async/await` 是ECMAScript 2017中的一部分，而且在IE和一些旧的浏览器中不支持，所以使用时务必要小心。
 
-
-
-## 2.3.POST请求
+## POST请求
 
 ```js
 // 发起一个 POST 请求
@@ -239,9 +235,7 @@ const {data} = await axios.post('/user', document.querySelector('#my-form'), {
 })
 ```
 
-
-
-## 2.4.Axios API
+## Axios API
 
 可以向 `axios` 传递相关配置来创建请求
 
@@ -278,8 +272,6 @@ axios({
 axios('/user/12345');
 ```
 
-
-
 ### 请求方式别名
 
 为了方便起见，已经为所有支持的请求方法提供了别名。
@@ -308,9 +300,7 @@ axios('/user/12345');
 
 > 注意：在使用别名方法时， `url`、`method`、`data` 这些属性都不必在配置中指定。
 
-
-
-## 2.5.Axios 实例
+## Axios 实例
 
 ### 创建一个实例
 
@@ -325,8 +315,6 @@ const instance = axios.create({
   headers: {'X-Custom-Header': 'foobar'}
 });
 ```
-
-
 
 ### 实例方法
 
@@ -350,9 +338,7 @@ const instance = axios.create({
 
 **axios#getUri([config])**
 
-
-
-## 2.6.请求配置
+## 请求配置
 
 这些是创建请求时可以用的配置选项。只有 `url` 是必需的。如果没有指定 `method`，请求将默认使用 `GET` 方法。
 
@@ -520,9 +506,7 @@ const instance = axios.create({
 }
 ```
 
-
-
-## 2.7.响应结构
+## 响应结构
 
 一个请求的响应包含以下信息。
 
@@ -552,8 +536,6 @@ const instance = axios.create({
 }
 ```
 
-
-
 当使用 `then` 时，您将接收如下响应:
 
 ```js
@@ -567,13 +549,9 @@ axios.get('/user/12345')
   });
 ```
 
-
-
 当使用 `catch`，或者传递一个[rejection callback](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)作为 `then` 的第二个参数时，响应可以通过 `error` 对象被使用，正如在[错误处理](https://www.axios-http.cn/docs/handling_errors)部分解释的那样。
 
-
-
-## 2.8.拦截器
+## 拦截器
 
 在请求或响应被 then 或 catch 处理前拦截它们。
 
@@ -599,16 +577,12 @@ axios.interceptors.response.use(function (response) {
   });
 ```
 
-
-
 如果你稍后需要移除拦截器，可以这样：
 
 ```js
 const myInterceptor = axios.interceptors.request.use(function () {/*...*/});
 axios.interceptors.request.eject(myInterceptor);
 ```
-
-
 
 可以给自定义的 axios 实例添加拦截器。
 
@@ -617,9 +591,7 @@ const instance = axios.create();
 instance.interceptors.request.use(function () {/*...*/});
 ```
 
-
-
-## 2.9.错误处理
+## 错误处理
 
 ```js
 axios.get('/user/12345')
@@ -642,8 +614,6 @@ axios.get('/user/12345')
   });
 ```
 
-
-
 使用 `validateStatus` 配置选项，可以自定义抛出错误的 HTTP code。
 
 ```js
@@ -653,8 +623,6 @@ axios.get('/user/12345', {
   }
 })
 ```
-
-
 
 使用 `toJSON` 可以获取更多关于HTTP错误的信息。
 
@@ -667,7 +635,7 @@ axios.get('/user/12345')
 
 
 
-# 3.Fetch API
+# Fetch API
 
 Fetch API 是一种现代的、功能强大的网络请求工具，它允许你通过 JavaScript 异步地请求资源，而不需要使用传统的 XMLHttpRequest 对象。
 
@@ -706,7 +674,7 @@ fetch(url)
 
 ## 使用 Fetch
 
-### 1.基本 GET 请求
+### GET 请求
 
 ```js
 fetch('https://api.example.com/data')
@@ -717,7 +685,7 @@ fetch('https://api.example.com/data')
 
 在这个例子中，fetch 默认执行 GET 请求，返回的 response 是一个 Response 对象，通过调用 .json() 方法来解析 JSON 数据。
 
-### 2.发送 POST 请求
+### POST 请求
 
 ```js
 fetch('https://api.example.com/data', {
@@ -738,7 +706,7 @@ fetch('https://api.example.com/data', {
 
 这里，我们通过设置 method 为 'POST' 来发送 POST 请求，并在请求体 body 中发送 JSON 格式的数据。
 
-### 3.处理响应状态
+### 处理响应状态
 
 ```js
 fetch('https://api.example.com/data')
@@ -754,7 +722,7 @@ fetch('https://api.example.com/data')
 
 在处理响应时，我们首先检查响应状态是否成功（response.ok），如果不成功则抛出错误。
 
-### 4.发送带凭据的请求
+### 发送带凭据的请求
 
 ```js
 fetch('https://api.example.com/data', {
@@ -764,7 +732,7 @@ fetch('https://api.example.com/data', {
 
 使用 credentials: 'include' 可以在跨域请求中发送 cookies。
 
-### 5.使用 Request 和 Response 对象
+### 使用 Request 和 Response 对象
 
 ```js
 const request = new Request('flowers.jpg');
@@ -778,7 +746,7 @@ fetch(request)
 
 你可以创建 Request 对象来定制请求，fetch 会返回一个 Response 对象，你可以用它来获取不同类型的响应体，如 blob、text、json 等。
 
-### 6.错误处理
+### 错误处理
 
 ```js
 fetch('https://api.example.com/data')
@@ -794,7 +762,7 @@ fetch('https://api.example.com/data')
 
 在链式调用中，任何地方抛出的错误都会被 .catch() 捕获。
 
-### 7.设置请求头
+### 设置请求头
 
 ```js
 fetch('https://example.com/api', {
@@ -812,7 +780,7 @@ fetch('https://example.com/api', {
 
 可以通过 headers 属性为请求添加自定义的 HTTP 头信息，例如 Content-Type、Authorization 等。
 
-### 8.处理非 200 的响应状态
+### 处理非 200 的响应状态
 
 ```js
 fetch('https://example.com/api')
@@ -828,7 +796,7 @@ fetch('https://example.com/api')
 
 fetch 不会自动将 HTTP 错误状态（如 404 或 500）作为拒绝的 Promise，仍然需要检查响应状态。
 
-### 9.发送表单数据
+### 发送表单数据
 
 ```js
 const formData = new FormData();
@@ -846,7 +814,7 @@ fetch('https://example.com/api/form', {
 
 可以使用 FormData 对象将表单数据发送给服务器：
 
-### 10.跨域请求
+### 跨域请求
 
 ```js
 fetch('https://example.com/api', {

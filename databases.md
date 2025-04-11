@@ -1627,6 +1627,10 @@ END;
 2. Relations with Arrows, sometimes with Attributes connected with dash line
 3. Multiplicty
 
+How to map ERD to the corresponding relations ? :question:
+
+
+
 
 
 ## 7.3.Entity Types
@@ -2142,7 +2146,646 @@ Functional dependency describes relationship between attributes.
 
 
 
+## Build and Validate Logical Data Model
+
+**构建和验证逻辑数据模型**
+
+在这一阶段，我们的目标是将概念数据模型转化为逻辑数据模型，并通过规范化等方法验证该模型的结构是否正确，确保它支持所需的事务处理。
+
+> To translate the conceptual data model into a logical  data model and then to validate this model to check  that it is structurally correct using normalization and  supports the required transactions. 
+
+### Derive relations for logical data model
+
+**为逻辑数据模型推导关系**
+
+这一步的任务是根据已识别的实体、关系和属性，为逻辑数据模型创建关系（即数据表）。通过这些关系，我们能够表示出系统中各个实体之间的联系，以及这些实体的特征。
+
+> To create relations for the logical data model to represent the entities, relationships, and  attributes that have been identified.
+
+在概念数据模型中，可能会出现多种不同的结构。
+
+![image-20250408213348802](images/image-20250408213348802.png)
+
+以下是针对每种结构，我们如何推导逻辑数据模型中的关系（即数据表）的方法：
+
+**(1) Strong entity types 强实体类型**
+
+- 对于数据模型中的每一个强实体类型，需要创建一个关系（通常表示为数据库表）。这个关系应包含该实体的所有简单属性。
+- 对于复合属性（即由多个简单属性组成的属性），在创建关系时，只需包含这些复合属性中的各个简单属性部分。也就是说，要将复合属性“展平”（flatten attribute），即将复合属性分解成单独的简单属性并分别列出。
+
+> For each strong entity in the data model, create **a relation that includes all the simple attributes** of that entity. 
+>
+> **For composite attributes, include only the constituent(成分) simple attributes**  (flatten attribute hierarchy). 
+
+**(2)  Weak entity types 弱实体类型**
+
+- 对于数据模型中的每个弱实体类型，需要创建一个关系（即表），该关系应包含该实体的所有简单属性。
+- 弱实体的主键是部分或完全由其所有者实体**派生**而来的。因此，在确定弱实体的主键之前，必须先映射出与所有者实体的所有关系。
+
+> For each weak entity in the data model, create **a relation that includes all the simple attributes** of that entity. 
+>
+> **The primary key of a weak entity is partially or fully derived from each owner entity** and so the identification of the primary key of a weak entity cannot be made until after all the relationships with the owner entities have been mapped.
+
+**(3) One-to-many binary relationship types 一对多二元关系类型**
+
+- 对于每个1:*二元关系，关系中“单方”（一方）的实体被指定为父实体，而“多方”（多方）的实体被指定为子实体。
+- 为了表示这种关系，需要将父实体的主键属性的副本**添加**到表示子实体的关系（表）中，作为外键。
+
+> For each 1:* binary relationship, the entity on the ‘one  side’ of the relationship is designated as **the parent entity** and the entity on the ‘many side’ is designated as **the child  entity**. 
+>
+> To represent this relationship, **post a copy of the primary key attribute(s) of parent entity into the relation  representing the child entity, to act as a foreign key.**
+
+![image-20250409103413644](images/image-20250409103413644.png)
+
+**(4) One-to-one (1:1) binary relationship types 一对一（1:1）二元关系类型**
+
+- 创建关系来表示1:1关系较为复杂，因为在这种关系中，基数（即一方和多方的区分）不能用来识别父实体和子实体。
+- 相反，使用**参与约束**来决定最佳的表示方式：是将涉及的实体合并为一个关系（表），还是创建两个关系，并将其中一个关系的主键副本作为外键放入另一个关系中。
+
+> Creating relations to represent a 1:1 relationship is more  complex as the cardinality cannot be used to identify the  parent and child entities in a relationship. 
+>
+> Instead, **the participation constraints are used** to decide whether it is best  to represent the relationship by combining the entities  involved into one relation or by creating two relations and  posting a copy of the primary key from one relation to the  other.
+
+**(a) Mandatory participation on both sides of 1:1 relationship 1:1关系中双方都必需参与**
+
+- 在这种情况下，两个参与1:1关系的实体都必须参与关系。
+- 将这两个实体**合并**为一个关系（表），并选择其中一个实体的主键作为新关系的主键。另一个实体的主键（如果存在）将作为备用键（Alternate Key）来使用。
+- 这种方式的优势是将两个实体的属性合并到一个表中，同时仍然保持它们的唯一标识（主键）。
+
+> Combine entities involved into one relation and choose one of  the primary keys of original entities to be primary key of the  new relation, while the other (if one exists) is used as an  alternate key. 
+
+![image-20250409104300988](images/image-20250409104300988.png)
+
+**举例**：如果有“员工”和“办公桌”两个实体，每个员工必须有一个办公桌，每个办公桌只能分配给一个员工。在这种情况下，可以将“员工”和“办公桌”两个实体合并为一个表，其中“员工ID”作为主键，“办公桌ID”作为备用键。
+
+**(b) Mandatory participation on one side of a 1:1 relationship 1:1关系中一方必需参与，另一方可选参与**
+
+- 在这种情况下，首先需要根据参与约束来确定哪个实体是父实体，哪个是子实体。
+- 在1:1关系中，参与关系的实体如果是**可选的**，则它被视为**父实体**；如果是**必需参与的**，则它被视为**子实体**。
+- 将父实体的主键作为外键**放入**表示子实体的关系中。
+- 如果关系中有其他属性，这些属性应在主键外键关系建立之后添加到子实体的关系表中。
+
+> **Identify parent and child entities** using participation constraints.  
+>
+> **Entity with optional participation** in relationship is  designated **as parent entity**, and entity with mandatory  participation is designated **as child entity**. 
+>
+> A copy of **primary key of the parent entity is placed** in the relation  representing the child entity. 
+>
+> If the relationship has one or  more attributes, these attributes should follow the posting  of the primary key to the child relation. 
+
+![image-20250409104344742](images/image-20250409104344742.png)
+
+**举例**：假设有“员工”和“办公室钥匙”两个实体，其中一个员工必定拥有办公室钥匙，而办公室钥匙是可选的（即并非所有员工都有钥匙）。在这种情况下，“员工”是父实体，“办公室钥匙”是子实体。可以将“员工ID”作为外键放入“办公室钥匙”表，并且如果“办公室钥匙”表中有其他属性（如钥匙类型），则这些属性应在外键字段之后添加。
+
+**(c) Optional participation on both sides of a 1:1 relationship 1:1关系中双方都可选参与**
+
+- 在这种情况下，父实体和子实体的区分是任意的，除非可以通过其他信息（如业务逻辑或其他约束条件）来帮助做出决定。
+- 如果无法从关系中直接判断哪个实体是父实体，哪个是子实体，可以根据实际情况选择任意一个作为父实体，另一个作为子实体。
+- **选择哪个表作为父表，哪个表作为子表**：这可能是一个任意的选择。父表的主键会被复制到子表中作为外键，形成表之间的关联关系。简而言之，就是将父表的主键复制到子表中，作为子表的外键。
+- **创建一个新关系表**：在这种方法中，会创建一个新的关系表，这个表包含了参与的两个实体（表）的主键的副本。通过这种方式，可以在新表中建立这两个实体之间的关系，而不直接在原有的子表中复制父表的主键。
+
+> In this case, the designation of the parent and child entities is  arbitrary unless we can find out more about the relationship that  can help a decision to be made one way or the other.
+>
+> **Decide which side to make parent and which child.** May be an arbitrary choice.  Post copy of primary key of parent table into child table.
+>
+> Another possibility would be to **create a new relation** with copies of both the participating entities’ primary keys.
+
+**举例**：假设有“员工”和“办公车位”两个实体，其中每个员工可能有一个办公车位，而不是所有员工都一定拥有车位，同样也不是所有车位都一定被分配给员工。在这种情况下，是否选择“员工”作为父实体，还是选择“办公车位”作为父实体取决于更多的业务约束或逻辑。
+
+![image-20250409105316585](images/image-20250409105316585.png)
+
+produce 3 tables. Female Male Married
+
+**(5)  One-to-one 1:1 recursive relationship  一对一递归关系**
+
+- 1:1 递归关系指的是同一个实体与自身之间存在一对一的关系。换句话说，实体中的一个实例与该实体中的另一个实例建立关系。在这种关系中，每个实体的一个实例都与同一实体的另一个实例相关联，并且这种关系是一对一的。
+
+> For a 1:1 recursive relationship, follow **the rules for participation as  described above for a 1:1 relationship**
+>
+> These are dealt with in a similar way to the case of two different entity types.
+
+![image-20250409111106079](images/image-20250409111106079.png)
+
+**(6) Superclass/Subclass Relationship Types 超类/子类关系类型**
+
+超类/子类关系是面向对象建模中常见的概念，表示一个更一般化的实体（超类）与其特定子类之间的关系。在关系型数据库中，可以通过不同的方式来表示这种超类/子类的关系，选择哪种方式取决于以下几个因素：
+
+1. **超类和子类的识别**：
+
+    > Identify superclass entity as parent entity and subclass  entity as the child entity.
+
+    - **超类实体**：是父实体，通常代表一类广义的实体。
+    - **子类实体**：是子实体，通常是从超类中派生出来的、更为具体的实体。
+
+2. **表示超类/子类关系的选项**： 有多种方法可以将超类/子类关系表示为一个或多个关系（表）。常见的表示方法包括：
+
+    > There are various options on  how to represent such a relationship as one or more  relations.
+
+    - **单表继承**：将超类和所有子类的属性放入同一个表中。
+    - **具体表继承**：为每个子类创建单独的表，且子类表中包含超类的外键。
+    - **类表继承**：为每个超类和子类对创建独立的表，超类的表只包含通用属性，子类表则包含特有属性，并通过外键与超类表关联。
+
+3. **选择最合适的表示方式的因素**： 选择哪种方式来表示超类/子类关系，通常取决于以下几个因素：
+
+    > The selection of the most appropriate option is dependent  on a number of factors such as the **disjointness** and  **participation constraints** on the superclass/subclass  relationship, whether the subclasses are involved in  **distinct relationships**, and the **number of participants** in  the superclass/subclass relationship.
+
+    - **互斥性 (Disjointness)**：指子类是否能有重叠的实例。若子类是互斥的（每个实例只能属于一个子类），则可以选择不同的表示方式。
+    - **参与约束 (Participation Constraints)**：即子类是否必须参与到超类的关系中，或者子类是否是可选的参与者。
+    - **子类的独立性 (Distinct Relationships)**：如果子类涉及不同的业务逻辑或具有独立的关系，可以考虑为每个子类设计独立的表结构。
+    - **参与人数 (Number of Participants)**：即超类/子类关系中的参与实体数量。如果参与实体数量较多或关系复杂，可能需要更加复杂的表示方法来确保数据的完整性和查询效率。
+
+**(7)  Many-to-many (\*:\*) binary relationship types  多对多 (\*:\*) 二元关系类型**
+
+- 创建关系表来表示多对多关系
+
+- 将参与关系的实体的主键作为外键放入新表
+    - 例如，假设有两个实体“学生”和“课程”，学生和课程之间存在多对多关系。我们可以在新表中将“学生ID”和“课程ID”作为外键，表示学生和课程之间的关系。
+- 外键组合形成新表的复合主键，可能包括关系的其他属性
+
+> Create a relation to represent the relationship and  include any attributes that are part of the relationship.
+>
+> We post a copy of the primary key attribute(s) of the  entities that participate in the relationship into the new  relation, to act as foreign keys.
+>
+> These foreign keys will also form the primary key(复合 主键) of the new relation, possibly in combination with  some of the attributes of the relationship.
+
+![image-20250409111901544](images/image-20250409111901544.png)
+
+**(8) Complex Relationship Types 复杂关系类型**
+
+- 创建关系表来表示复杂关系，将参与复杂关系的实体的主键作为外键存入新表
+- 外键代表‘多’的关系并可能构成主键，可能包含关系的其他属性
+
+> Create a relation to represent the relationship and include  any attributes that are part of the relationship. Post a copy  of the primary key attribute(s) of the entities that  participate in the complex relationship into the new  relation, to act as foreign keys.  
+>
+> Any **foreign keys that represent a ‘many’ relationship (for  example, 1..*, 0..*) generally will also form the primary  key** of this new relation, possibly in combination with  some of the attributes of the relationship. 
+
+**(9) Multi-valued Attributes 多值属性**
+
+- 创建新关系来表示多值属性，将实体的主键作为外键引入新表
+    - 例如，如果“学生”有多个“电话号码”，我们会在新表中存储“学生ID”作为外键。
+- 除非多值属性本身是实体的一个替代主键（alternate key），否则新表的主键通常是多值属性和实体主键的组合。
+    - 比如，在“学生”与“电话号码”的关系中，假设一个学生有多个电话号码，那么新表的主键可能由“学生ID”和“电话号码”组成，从而确保每个学生的每个电话号码在新表中都是唯一的。
+
+> Create a new relation to represent multi-valued  attributes and include primary key of entity(实体) in new  relation, to act as a foreign key. 
+>
+> Unless the multi-valued attribute is itself an alternate  key of the entity, the primary key of the new relation is  the combination of the multi-valued attribute and the  primary key of the entity.
+
+
+
+**Ex**
+
+![IMG_20250409_112104](images/IMG_20250409_112104.jpg)
+
+先把所有实体转化为表，再看关系需不需要加新表，所以最少4张表，最多7张。
+
+Students(<u>sid</u>, …)
+
+Course Offerings(<u>coNumber</u>, …, InstructorID{FK}, coNumber{FK})
+
+Intructor(<u>id</u>, coNumber{FK}, …)
+
+Course(<u>number</u>, …)
+
+
+
+Eroll(<u>sid+coNumber</u>, grade)
+
+Teach(<u>id</u>,  …)
+
+Offer(<u>number</u>, coNumber{FK}, …)
 
 
 
 
+
+### Validate Relations Using Normalisation
+
+**使用规范化验证关系**
+
+确保数据表设计符合规范，减少冗余，保证数据的一致性和完整性。To validate the relations in the logical data model using  normalisation.
+
+### Validate Relations Against User Transactions
+
+**验证关系是否支持用户事务**
+
+检查数据库的关系设计是否能满足用户的实际需求，确保数据库能够顺利执行所需的事务，并支持用户的业务操作。To ensure that the relations in the logical data model  support the required transactions.
+
+### Check Integrity Constraints
+
+**检查完整性约束**
+
+确保逻辑数据模型中的完整性约束被正确表示和遵循，以保证数据的一致性、准确性和完整性。 To check integrity constraints are represented in the  logical data model.
+
+### Review Logical Data Model with User
+
+**与用户审查逻辑数据模型**
+
+确保逻辑数据模型与用户的实际需求一致，避免设计上的误差或忽略了某些关键的数据需求。 To review the logical data model with the users to  ensure that they consider the model to be a true  representation of the data requirements of the enterprise.
+
+### Merge Logical Data Models into Global Model
+
+**将逻辑数据模型合并为全局模型**
+
+通过合并多个逻辑数据模型，创建一个全面的数据库模型，涵盖所有用户视图，确保数据库设计能够服务于所有相关方的需求。To merge logical data models into a single global  logical data model that represents all user views of a  database.
+
+#### Merge Local  Logical Data Models into Global Model
+
+**将本地逻辑数据模型合并为全局模型**
+
+(1) Review the names and contents of entities/relations and  their candidate keys.  
+
+(2) Review the names and contents of relationships/ foreign  keys.  
+
+(3) Merge entities/relations from the local data models  
+
+(4) Include (without merging) entities/relations unique to each  local data model  
+
+(5) Merge relationships/foreign keys from the local data  models. 
+
+(6) Include (without merging) relationships/foreign keys unique  to each local data model.  
+
+(7) Check for missing entities/relations and relationships/  foreign keys.  
+
+(8) Check foreign keys.  
+
+(9) Check Integrity Constraints.  
+
+(10) Draw the global ER/relation diagram  
+
+(11) Update the documentation. 
+
+#### Validate global logical data model
+
+**验证全局逻辑数据模型**
+
+通过规范化技术验证从全局逻辑数据模型创建的关系，确保这些关系结构符合数据设计的规范。规范化过程旨在消除数据冗余和更新异常，提高数据一致性和完整性。验证的目标是确保数据模型能够高效地支持所需的事务处理和查询需求。如果有必要，还需要进行调整，以保证其能支持所有必要的操作。
+
+To validate the relations created from the global logical data model using the technique of normalization and to ensure they support the required transactions, if necessary.
+
+#### Review global logical data model with users
+
+**与用户共同审查全局逻辑数据模型**
+
+将全局逻辑数据模型与最终用户进行审查，以确保模型能够准确反映企业的数据需求。用户反馈对于确保模型的实际可用性和适应性至关重要，因为他们最了解业务操作中的实际需求和挑战。通过这种审查过程，可以确保数据模型不仅从技术角度有效，而且能够在实际业务环境中满足需求。
+
+To review the global logical data model with the users to ensure that they consider the model to be a true representation of the data requirements of an enterprise.
+
+
+
+
+
+# 10.Security and Administration
+
+
+
+## Database Security
+
+**数据库安全**：保护数据库免受故意或意外威胁的机制。
+
+> Database security – mechanisms that protect the  database against intentional or accidental threats.
+
+- 数据是宝贵的资源，必须像其他公司资源一样严格控制和管理。
+
+    > Data is a valuable resource that must be strictly  controlled and managed, as with any corporate  resource.
+
+- 保护的目标包括：
+
+    - **机密性/隐私丧失**（C）Loss of confidentiality /privacy (C)
+    - **完整性丧失**（I）Loss of integrity (I)
+    - **可用性丧失**（A）Loss of availability (A)
+    - **盗窃与欺诈**    Theft and fraud
+
+**威胁**：任何可能对系统及其所依赖的组织产生不利影响的情况或事件，无论是故意的还是无意的。
+
+> Threat - any situation or event, whether intentional or  unintentional, that will adversely affect a system and  consequently an organization.
+
+- 威胁类型包括： Interception(截取，窃听）, interruption,  modification, fabrication （伪造）
+    - **截取**（窃听）
+    - **中断**
+    - **修改**
+    - **伪造**
+
+- 需要考虑的不仅仅是数据库中存储的数据，还应涵盖整个生态系统。
+
+    > Need to consider not only the data held in a database but  the whole ecosystem.
+
+- 未能保护数据库可能导致以下后果：
+
+    - 机密性丧失
+    - 竞争力丧失
+    - 隐私丧失
+    - 法律诉讼
+    - 数据损坏
+    - 财务损失等。
+
+    > Failure to protect could lead to loss of confidentiality, loss  of competitiveness, loss of privacy, legal action, corrupted  data（损坏数据）, financial loss, etc…
+    
+- **威胁来源**：
+
+    - **硬件**：火灾、洪水、电源故障、设备盗窃等。
+    - **通信网络**：窃听、电缆断裂、电磁干扰。
+    - **程序员/操作员**：创建后门、程序篡改、培训不足。
+    - **DBMS和应用软件**：安全机制失效、程序盗窃。
+    - **数据库**：未经授权的数据修改、数据盗窃。
+    - **用户**：冒用他人身份、非法访问、引入病毒。
+    - **管理员**：安全策略不足。
+    
+    ![image-20250409100040205](images/image-20250409100040205.png)
+
+## Countermeasures – Computer-Based Controls
+
+**对策 -  基于计算机的控制**
+
+1. **授权（Authorisation）**：授权是指确定和批准用户访问系统资源的权限。只有获得授权的用户才能执行特定操作或访问特定数据。
+2. **访问控制（Access controls）**：访问控制是用来限制用户和系统之间的交互，确保只有经过授权的用户才能访问特定的数据、应用程序或系统资源。
+3. **视图（Views）**：视图是数据访问控制的一种方式，允许用户仅查看数据的特定部分，而不是整个数据集。通过创建定制的视图，可以防止用户看到他们没有权限查看的信息。
+4. **备份与恢复（Backup and recovery）**：备份是定期保存数据的副本，以防原始数据丢失。恢复则是在数据丢失或损坏时，将备份数据恢复到系统中，确保系统能够继续正常运作。
+5. **完整性（Integrity）**：数据完整性确保数据在存储和传输过程中不被未经授权的修改或破坏。通过使用校验和、哈希函数等方法，可以检测和防止数据的篡改。
+6. **加密（Encryption）**：加密是将数据转换为只有授权用户才能解读的形式，防止未经授权的访问者获取敏感信息。加密保护数据的机密性和隐私。
+7. **RAID技术（RAID technology）**：RAID（独立冗余磁盘阵列）技术通过将多个硬盘组合成一个虚拟硬盘阵列，提供数据冗余、性能提升或两者兼备的功能。RAID可以提高数据存储的可靠性和速度，减少数据丢失的风险。
+
+### Authorisation
+
+1. **授予特权**：授予用户合法访问系统或对象的权利/特权。。
+2. **涉及认证（Authentication）**：涉及**认证（Authentication）**，验证用户身份。
+
+> The granting of a right or privilege（特权）, which  enables a subject to legitimately （合理正当） have  access to a system or a system’s object. 
+>
+> Involves authentication（认证） which determines  whether a user is, who he or she claims to be.
+
+### Access control
+
+通过授予和撤销特权来强制执行授权。
+
+> Methods used to **enforce authorisation** is based on the **granting** and **revoking** of privileges.
+
+**特权**：允许用户创建或访问数据库对象（读、写、修改）或运行DBMS工具。
+
+> **A privilege** allows a user to create or access (that is  read, write, or modify) some database object (such  as a relation, view, and index) or to run certain  DBMS utilities.
+
+**自主访问控制（DAC）**：
+
+Most DBMS provide an approach called Discretionary  Access Control (DAC，自主访问控制).
+
+- SQL标准支持，通过GRANT和REVOKE命令实现。
+
+    > SQL standard supports DAC through the GRANT and  REVOKEcommands.
+
+- 示例：
+
+    - GRANT SELECT, UPDATE (salary) ON Staff TO Personnel, Director;
+    - REVOKE SELECT ON Branch FROM PUBLIC;
+
+**强制访问控制（MAC）**：
+
+DAC while effective has certain weaknesses. In  particular an unauthorized user can trick（欺诈） an  authorized user into disclosing sensitive data.
+
+- 为对象分配安全级别，用户分配权限级别，规则限制读写。
+
+    > Each database object is assigned **a security class** and  each user is assigned a **clearance（准许）** for a  security class, and **rules** are imposed on reading and  writing of database objects by users.
+
+- SQL标准不支持，弥补DAC的弱点（如诱骗授权用户泄露数据）。
+
+    > An additional approach is required called Mandatory  Access Control (MAC，强制访问控制), not supported  by SQL standard.
+
+### View
+
+隐藏部分数据，限制用户访问。
+
+>Hiding parts of the database from certain users.
+
+### Backup & recovery
+
+定期备份数据到安全位置。
+
+**日志（Journaling）**：记录所有数据库更改，便于故障恢复。
+
+>Backup data at regular intervals to secure location.
+>
+>Keep and maintain a log file (or journal) of all changes made to database to enable effective  recovery in event of failure.
+
+### Integrity
+
+通过完整性约束确保数据一致性。
+
+>Through enforcing integrity constraints.
+
+### Encryption
+
+对数据应用加密算法。
+
+**对称加密**：DES、AES、3DES。
+
+**非对称加密**：RSA。
+
+>Applying encryption algorithm on data. 
+>
+>**Symmetric encryption**: DES, AES, 3DES 
+>
+>**Asymmetric encryption**: RSA (Rivest–Shamir–Adleman)
+
+### RAID Technology
+
+- **独立磁盘冗余阵列（Redundant Array of Independent Disks, RAID）**。
+- 数据库管理系统（DBMS）运行的硬件必须具备容错能力。
+- 具有冗余组件，可以在一个或多个组件发生故障时，毫不间断地将其无缝集成到正常工作的系统中。
+- 冗余硬件组件包括：磁盘驱动器、磁盘控制器、中央处理单元（CPU）、电源供应器和冷却风扇。
+
+> Redundant Array of Independent Disks（独立磁盘冗余 阵列）. 
+>
+> Hardware that the D B M S is running on must be **fault-tolerant**. 
+>
+> With redundant components that can be seamlessly  integrated into the working system whenever there is one  or more component failures. 
+>
+> Redundant hardware components: **disk drives**, **disk  controllers**, **CPU**, **power supplies**, and **cooling fans**.
+
+- 一个由多个独立磁盘组成的大型磁盘阵列，旨在提高可靠性，同时增加性能。
+- 通过**数据条带化（data striping）**提升性能：数据被分割成相等大小的分区（条带单元），并透明地分布在多个磁盘上。
+- 通过使用**奇偶校验编码（parity scheme）**或**纠错编码（error-correcting scheme）**在磁盘间存储冗余信息，从而提高可靠性。
+
+> A large disk array with several independent disks organized to improve reliability and at the same time increase performance. 
+>
+> Performance through **data striping（数据条带化）**:the data is segmented into equal-size partitions (the striping unit), which are transparently distributed across multiple disks. 
+>
+> Reliability through storing redundant information across the disks using a **parity scheme（奇偶校验编码）**or an **error-correcting scheme（纠错编码）**
+
+有多种不同的磁盘配置，称为RAID级别：
+
+- **RAID 0**：无冗余
+- **RAID 1**：镜像（镜像冗余）
+- **RAID 0+1**：无冗余和镜像
+- **RAID 2**：内存式错误校正码
+- **RAID 3**：位交叉奇偶校验（Bit-Interleaved Parity）
+- **RAID 4**：块交叉奇偶校验（Block-Interleaved Parity）
+- **RAID 5**：块交叉分布式奇偶校验（Block-Interleaved Distributed Parity）
+- **RAID 6**：P+Q冗余（P+Q Redundancy）
+
+> There are a number of different disk configurations called  RAID levels. 
+>
+> - RAID 0 Nonredundant 
+> - RAID 1 Mirrored
+> - RAID 0+1 Nonredundant and Mirrored
+> - RAID 2 Memory-Style Error-Correcting Codes
+> - RAID 3 Bit-Interleaved Parity（位交叉奇偶校验）
+> - RAID 4 Block-Interleaved Parity
+> - RAID 5 Block-Interleaved Distributed Parity
+> - RAID 6 P+Q Redundancy
+
+![image-20250409151432512](images/image-20250409151432512.png)
+
+![image-20250409151444231](images/image-20250409151444231.png)
+
+## DBMSs and Web Security 
+
+互联网通信基于TCP/IP和HTTP，未考虑安全性，数据默认“明文”传输，易被拦截。
+
+> Internet communication relies on TCP/IP as the underlying protocol. However, TCP/IP and HTTP were not designed with security in mind. Without special software, all Internet traffic travels ‘in the clear’ and anyone who monitors traffic can read it.
+
+确保传输数据：
+
+- 仅限发送者和接收者访问（隐私）。
+- 未被篡改（完整性）。
+- 接收者确认发送者身份（真实性）。
+- 发送者确认接收者身份（非伪造）。
+- 发送者不可否认发送（不可否认性）。
+
+> Must ensure transmission over the Internet is: 
+>
+> - inaccessible to anyone but sender and receiver  (privacy); 
+>
+> - not changed during transmission (integrity); 
+>
+> - receiver can be sure it came from sender  (authenticity); 
+>
+> - sender can be sure receiver is genuine (non fabrication，伪造); 
+>
+> - sender cannot deny he or she sent it (non repudiation，不可否认).
+
+措施
+
+- 代理服务器（Proxy Servers）、防火墙（Firewalls）。
+- 消息摘要算法（Message Digest）和数字签名（Digital Signatures）。
+- 数字证书（Digital Certificates）、Kerberos认证。
+- SSL（Secure Sockets Layer）和HTTPS。
+- 安全电子交易（SET）、Java和ActiveX安全。
+
+> Measures include: 
+>
+> − Proxy servers （代理服务器） 
+>
+> − Firewalls 
+>
+> − Message digest（摘要）algorithms and digital signatures（ 数字签名） 
+>
+> − Digital certificates 
+>
+> − Kerberos （一种安全认证系统） 
+>
+> − Secure sockets layer (SSL) and Secure HTTP (S-HTTP，HTTPs) 
+>
+> − Secure Electronic Transactions (SET) and Secure Transaction  Technology (SST) 
+>
+> − Java security 
+>
+> − ActiveX security
+
+## Data & Database Administration
+
+**数据管理员（DA）**：
+
+- 管理数据资源，包括规划、标准制定、概念和逻辑设计。
+- 任务：制定数据模型、确定数据需求、制定安全政策等。
+
+> Data administrator (DA) 
+>
+> −Managing data resource, including database  planning, development, maintenance of standards,  policies, procedures, conceptual and logical  database design
+
+**数据库管理员（DBA）**：
+
+- 负责物理设计、实现、安全控制、性能监控。
+- 任务：选择DBMS、定义约束、备份、性能调优等。
+
+> Database administrator (DBA) 
+>
+> −Application/physical database design to  operational management including setting security  and integrity control, monitoring system  performance.
+
+## Legal and Ethical Issues
+
+**相关法规**
+
+- **GDPR（欧盟通用数据保护条例）**、**UK DPA（英国数据保护法）**。
+- 其他：SEC NMS、Sarbanes-Oxley Act、HIPAA、BASEL II等。
+
+>  Lecture 3 & 4 talked about legal and ethical issues on  capturing, storing and processing data. 
+>
+> − EU General Data Protection Regulation (GDPR) − UK Data Protection Act (DPA) 
+>
+> Other regulations 
+>
+> − Securities and Exchange Commission (SEC) Regulation  National Market System (NMS) 
+>
+> − The Sarbanes-Oxley Act, COBIT, and COSO 
+>
+> − The Health Insurance Portability and Accountability Act 
+>
+> − Access to Information Laws 
+>
+> − International banking 
+>
+> – BASEL II Accords
+
+**IT治理**
+
+- DA和DBA需了解公司运营相关法规，制定政策并传达给员工。
+- 推广法规和最佳实践，减少非法行为，提高效率，降低IT失败风险。
+
+> IT Governance
+>
+> DA & DBA need to be aware of relevant regulations  concerning the operations within the company. 
+>
+> Policies related to those regulations need to be  created and articulated to employees at all levels. 
+>
+> Promote legislative/voluntary regulations, standards  and best practice to reduce illegal behavior, improve  efficiencies, and risks of IT failures on other  companies, national infrastructure, consumers and  the natural environment.
+
+**建立法律与伦理数据管理文化**
+
+- 制定全组织范围的法律和伦理行为政策。
+- 遵循专业组织道德规范：
+    - **ACM道德与职业实践准则**：24条责任声明，涵盖伦理、专业行为、领导角色和合规性。
+    - **BCS行为准则**：公共利益、专业能力与诚信、对权威的责任、对职业的责任。
+
+> Establishing a Culture of Legal and Ethical  Data Stewardship(管理工作)
+>
+> Steps to consider include: 
+>
+> −Develop an organization-wide policy for legal and  ethical behavior. 
+>
+> −Professional organizations and codes of ethics (道德规范，职业道德准则)
+>
+> • ACM Code of Ethics and Professional Practice  
+>
+> • BCS Code of Conducts
+
+
+
+> 24 statements of personal responsibility in 4 main categories: 
+>
+> −Fundamental ethical considerations, 
+>
+> −Specific considerations of professional conduct, 
+>
+> −Considerations for individuals in leadership roles, 
+>
+> −Compliance with the code.
+
+
+
+> BCS Code of conduct comprises four key principles:
+>
+>  − Public interest: you make IT for everyone 
+>
+> − Professional competence and integrity: show what you  know, learn what you don’t. 
+>
+> − Duty to relevant authority: respect the organisation or  individual you work for. 
+>
+> − Duty to profession: keep IT real. Keep IT professional.  Pass IT on.
