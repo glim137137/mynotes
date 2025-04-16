@@ -152,22 +152,54 @@ Java语言提供了八种基本类型。六种数字类型（四个整数型，�
 
 ### 构造器（Constructor）
 
-#### (1) 默认构造器（Default Constructor）
+#### 默认构造器（Default Constructor）
 
-- 如果类中没有显式定义任何构造器，Java 编译器会自动提供一个无参的默认构造器。
+- 如果类中**没有显式定义任何构造器**，Java 编译器会自动提供一个无参的默认构造器。
 - 默认构造器的作用是简单地创建对象，不进行额外初始化。
 
-#### (2) 无参构造器（No-Argument Constructor）
+```java
+class Person {
+    String name;
+    int age;
 
-- 由程序员显式定义的无参数构造器。
-- 可以用来设置字段的默认值。
+    // 默认构造器 (由编译器自动生成，如果没有其他构造器)
+    // public Person() {} // 编译器自动提供
+}
+```
 
-#### (3) 带参构造器（Parameterized Constructor）
+#### 无参构造器（No-Argument Constructor）
+
+- 由程序员**显式定义**的无参数构造器。
+- 可以用来设置字段的**默认值**。
+
+```java
+class Person {
+    String name;
+    int age;
+
+    // 无参构造器（由程序员手动定义）
+    public Person() {
+        // 可以在无参构造器中添加自定义初始化逻辑
+        this.name = "Unknown";
+        this.age = 0;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // 使用无参构造器
+        Person person = new Person();
+        System.out.println("Name: " + person.name + ", Age: " + person.age);
+    }
+}
+```
+
+#### 带参构造器（Parameterized Constructor）
 
 - 接受参数，用于根据传入的值初始化对象。
 - 支持灵活的初始化方式。
 
-#### (4) 重写构造器（Overloaded Constructor）
+#### 重写构造器（Overloaded Constructor）
 
 - 与普通方法类似，构造器可以被重载。重载的构造器具有相同的名称（类名），但参数列表不同。
 
@@ -207,15 +239,206 @@ class Test {
 }
 ```
 
+#### `this` 关键字
+
+当局部变量（例如方法的参数）与实例变量同名时，可以使用 `this` 来区分实例变量和局部变量。
+
+```java
+class Person {
+    String name;  // 实例变量
+    
+    Person(String name) {
+        // 参数 name 与实例变量 name 同名，使用 this 来区分
+        this.name = name;
+    }
+    
+    void printName() {
+        System.out.println("Name: " + this.name);
+    }
+}
+```
+
+同样，`this` 可以用来调用当前对象的实例方法。通常在没有歧义时可以省略 `this`，但如果需要明确表示是调用当前对象的方法，可以使用 `this`。
+
+```java
+class Car {
+    void start() {
+        System.out.println("Car is starting...");
+    }
+    
+    void drive() {
+        // 使用 this 调用当前对象的方法
+        this.start();
+        System.out.println("Car is driving...");
+    }
+}
+```
+
+`this` 可以作为参数传递给方法或构造函数。当你希望传递当前对象的引用时，可以使用 `this`。
+
+```java
+class Printer {
+    void print(Person person) {
+        System.out.println("Printing: " + person.getName());
+    }
+}
+
+class Person {
+    String name;
+    
+    Person(String name) {
+        this.name = name;
+    }
+    
+    String getName() {
+        return this.name;
+    }
+    
+    void printDetails() {
+        Printer printer = new Printer();
+        // 传递当前对象（this）作为参数
+        printer.print(this);
+    }
+}
+```
+
+> 在静态方法或静态上下文中，不能使用 `this`，因为静态方法是属于类的，而不是属于某个具体的对象实例的。
+>
+> ```java
+> class MyClass {
+>     static void myMethod() {
+>         // 不能在静态方法中使用 this
+>         // System.out.println(this);  // 编译错误
+>     }
+> }
+
+##### 使用 `this()` 调用其他构造方法
+
+`this()` 允许一个构造方法调用同一个类中的另一个构造方法，从而实现构造器的重载。它使得代码更加简洁，减少了冗余的代码。值得注意的是，`this()` 只能是构造器中的第一行。
+
+```java
+class Person {
+    String name;
+    int age;
+
+    // 构造器1：无参构造器
+    public Person() {
+        this("Unknown", 0);  // 调用构造器3，传递两个参数：String 和 int
+    }
+
+    // 构造器2：带有 name 参数的构造器
+    public Person(String name) {
+        this(name, 0);  // 调用构造器3，传递一个参数 name 和默认值 0 给 age
+    }
+
+    // 构造器3：带有 name 和 age 参数的构造器
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+```
+
 ### 继承（Inheritance）
 
-- 一个类可以继承另一个类的属性和方法。
+一个子类可以继承另一个父类的属性和方法。但是 java 只支持单继承，也就是一个子类只能继承自一个父类。而 python 支持多继承。
 
 - 示例：
 
     ```java
     public class Dog extends Animal { ... }
     ```
+
+#### `super` 关键字
+
+如果子类和父类有同名的成员变量，使用 `super` 可以访问父类的成员变量，而避免与子类的同名变量产生冲突。
+
+```java
+class Animal {
+    String name = "animal";
+}
+
+class Dog extends Animal {
+    String name = "dog";
+    
+    void printName() {
+        // 访问父类的成员变量
+        System.out.println("父类的名字: " + super.name);
+        // 访问子类的成员变量
+        System.out.println("子类的名字: " + this.name);
+    }
+}
+```
+
+如果子类重写了父类的方法，使用 `super` 可以访问父类中被重写的方法。
+
+```java
+class Animal {
+    void sound() {
+        System.out.println("animal voice");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void sound() {
+        System.out.println("bark");
+    }
+    
+    void callSuperSound() {
+        // 使用 super 调用父类的方法
+        super.sound();
+    }
+}
+```
+
+##### 使用`super()`调用父类的构造函数
+
+在子类的构造方法中，可以使用 `super()` 来调用父类的构造函数。如果父类有无参构造函数，`super()` 会默认调用该构造函数。如果父类有带参数的构造函数，子类需要显式调用父类的带参数构造函数。
+
+```java
+class Animal {
+    Animal(String name) {
+        System.out.println("动物的名字是: " + name);
+    }
+}
+
+class Dog extends Animal {
+    Dog(String name) {
+        // 使用 super 调用父类的构造函数
+        super(name);
+        System.out.println("狗的名字是: " + name);
+    }
+}
+```
+
+如果父类有多个构造函数，子类可以通过 `super()` 选择性地调用父类的某个构造函数。
+
+```java
+class Animal {
+    Animal() {
+        System.out.println("无参父类构造函数");
+    }
+    
+    Animal(String name) {
+        System.out.println("带参父类构造函数: " + name);
+    }
+}
+
+class Dog extends Animal {
+    Dog() {
+        // 默认调用父类的无参构造函数
+        super();
+        System.out.println("无参子类构造函数");
+    }
+    
+    Dog(String name) {
+        // 调用父类的带参构造函数
+        super(name);
+        System.out.println("带参子类构造函数");
+    }
+}
+```
 
 ### 封装（Encapsulation）
 
@@ -370,12 +593,12 @@ public class Puppy {
  
     // 获取 age 的值
     public int getAge() {
-        return age;
+        return this.age;
     }
  
     // 获取 name 的值
     public String getName() {
-        return name;
+        return this.name;
     }
  
     // 主方法
@@ -491,16 +714,16 @@ char x = 'x';        // 声明变量 x 的值是字符 'x'。
 访问修饰符控制成员的可见性，也就是定义了类、方法、字段等可以被哪些其他类访问。Java提供了四种访问修饰符：
 
 - **`public`**：表示该成员可以被任何类访问，不受包限制。
-- **`protected`**：表示该成员可以被同一个包中的其他类或不同包中的子类访问。
+- **`protected`**：表示该成员可以被**同一个包中的其他类**或**不同包中的子类**访问。
 - **`private`**：表示该成员只能在当前类内部访问，不能被其他类访问。
-- **默认（无修饰符）**：如果没有使用访问修饰符，表示该成员只能被同一个包中的其他类访问（包内访问）。
+- **默认（无修饰符）**：如果没有使用访问修饰符，表示该成员只能被同一个包中的其他类访问**（包内访问）**。
 
 ### 非访问修饰符（Non-access Modifiers）
 
 非访问修饰符用于定义类、方法、字段等的其他特性，比如是否为静态、是否为常量等。常见的非访问修饰符有：
 
 - **`static`**：表示该成员属于类，而不是某个具体的对象。可以通过类名直接访问，而不需要实例化对象。
-- **`final`**：表示该成员不可改变。对于类来说，表示该类不能被继承；对于方法来说，表示该方法不能被重写；对于变量来说，表示该变量的值不能被改变。
+- **`final`**：表示该成员不可改变。对于类来说，表示**该类不能被继承**；对于方法来说，表示**该方法不能被重写**；对于变量来说，表示**该变量的值不能被改变**。
 - **`abstract`**：表示该类或方法是抽象的，不能实例化或者必须在子类中实现。
 - **`synchronized`**：表示该方法是线程安全的，多个线程访问时会按顺序执行，确保同一时间只有一个线程访问该方法。
 - **`volatile`**：表示该字段可能会被多个线程修改，确保所有线程都能看到该字段的最新值。
@@ -614,7 +837,7 @@ A ^ B = 0011 0001
 | ^ =     | 按位异或赋值操作符                                           | C ^ = 2等价于C = C ^ 2                   |
 | \| =    | 按位或赋值操作符                                             | C \| = 2等价于C = C \| 2                 |
 
-### 条件运算符（?:）
+### 条件运算符
 
 条件运算符也被称为三元运算符。该运算符有3个操作数，并且需要判断布尔表达式的值。该运算符的主要是决定哪个值应该赋值给变量。
 
@@ -649,7 +872,7 @@ boolean result = name instanceof String; // 由于 name 是 String 类型，所�
 
 同js
 
-### for遍历数组
+### for 遍历数组
 
 Java5 引入了一种主要用于数组的增强型 for 循环。
 
@@ -737,7 +960,7 @@ String[][] str = new String[3][4];
 
 ---
 
-### 1. 什么是 Java 包？
+### 什么是 Java 包？
 #### 定义
 包是类的命名空间（namespace），类似于文件系统中的目录。它通过将类、接口和其他资源组织到不同的包中，帮助开发者管理代码结构。
 

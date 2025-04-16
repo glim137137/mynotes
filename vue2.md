@@ -2752,3 +2752,24 @@ Vue.component("item", {
   },
 });
 ```
+
+
+
+
+
+# 技巧
+
+
+
+## 使用index作为key
+
+```vue
+<a
+            style="background-color: #f6edd4"
+            class="iconfont"
+            :class="{ 'icon-selected': currentIndex == index }"
+            :style="{ 'background-color': item }"
+            v-for="(item, index) in bgList"
+            :key="index"
+            @click="changeColor(index)"
+></a>

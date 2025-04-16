@@ -393,7 +393,7 @@ export default {
 
 ##### 访问 Props
 
-`setup` 函数的第一个参数是组件的 `props`。和标准的组件一致，一个 `setup` 函数的 `props` 是响应式的，并且会在传入新的 props 时同步更新。
+`setup` 函数的第一个参数是这个组件声明的 `props`。和标准的组件一致，一个 `setup` 函数的 `props` 是响应式的，并且会在传入新的 props 时同步更新。
 
 ```js
 export default {
@@ -1082,7 +1082,7 @@ watchEffect(async () => {
 你也可以在同一个组件中同时使用选项式 API 和组合式 API：
 
 ```js
-javascriptimport { ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 
 export default {
   data() {
@@ -1203,8 +1203,8 @@ export default {
 
 ```vue
 <BlogPost v-bind="post" />
- <!-- 等价于 -->
- <BlogPost :id="post.id" :title="post.title" />
+<!-- 等价于 -->
+<BlogPost :id="post.id" :title="post.title" />
 ```
 
 ### Props 校验
@@ -1442,6 +1442,11 @@ export default {
 
 ```vue
 <!-- Child.vue -->
+<template>
+  <div>Parent bound v-model is: {{ model }}</div>
+  <button @click="update">Increment</button>
+</template>
+
 <script setup>
 const model = defineModel()
 
@@ -1449,11 +1454,6 @@ function update() {
   model.value++
 }
 </script>
-
-<template>
-  <div>Parent bound v-model is: {{ model }}</div>
-  <button @click="update">Increment</button>
-</template>
 ```
 
 父组件可以用 `v-model` 绑定一个值：

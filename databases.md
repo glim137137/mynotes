@@ -2440,6 +2440,8 @@ To review the global logical data model with the users to ensure that they consi
 
 ## Database Security
 
+**4 damages**: illegal users, illegal data, fault, concurrent access
+
 **数据库安全**：保护数据库免受故意或意外威胁的机制。
 
 > Database security – mechanisms that protect the  database against intentional or accidental threats.
@@ -2533,8 +2535,8 @@ Most DBMS provide an approach called Discretionary  Access Control (DAC，自主
 
 - 示例：
 
-    - GRANT SELECT, UPDATE (salary) ON Staff TO Personnel, Director;
-    - REVOKE SELECT ON Branch FROM PUBLIC;
+    - **GRANT** SELECT, UPDATE (salary) ON Staff TO Personnel, Director;
+    - **REVOKE** SELECT ON Branch FROM PUBLIC;
 
 **强制访问控制（MAC）**：
 
@@ -2789,3 +2791,259 @@ DAC while effective has certain weaknesses. In  particular an unauthorized user 
 > − Duty to relevant authority: respect the organisation or  individual you work for. 
 >
 > − Duty to profession: keep IT real. Keep IT professional.  Pass IT on.
+
+
+
+
+
+
+
+# 11.Transaction Management
+
+
+
+## An example of Transaction
+
+```SQL
+BEGIN TRAN accout_transfer
+
+-- 更新账户 'A' 的余额
+UPDATE Accounts
+SET balance = balance - 90
+WHERE account_id = 'A';
+-- 检查更新是否成功（如果出错，则回滚事务）
+IF @@TRANSTATE = 2
+    ROLLBACK TRAN;
+
+-- 更新账户 'B' 的余额
+UPDATE Accounts
+SET balance = balance + 90
+WHERE account_id = 'B';
+-- 检查更新是否成功（如果出错，则回滚事务）
+IF @@TRANSTATE = 2
+    ROLLBACK TRAN;
+ELSE
+	COMMIT TRAN;
+```
+
+
+
+## Transaction Support
+
+事务是用户或应用程序执行的一个或一系列操作，涉及数据库的读或写。
+
+> Action, or series of actions, carried out by user or  application, which reads or updates contents of  database.
+
+- 它是数据库上的一个逻辑工作单元。
+- 应用程序是由一系列事务组成的，事务之间可能包含非数据库处理。
+- 事务将数据库从一个一致的状态转换为另一个一致的状态，尽管在事务执行过程中，一致性可能会被暂时违反。
+
+> - **Logical unit of work** on the database.
+>
+> - Application program is series of transactions with  non-database processing in between.
+> - **Transforms database from one consistent state to  another**, although consistency may be violated  during transaction.
+
+事务可以有两种结果：
+
+- **成功** - 事务提交，数据库达到一个新的一致状态。
+- **失败** \- 事务中止，数据库必须恢复到事务开始前的一致状态。
+- 这样的事务会被回滚或撤销。
+
+>  Success - transaction **commits** and database reaches a **new  consistent state**. 
+>
+> Failure - transaction **aborts**, and database must be restored  to **consistent state before it started**.
+>
+> Such a transaction is **rolled back** or **undone**.
+
+提交的事务不能被中止。
+
+> Committed transaction cannot be aborted.
+
+被中止并回滚的事务可以在之后重新启动。
+
+> Aborted transaction that is rolled back can be restarted  later.
+
+### State Transition Diagram for Transaction
+
+![image-20250416173102466](images/image-20250416173102466.png)
+
+### Properties of Transactions
+
+定义事务的四个基本（ACID）属性：
+
+- **原子性 (Atomicity)** - “全有或全无”属性，事务中的所有操作要么全部成功，要么全部失败。
+
+    > ‘All or nothing’ property.
+
+- **一致性 (Consistency)** - 事务必须将数据库从一个一致的状态转换到另一个一致的状态。
+
+    >  Must transform database from one  consistent state to another.
+
+- **隔离性 (Isolation)** - 不完整事务的部分效果不应对其他事务可见。
+
+    > Partial effects of incomplete transactions should  not be visible to other transactions.
+
+- **持久性 (Durability)** - 已提交事务的效果是永久性的，不能因为之后的故障而丢失。
+
+    > Effects of a committed transaction are  permanent and must not be lost because of later failure.
+
+
+
+### DBMS Transaction Subsystem
+
+![image-20250416173507361](images/image-20250416173507361.png)
+
+
+
+## Two Principle Tasks on Transaction
+
+### Concurrency control
+
+**多个用户-并发事件** Multiple Users-Concurrent events
+
+尽管两个事务本身可能是正确的，但操作的交错执行可能会导致不正确的结果。
+
+> Although two transactions may be correct in  themselves, interleaving of operations may produce  an incorrect result.
+
+**并发控制**
+
+- 并发控制是管理同时发生的数据库操作的过程，确保它们彼此之间不互相干扰。
+
+    > Process of managing simultaneous(同时发生的) operations on the database without having them  interfere(干扰) with one another.
+
+- 当两个或更多用户同时访问数据库且至少有一个在更新数据时，防止它们之间的干扰。
+
+    > Prevents interference when two or more users are  accessing database simultaneously and at least one is  updating data.
+
+**并发控制的必要性**
+
+- 丢失更新 Lost update problem. 
+
+    > 这是指当两个事务同时修改相同的数据，并且没有适当的并发控制时，一个事务的更新可能会被另一个事务的更新覆盖，从而导致其中一个事务的修改丢失。
+    >
+    > Successfully completed update is overridden by  another user.  **~ write-write conflict**
+
+- 读脏数据 Uncommitted dependency problem(dirty read). 
+
+    > 脏读发生在一个事务读取了另一个事务尚未提交的修改。这意味着读取的数据可能是临时的、无效的，甚至可能会被回滚。
+    >
+    > Occurs when one transaction can see intermediate  results of another transaction before it has  committed. **~ write-read conflict**
+
+- 不一致分析问题 Inconsistent analysis problem.
+
+    > Occurs when transaction reads several values but second  transaction updates some of them during execution of first.
+    >
+    > 当**事务A**在执行过程中读取了多个值，但在它执行期间，**事务B**对其中一些值进行了更新，这就导致了**事务A**在后续读取相同数据时，得到不同的结果。
+    >
+    >  **~ write-read conflict**
+
+-  读值不可复现 Unrepeatable Read. 
+
+    > The unrepeatable problem occurs when two or more read operations of the same transaction read different values of the same variable. 
+    >
+    > **~ read-write conflict**
+
+#### Serialisability
+
+并发事务执行时，不会相互干扰，仿佛这些事务是按顺序串行执行的。
+
+> Concurrent transactions execution without interfering with  one another, as if the transactions are run in **serial  execution**.
+
+在串行化中，多事务的执行是正确的。
+
+> In serializability (line up, 排队),  multi-transactions execution  is correct.
+
+**在串行化（排队）中，读/写的顺序非常重要：**
+
+- 如果两个事务只读取某个数据项，它们不会冲突，顺序也不重要。
+
+    > If two transactions only read a data item, they do  not conflict and order is not important.
+
+- 如果两个事务要么读取，要么写入不同的数据项，它们不会冲突，顺序也不重要。
+
+    > If two transactions either read or write separate data items, they do not conflict and order is not important.
+
+- 如果一个事务写入某个数据项，而另一个事务读取或写入相同的数据项，则执行顺序变得非常重要。
+
+    > **If one transaction writes a data item and another  reads or writes same data item, order of execution is  important.**
+
+#### Concurrency Control Techniques
+
+- 锁定（Locking）
+- 时间戳（Time stamping）
+
+**它们都是保守的策略：** 在事务可能与其他事务冲突时，会延迟事务的执行。
+
+> Both are conservative approaches: **delay transactions**  in case they conflict with other transactions.
+
+**乐观方法**假设冲突很少发生，并且只在提交时检查冲突。
+
+> Optimistic methods assume conflict is rare and only  check for conflicts at commit.
+
+#### Locking
+
+事务使用锁来拒绝其他事务的访问，从而防止不正确的更新。
+
+两种类型：
+
+- **共享锁（shared lock）**：用于读取数据项。
+- **排他锁（exclusive lock）**：用于读取或写入数据项。
+
+读取操作不会产生冲突，因此多个事务可以同时在同一个数据项上持有共享锁。
+
+> **Reads cannot conflict**, so **more** than one **transaction can hold  shared locks simultaneously** on same item.
+
+排他锁使事务对该数据项拥有独占访问权限。
+
+> Exclusive lock gives transaction exclusive access to that item
+
+一些系统允许事务将读取锁升级为排他锁，或将排他锁降级为共享锁。
+
+> Somesystems allow transaction to upgrade read lock to an  exclusive lock, or downgrade exclusive lock to a shared lock.
+
+**Example: Incorrect Locking Schedule**
+
+![image-20250416194905487](images/image-20250416194905487.png)
+
+- 问题在于事务过早释放锁，导致丧失了完全的隔离性和原子性。
+- 为了保证串行化，需要在每个事务中增加一个关于锁定和解锁操作顺序的协议。
+
+#### Two-Phase Locking (2PL)
+
+如果所有锁定操作都发生在事务中的**第一个解锁操作之前**，则事务遵循2PL协议。
+
+> Transaction follows 2PL protocol if all locking operations  precede first unlock operation in the transaction. 
+
+**事务的两个阶段：**
+
+- **增长阶段（Growing phase）**：获取所有锁，但不能释放任何锁。
+- **收缩阶段（Shrinking phase）**：释放锁，但不能再获取任何新锁。
+
+> Two phases for transaction: 
+>
+> - Growing phase - acquires all locks but cannot  release any locks. 
+>
+> - Shrinking phase - releases locks but cannot acquire  any new locks.
+
+Example: 
+
+Preventing Lost Update Problem using 2PL
+
+Preventing Uncommitted Dependency  Problem using 2PL
+
+Preventing Inconsistent Analysis  Problem using 2PL
+
+#### Cascading Rollback
+
+**级联回退**
+
+如果事务遵循2PL，调度是可串行化的，但锁释放时机不当可能导致问题。
+
+> If every transaction in a schedule follows 2PL,  schedule is serializable. 
+>
+> However, problems can occur with interpretation of  when locks can be released.
+
+To prevent this with 2PL, leave **release of all locks**  until **end of transaction**.
+
+> 为避免级联回退，要求不管是写操作锁还是读操作 锁都应保持到事务结束(End of Transaction, EOT)才释放。该 补丁对其后的加锁协议也适用。
+

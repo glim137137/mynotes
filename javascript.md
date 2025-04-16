@@ -41,6 +41,18 @@ let multilineStr = `Hello,
 World!`;
 ```
 
+你也可以用`String()`方法
+
+```js
+let arr = [1, 2, 3];
+let str = String(arr);
+console.log(str);  // 输出 "1,2,3"
+
+let obj = { name: "Alice", age: 30 };
+let str = String(obj);
+console.log(str);  // 输出 "[object Object]"
+```
+
 #### 字符串方法
 
 大多数方法是`String`对象原型的方法，即`String.prototype.methodFunc()`；此外的是**静态方法**`String.methodFunc()`。
@@ -203,6 +215,8 @@ console.log("raw:", String.raw`Hi\nWorld`); // 输出: "Hi\\nWorld"
 str.includes
 
 str.match(reg)
+
+str.search(reg)
 
 str.replace
 
@@ -454,7 +468,7 @@ console.log(Symbol.keyFor(sym3)); // undefined，sym3 不在全局符号注册�
   const person = new Objcet({
       name: 'Alice',
       age: 30
-  };)
+  })
   ```
 
 - **构造函数**
@@ -620,9 +634,13 @@ console.log('Object.values:', values);
 // 输出: ['Alice', 25, ['reading', 'gaming'], { city: 'New York', zip: 10001 }]
 ```
 
+#### 常用方法
 
+Object.entries()
 
+Object.keys()
 
+Object.assign(target, ...sources)
 
 ### 数组（Array）
 
@@ -636,7 +654,7 @@ const fruits = ['apple', 'banana', 'cherry'];
 
 使用 `Array` 构造函数
 
-```
+```js
 const numbers = new Array(1, 2, 3, 4, 5);
 const emptyArray = new Array(5); // 创建一个长度为5的空数组
 ```
@@ -1231,6 +1249,20 @@ o3 instanceof D; // true
 o3 instanceof C; // true 因为 C.prototype 现在在 o3 的原型链上
 ```
 
+### in 运算符
+
+`in` 操作符用于检查一个对象是否具有某个属性
+
+```js
+let person = { name: "Alice", age: 25 };
+
+console.log("name" in person);  // true
+console.log("gender" in person); // false
+
+let person = { name: "Bob" };
+console.log("toString" in person);  // true，toString 是 Object.prototype 的方法
+```
+
 ## 判断 & 循环
 
 **同C**
@@ -1533,9 +1565,7 @@ console.log(x);  // 15
 
     - 用于从 `localStorage` 获取指定 `key` 的数据。
 
-    - 参数
-
-        ：
+    - 参数：
 
         - `key`: 键名，表示要获取的数据。
 
@@ -1545,7 +1575,7 @@ console.log(x);  // 15
     const username = localStorage.getItem('username');
     console.log(username);  // 输出: Alice
     ```
-
+    
 3. **`localStorage.removeItem(key)`**
 
     - 用于从 `localStorage` 删除指定 `key` 的数据。
@@ -2539,6 +2569,52 @@ const functionName = (parameters) => {
 | **代码复杂性**   | 简单易懂                                     | 需要处理回调函数、`Promise` 等，代码较复杂 |
 | **常见应用场景** | 计算密集型任务，顺序操作                     | I/O密集型任务，网络请求，文件操作等        |
 
+### 事件循环机制
+
+1. **执行栈（Call Stack）**：
+    - JavaScript 是单线程的，所有的同步代码都会被推入执行栈。
+    - 执行栈是一个后进先出（LIFO，Last In First Out）的结构，意味着最先被压入的任务会最晚执行。
+2. **任务队列（Task Queue）**：
+    - 异步任务的回调函数会被放入任务队列（也称为消息队列）中，等待主线程空闲时执行。
+    - 比如，`setTimeout`、`setInterval`、I/O 操作等任务会被放入任务队列。
+3. **事件循环（Event Loop）**：
+    - 事件循环会监视执行栈和任务队列。它的工作方式是：
+        1. 如果执行栈为空，事件循环会将任务队列中的第一个任务推入执行栈。
+        2. 执行栈为空时，事件循环将从任务队列中获取任务并执行，直到任务队列为空或者有新的同步任务进来。
+4. **宏任务和微任务（Macro Task & Micro Task）**：
+    - **宏任务**：包括 `setTimeout`、`setInterval`、I/O 操作等。
+    - **微任务**：包括 `Promise.then`、`process.nextTick` 等。微任务会在每轮事件循环结束后，所有宏任务执行前执行。
+
+```js
+console.log("开始");
+
+setTimeout(() => {
+    console.log("setTimeout 任务");
+}, 0);
+
+Promise.resolve().then(() => {
+    console.log("Promise 任务");
+});
+
+console.log("结束");
+
+/*
+开始
+结束
+Promise 任务
+setTimeout 任务
+*/
+```
+
+1. "开始" 会立即打印。
+2. `setTimeout` 设置的任务会被放到宏任务队列中，等待事件循环执行。
+3. `Promise.then` 的回调会放到微任务队列中，优先于宏任务执行。
+4. "结束" 会立即打印。
+5. 微任务队列中的任务（`Promise` 回调）会在当前任务完成后立刻执行，打印 "Promise 任务"。
+6. 最后，宏任务队列中的 `setTimeout` 回调被执行，打印 "setTimeout 任务"。
+
+事件循环使得 JavaScript 在单线程环境下能够高效处理异步任务。它通过**执行栈**、**任务队列**和**事件循环**的配合，确保异步操作不阻塞主线程，并按优先级处理任务。
+
 ### 回调函数 Callback
 
 回调函数是最基本的异步编程方式。当异步操作完成时，传入的回调函数会被调用。
@@ -3168,7 +3244,6 @@ console.log(uniqueArray);  // [1, 2, 3, 4, 5]
 // 清空 Set
 mySet.clear();
 console.log(mySet);  // Set {}
-
 ```
 
 `Set` 是一个很有用的 JavaScript 数据结构，特别适用于去重、检查元素是否存在和集合操作。它具有以下几个常用方法：
@@ -3872,7 +3947,7 @@ BOM 并没有像 DOM（文档对象模型）那样的标准结构，而是由不
 - window.close() - 关闭当前窗口
 - window.moveTo(x, y) -移动当前窗口
 - window.resizeTo(w, h) -重新调整当前窗口
-- window.scrollTo(x, y) - 滚动窗口到指定的位置。
+- **window.scrollTo(x, y)** - 滚动窗口到指定的位置。
 - window.moveBy(x, y) -将浏览器窗口相对于当前的位置移动指定的距离。
 - window.resizeBy(w, h) -根据给定的宽度和高度，调整浏览器窗口的大小。
 - window.scrollBy(x, y) - 在当前页面位置基础上滚动指定的距离。
