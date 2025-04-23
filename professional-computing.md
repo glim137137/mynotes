@@ -4,7 +4,7 @@
 
 [TOC]
 
-# Objectives:
+# Objectives
 
 • Describe the characteristics of modern software engineering projects and  employ appropriate project management techniques.
 

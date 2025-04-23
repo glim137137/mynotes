@@ -2,7 +2,7 @@
 
 [TOC]
 
-# 1.原理
+# 原理
 
 文件上传漏洞是指**文件上传功能**没有对上传的文件做合理严谨的**过滤**，导致用户可以利用此功能，上传能被**服务端解析执行的文件**（动态脚本文件），并通过此文件**获得执行服务端命令的能力**。
 
@@ -20,9 +20,9 @@
 
 
 
-# 2.验证的绕过
+# 验证的绕过
 
-## 1.MIME类型验证
+## MIME类型验证
 
 MIME类型（Multipurpose Internet Mail Extensions，多用途互联网邮件扩展）是一种标准，用于表示各种文件类型和内容类型。它最初是在电子邮件系统中定义的，但现在广泛应用于各种互联网协议，包括HTTP，用于指示浏览器或其他客户端如何处理接收到的数据。
 
@@ -67,9 +67,9 @@ MIME类型（Multipurpose Internet Mail Extensions，多用途互联网邮件扩
 
 
 
-## 2.文件名验证
+## 文件名验证
 
-### 1.修改上传配置文件
+### 修改上传配置文件
 
 通过先上传配置文件，允许后门文件的上传。 
 
@@ -103,7 +103,7 @@ MIME类型（Multipurpose Internet Mail Extensions，多用途互联网邮件扩
    AddHandler php5-script .gif          #在当前目录下，如果匹配到evil.gif文件，则被解析成PHP代码执行
    </FilesMatch>
 
-### 2.文件名解析漏洞
+### 文件名解析漏洞
 
 文件解析漏洞主要由于网站管理员操作不当或者 Web 服务器自身的漏洞，导致一些特殊文件被 IIS、apache、nginx 或其他 Web服务器在某种情况下解释成脚本文件执行。
 
@@ -111,7 +111,7 @@ MIME类型（Multipurpose Internet Mail Extensions，多用途互联网邮件扩
 
 但是，大部分的解析漏洞还是由于web服务器自身的漏洞，导致特殊文件被当成脚本文件执行了。
 
-#### 1.IIS
+#### IIS
 
 ##### 目录解析漏洞
 
@@ -149,7 +149,7 @@ MIME类型（Multipurpose Internet Mail Extensions，多用途互联网邮件扩
 
 黑客可以通过抓包，在文件名后加一个空格或者点绕过黑名单。若上传成功，空格和点都会被windows自动消除。
 
-#### 2.Ngnix
+#### Ngnix
 
 ##### 畸形解析漏洞
 
@@ -181,7 +181,7 @@ MIME类型（Multipurpose Internet Mail Extensions，多用途互联网邮件扩
 
 这样`‘1.jpg ’`就可以被当做php文件交给php去执行了。
 
-#### 3.Apache
+#### Apache
 
 ##### 多后缀解析漏洞
 
@@ -218,5 +218,5 @@ Apache就会把`1.php3.owf.jpg`解析成`1.php3`
 
 
 
-## 3.文件内容验证
+## 文件内容验证
 

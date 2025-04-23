@@ -1,6 +1,6 @@
 # LaTeX
 
-本篇文章来自于[OI Wiki](https://oi-wiki.org/tools/latex/)
+**文章参考**：[OI Wiki](https://oi-wiki.org/tools/latex/)
 
 [TOC]
 

@@ -1,6 +1,6 @@
 # Linux
 
-**本文参考**：[runboon](https://www.runoob.com/linux/linux-tutorial.html)
+**文章参考**：[runboon](https://www.runoob.com/linux/linux-tutorial.html)
 
 [TOC]
 

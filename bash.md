@@ -1,6 +1,6 @@
 # Bash
 
-文章参考：[freeCodeCamp](https://www.freecodecamp.org/chinese/news/bash-scripting-tutorial-linux-shell-script-and-command-line-for-beginners/)
+**文章参考**：[freeCodeCamp](https://www.freecodecamp.org/chinese/news/bash-scripting-tutorial-linux-shell-script-and-command-line-for-beginners/)
 
 [TOC]
 

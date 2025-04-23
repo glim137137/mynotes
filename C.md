@@ -1310,8 +1310,8 @@ Point p1; // 现在可以用 Point 来声明变量
 
 **语法**：
 
-```
-cpointer->member
+```c
+pointer->member
 ```
 
 其中：

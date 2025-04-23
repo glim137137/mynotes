@@ -375,7 +375,7 @@ Boolean(undefined); // false (undefined 转换为 false)
 
 
 
-### 空（Null）与 未定义（Undefined）
+### 空（Null）& 未定义（Undefined）
 
 ```js
 console.log(null == undefined);  // true，非严格比较时相等
