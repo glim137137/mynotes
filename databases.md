@@ -3270,6 +3270,8 @@ T_A restart with ts(T_A);       // 用以前的时间戳，让自己变为旧事
 
 **Thomas’s write rule**这个例子是年轻的优先级高。
 
+先比较事务，在比较数据。
+
 ![image-20250422212141102](images/image-20250422212141102.png)
 
 ## Optimistic Techniques
@@ -3329,6 +3331,8 @@ T_A restart with ts(T_A);       // 用以前的时间戳，让自己变为旧事
 > After successful validation phase for update  transactions.
 
 > Updates made to local copy are applied to the  database. （此阶段，本地副本的数据更新才会写入DB）
+
+
 
 
 
@@ -3438,25 +3442,25 @@ T_A restart with ts(T_A);       // 用以前的时间戳，让自己变为旧事
 
 恢复管理器负责原子性和持久性。
 
-> Recovery manager responsible for **atomicity** and  **durability**.
+> Recovery manager responsible for **atomicity** and **durability**.
 
 如果在提交和数据库缓冲区被刷新到辅助存储之间发生故障，为了确保持久性，恢复管理器必须重做（向前滚动）事务的更新
 
-> If failure occurs between commit and database buffers  being flushed to secondary storage then, to ensure  durability, recovery manager has to redo (rollforward)  transaction’s updates.
+> If failure occurs between commit and database buffers  being flushed to secondary storage then, to ensure  durability, recovery manager has to **redo** (rollforward, 使用log的**BI**恢复)  transaction’s updates.
 
 如果事务在故障发生时未提交，恢复管理器必须撤销（回滚）该事务的所有影响，以确保原子性。
 
->If transaction had not committed at failure time,  recovery manager has to undo (rollback) any effects  of that transaction for atomicity.
+>If transaction had not committed at failure time,  recovery manager has to **undo** (rollback, 使用log的**AI**恢复) any effects  of that transaction for atomicity.
 
-部分回滚 - 只需要回滚一个事务。
+- 部分回滚 - 只需要回滚一个事务。
 
->Partial undo - only one transaction has to be undone.
+    > Partial undo - only one transaction has to be undone.
 
-全局回滚 - 需要回滚所有事务。
+- 全局回滚 - 需要回滚所有事务。
 
->Global undo - all transactions have to be undone.
+    > Global undo - all transactions have to be undone.
 
-
+![image-20250430114229137](images/image-20250430114229137.png)
 
 ## Recovery Facilities
 
@@ -3483,71 +3487,138 @@ T_A restart with ts(T_A);       // 用以前的时间戳，让自己变为旧事
 ### Log file
 
 包含有关数据库所有更新的信息：
- − 事务记录
- − 检查点记录
 
-通常用于其他目的（例如，审计）。
+- 事务记录 Transaction records
+
+- 检查点记录 Checkpoint records
+
+通常用于其他目的（例如，审计）。 Often used for other purposes (for example,  auditing)
 
 事务记录包含：
- − 事务标识符。
- − 日志记录类型（事务开始、插入、更新、删除、回滚、提交）。
- − 受数据库操作影响的数据项标识符（插入、删除和更新操作）。
- − 数据项的前图像。
- − 数据项的后图像。
- − 日志管理信息
+
+- 事务标识符。**Transaction identifier.**
+- 日志记录类型（事务开始、插入、更新、删除、回滚、提交）。 **Type of log record** (transaction start, insert, update, delete,  abort, commit).
+- 受数据库操作影响的数据项标识符（插入、删除和更新操作）。 **Identifier of data item affected by database action** (insert,  delete, and update operations).
+-  数据项的前图像。**Before-image of data item.**
+- 数据项的后图像。**After-image of data item.**
+- 日志管理信息。Log management information.
+
+
 
 日志文件可以进行双倍复制（duplexed）或三倍复制（triplexed）。
-  有时日志文件会被拆分成两个独立的随机访问文件。
-  可能成为瓶颈；对整体性能至关重要。
+
+> Log file may be duplexed(双倍复制) or triplexed(三 倍)
+
+有时日志文件会被拆分成两个独立的随机访问文件。
+
+>Log file sometimes split into two separate random access files.
+
+可能成为瓶颈；对整体性能至关重要。
+
+>Potential bottleneck; critical in determining overall  performance.
+
+
 
 
 
 ### Checkpointing
 
 检查点 - 数据库和日志文件之间的同步点。所有缓冲区都被强制写入到辅助存储。
-  创建检查点记录，包含所有活动事务的标识符。
-  当发生故障时，重新执行自检查点以来已提交的所有事务，并撤销故障发生时仍处于活动状态的所有
+
+> Checkpoint - point of synchronization between  database and log file. All buffers are force-written to  secondary storage.
+
+创建检查点记录，包含所有活动事务的标识符。
+
+> Checkpoint record is created containing identifiers of  all active transactions.
+
+当发生故障时，重新执行自检查点以来已提交的所有事务，并撤销故障发生时仍处于活动状态的所有事务。
+
+> When failure occurs, redo all transactions that  committed since the checkpoint and undo all  transactions active at time of crash.
+
+![image-20250430114211252](images/image-20250430114211252.png)
 
 
 
 ### Recovery Techniques
 
- 如果数据库已损坏：
- − 需要恢复数据库的最后备份副本，并使用日志文件重新应用已提交事务的更新。
+如果数据库已损坏：
 
- 如果数据库仅不一致：
- − 需要撤销导致不一致的更改。可能还需要重新执行一些事务，以确保更新写入辅助存储。
- − 不需要备份，但可以使用日志文件中的前图像和后图像恢复数据库。
+- 需要恢复数据库的最后备份副本，并使用日志文件重新应用已提交事务的更新。
+
+    > Need to restore last **backup copy** of database and reapply  updates of committed transactions using log file.
+
+如果数据库仅不一致：
+
+- 需要撤销导致不一致的更改。可能还需要重新执行一些事务，以确保更新写入辅助存储。
+
+    > Need to undo changes that caused inconsistency. May also  need to redo some transactions to ensure updates reach  secondary storage.
+
+- 不需要备份，但可以使用日志文件中的前图像和后图像恢复数据库。
+
+    > Do not need **backup**, but can restore database using  before- and after-images in the **log file**.
 
 
 
 #### Deferred Update
 
 更新在事务到达提交点之前不会写入数据库。
-  如果事务在提交之前失败，则不会修改数据库，因此不需要撤销更改。
-  可能需要重新执行已提交事务的更新，因为它们的效果可能尚未到达数据库。
 
+> Updates are not written to the database until after a  transaction has reached its commit point
 
+如果事务在提交之前失败，则不会修改数据库，因此不需要撤销更改。
+
+> If transaction fails before commit, it will not have  modified database and so **no undoing** of changes  required.
+
+可能需要重新执行已提交事务的更新，因为它们的效果可能尚未到达数据库。
+
+> May be necessary to **redo updates of committed  transactions** as their effect may not have reached  database.
 
 #### Immediate Update
 
+更新在发生时立即应用到数据库，而无需等待到达提交点。
 
-  更新在发生时立即应用到数据库，而无需等待到达提交点。
-  在发生故障后，需要重新执行已提交事务的更新。
-  可能需要撤销在故障发生时尚未提交的事务的影响。
-  必须确保日志记录在写入数据库之前完成。采用先记后写日志协议。
+> Updates are applied to database as they occur  without waiting to reach the commit point.
 
-立即更新（2/2）
-  如果日志中没有“事务提交”记录，则表示该事务在故障时仍处于活动状态，必须撤销。
-  撤销操作按照它们写入日志的逆序进行。（通常事务对数据项有多次修改，撤销操作要按逆向顺序进行）
+在发生故障后，需要重新执行已提交事务的更新。
+
+> Need to **redo updates of committed transactions**  following a failure.
+
+可能需要撤销在故障发生时尚未提交的事务的影响。
+
+>May need to **undo effects of transactions** that had  not committed at time of failure.
+
+必须确保日志记录在写入数据库之前完成。采用先记后写日志协议。
+
+>Essential that log records are written before write to  database. **Write-ahead log protocol（先记后写）.**
+
+
+如果日志中没有“事务提交”记录，则表示该事务在故障时仍处于活动状态，必须撤销。
+
+> If no **“transaction commit”** record in log, then that  transaction was active at failure and must be undone.
+
+撤销操作按照它们写入日志的逆序进行。（通常事务对数据项有多次修改，撤销操作要按逆向顺序进行）
+
+> Undo operations are performed **in reverse order in which they were written to log.**（一般事务对数据项有 多次修改，undo要逆向进行）
 
 #### Shadow Paging
 
  在事务生命周期中，维护两个页面表：当前页面表和影像页面表。
-  当事务开始时，这两个页面表是相同的。
-  影像页面表之后永远不会被修改，用于在发生故障时恢复数据库。
-  在事务期间，当前页面表记录所有数据库的更新。
-  当事务完成时，当前页面表变为影像页面表。
 
+> Maintain two page tables during life of a transaction:  **current** page and **shadow** page table.
 
+当事务开始时，这两个页面表是相同的。
+
+>When transaction starts, two pages are the same.
+
+影像页面表之后永远不会被修改，用于在发生故障时恢复数据库。
+
+>Shadow page table is never changed thereafter and is  used to restore database in event of failure.
+
+在事务期间，当前页面表记录所有数据库的更新。
+
+>During transaction, current page table records all  updates to database.
+
+当事务完成时，当前页面表变为影像页面表。
+
+> When transaction completes, current page table  becomes shadow page table.
 

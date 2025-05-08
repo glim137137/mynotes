@@ -129,7 +129,7 @@ $$
 
 
 
-### **Pascal’s Identity（帕斯卡恒等式）**
+### Pascal’s Identity（帕斯卡恒等式）
 
 **1. 公式**
 
@@ -158,7 +158,7 @@ C(n, r) = C(n-1, r-1) + C(n-1, r)
 $$
 
 
-### **Vandermonde’s Identity（范德蒙德恒等式）**
+### Vandermonde’s Identity（范德蒙德恒等式）
 
 **1. 公式**
 $$
@@ -319,7 +319,7 @@ $$
 
 ---
 
-#### **3. 关键应用场景**
+#### 3. 关键应用场景
 1. **垃圾邮件过滤**  
    - **先验**：历史邮件中垃圾邮件的比例 $P(\text{Spam}) $
    - **似然**：垃圾邮件中出现特定关键词的概率 $P(\text{Keyword} \mid \text{Spam}) $  
@@ -335,7 +335,7 @@ $$
 
 ---
 
-#### **4. 贝叶斯定理的推导**
+#### 4. 贝叶斯定理的推导
 从条件概率定义出发：  
 $$
 P(A \cap B) = P(A \mid B) \cdot P(B) = P(B \mid A) \cdot P(A)
@@ -345,7 +345,7 @@ $$
 
 ---
 
-#### **5. 经典例题**
+#### 5. 经典例题
 **问题**：某种疾病的患病率为 $ 1\%$（先验）。检测的准确率为：  
 
 - 真阳性率（患病且检测阳性）$ P(\text{Test+} \mid \text{Disease}) = 99\% $
@@ -367,14 +367,14 @@ $$
 
 ---
 
-#### **6. 贝叶斯方法的优势**
+#### 6. 贝叶斯方法的优势
 - **动态更新**：随着数据积累，后验概率可不断修正（如机器学习中的在线学习）。  
 - **处理不确定性**：量化对未知参数的置信度（如置信区间）。  
 - **结合领域知识**：通过先验分布引入专家经验。
 
 ---
 
-#### **7. 注意事项**
+#### 7. 注意事项
 - **先验选择**：主观性可能导致结果偏差（需合理设定或使用无信息先验）。  
 - **计算复杂度**：高维问题需依赖马尔可夫链蒙特卡洛（MCMC）等近似方法。  
 
@@ -433,8 +433,6 @@ $$
 
 
 
-
-
 ## 3.3.Degree
 
 **顶点的度数（Degree of a Vertex）** 是指与该顶点**直接相连的边的数量**，用于衡量该顶点在图中的“连接程度”。
@@ -454,7 +452,7 @@ $$
 
 
 
-**Corollary**：
+#### Corollary
 
 在任何无向图中，**度数为奇数的顶点个数必为偶数**。
 
@@ -466,37 +464,117 @@ $$
 
 ### Path
 
-- **路径** 是指一个顶点序列 $v_0,v_1,v_2,…,v_k$，使得对任意 $0≤i<k$，边 $(v_i,v_{i+1})$ 都存在于图中。
-- **长度**：路径的边数（如 k 条边）。
-- **简单路径（Simple Path）**：所有顶点**不重复**（无重复访问的顶点）。
+**路径** 是指一个顶点序列 $v_0,v_1,v_2,…,v_k$，使得对任意 $0≤i<k$，边 $(v_i,v_{i+1})$ 都存在于图中。
 
+**长度**：路径的边数（如 k 条边）。
 
+**简单路径（Simple Path）**：所有顶点**不重复**（无重复访问的顶点）。
 
-**Lemma**：
+- **Lemma**：在任何图中，如果两个顶点之间存在一条路径，那么它们之间**必定存在一条简单路径**（即没有重复顶点的路径）。
 
-在任何图中，如果两个顶点之间存在一条路径，那么它们之间**必定存在一条简单路径**（即没有重复顶点的路径）。
+**欧拉路径**：
+
+> a path that includes all of the vertices of G , traverses every edge of G exactly once and it begins and ends at distinct vertices.
+
+- **Corollary**：一个连通图有一个欧拉路径**当且仅当**它有且仅有**两个奇度的顶点**。
 
 
 
 ### Connected
 
-Two vertices u and v of a graph G are connected if there is a path from u to v.
+- **连通（connected）**：
+
+    > Two vertices u and v of a graph G are connected if there is a path from u to v.
+
+- **连通图（connected graph）**：任意两点之间都有路径。
+
+    > A graph G is connected if for every pair of vertices u and v of G there is a path from u to v . Otherwise G is disconnected.
 
 
 
+### Cycle
+
+**环**（或称为**圈**）是指在图 \( G \) 中，从顶点 $v_0$ 到顶点 $v_n$ 的一个长度为 $n$ 的路径是一个由 $n+1$ 个顶点和 $n$ 条边组成的交替序列：
+$$
+v_0, e_1, v_1, e_2, \dots, v_{n-1}, e_n, v_n
+$$
 
 
+其中，每条边 $e_i$ 连接顶点 $v_{i-1}$ 和 $v_i$，对于 $i = 1, \dots, n$。**（无重复边，可以有重复点）**
 
+**简单环（Simple Cycle）**：如果环中所有的顶点（除了起始点和终止点）都不重复，那么这个环是一个简单环。**（无重复边，除起点外无重复点）**
+
+> A simple cycle is a cycle from v to v in which, **except for the beginning and ending vertices** that are both equal to v, there are no repeated vertices . 
+
+**欧拉回路（Euler Cycle）**：通过图中每条边且每条边只被经过一次的路径。
+
+- **Euler’s Theorem**：一个至少有一条边的连通图，具有一个欧拉循环**当且仅当**它没有奇度的顶点。
 
 
 
 ## 3.5.Subgraph
 
+Let H and G be graph 
+
+**子图**。H is a **subgraph** of G (H ⊆G), if V(H) ⊆ V(G) and E(H) ⊆ E(G) . 
+
+**真子图**。H is a **proper subgraph** of G if H is a subgraph of G and H ≠ G.（H ≠ G:点集合，边集合 有一个不同即可） 
+
+**诱导子图**（难理解）。H is an **induced subgraph** of G,if H is a subgraph of G such that every edge with both endnodes in V(H) is also an edge of H.  称His the subgraph of G induced by the node set V(H).
+
+> 当我们从图G中选取一部分顶点V'⊆V，然后构造一个新的图G'=(V', E')，其中E'包含了所有在V'中顶点之间的边，这样的图G'就称为G的诱导子图。
+
+
+
+## 3.6.Connected Component
+
+**第一种定义**从顶点划分的角度出发，将图分成若干连通的“块”，每个块是一个诱导子图，且这些子图是图的连通分量。
+
+**第二种定义**从子图的角度出发，强调连通分量是最大的连通子图，无法再通过添加顶点或边而保持连通。
+
+**等价性**：第一种定义中的每个诱导子图 $ G_i $（由 $ V_i $ 诱导）正是第二种定义中的一个最大连通子图。因为：
+
+- $ G_i $ 是连通的（内部顶点间有路径）。
+- $ G_i $ 是最大的（如果加入任何不在 $ V_i $ 的顶点或边，会破坏连通性，因为不同 $ V_i $ 和 $ V_j $ 的顶点间无路径）。
+
+> Note that connected graphs only have one component.
+
+
+
+## 3.7.Bipartite Graphs
+
+**二分图**： 一个图 $ G = (V, E) $ 是**二分图**，如果其顶点集 $ V $ 可以被划分为两个**不相交的子集** $ V_1 $ 和 $ V_2 $，满足：
+
+1. $ V = V_1 \cup V_2 $ 且 $ V_1 \cap V_2 = \emptyset $（顶点集被划分为两个互斥的部分）。
+2. 图中每条边 $e \in E$的两个端点分别属于 $V_1 $和 $V_2$，即：
+    - 对于每条边 $ e = (u, v) \in E $，若 $ u \in V_1 $，则 $ v \in V_2 $，反之亦然。
+    - 换句话说，$ V_1 $ 内部和 $ V_2 $ 内部没有边。
+
+**二分区（bipartition）**：二分图可以表示为 $G = (V_1, V_2, E)$ 或者 $G = (V_1, V_2)$，其中 $ E \subseteq V_1 \times V_2 $。这种划分称为**二部划分**（bipartition）。
+
+>  Note that a simple graph G on one vertex u is bipartite because we can let X = {u} and Y = ∅ 。
+
+**闭合回路（closed path）**：起点终点相同的路径。
+
+>  A closed path is a path that begins and ends at the same vertex .
+
+:star: A path or a cycle is even or odd depending on the parity（奇偶性）of its length.
+
+- **Lemma**：Every odd closed path contains an odd simple cycle.
+
+    > 注意：every even closed path contains an even simple cycle 这句话是错的。
+
+- **Theorem**：Agraph is bipartite if and only if it contains no odd simple cycle.
+
+
+
+## 3.8.Tree
 
 
 
 
-## 3.6.Component
+
+
 
 
 
