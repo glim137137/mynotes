@@ -319,7 +319,7 @@ char x = 'x';        // 声明变量 x 的值是字符 'x'。
 
 | 运算符 | 描述                                                         | 例子             |
 | :----- | :----------------------------------------------------------- | :--------------- |
-| ==     | 检查如果两个操作数的值是否相等，如果相等则条件为真。         | （A == B）为假。 |
+| ==     | 检查如果两个操作数的值是否相等，如果相等则条件为真。**用==比较对象是比较地址是否相同，不是比较内容。** | （A == B）为假。 |
 | !=     | 检查如果两个操作数的值是否相等，如果值不相等则条件为真。     | (A != B) 为真。  |
 | >      | 检查左操作数的值是否大于右操作数的值，如果是那么条件为真。   | （A> B）为假。   |
 | <      | 检查左操作数的值是否小于右操作数的值，如果是那么条件为真。   | （A <B）为真。   |
@@ -395,7 +395,7 @@ variable x = (expression) ? value if true : value if false
 
 ### instanceof 运算符
 
-该运算符用于操作对象实例，检查该对象是否是一个特定类型（类类型或接口类型）。
+该运算符用于操作对象实例，检查该对象的**运行类型**是否是一个特定类型（类类型或接口类型）或特定类型的子类型。
 
 instanceof运算符使用格式如下：
 
@@ -403,16 +403,13 @@ instanceof运算符使用格式如下：
 ( Object reference variable ) instanceof  (class/interface type)
 ```
 
-如果运算符左侧变量所指的对象，是操作符右侧类或接口(class/interface)的一个对象，那么结果为真。
-
 下面是一个例子：
 
 ```java
 String name = "James";
-boolean result = name instanceof String; // 由于 name 是 String 类型，所以返回真
+boolean result1 = name instanceof String; // 由于 name 是 String 类型，所以返回真
+boolean result2 = name instanceof Object; // String 是 Object 的子类型。
 ```
-
-如果被比较的对象兼容于右侧类型，该运算符仍然返回 true。
 
 
 
@@ -1047,29 +1044,49 @@ public int sum(int... nums) {
 
 重写是指**子类重新定义父类中已有的方法**，以覆盖父类的实现。重写是实现运行时多态的基础，通常与继承和多态相关。
 
-```java
-class Parent {
-	public String getInfo() {
-		return "Parent";
-	}
-}
+- 子类方法的参数，方法名称，要和父类方法的参数，方法名称完全一样。
 
-class Child extends Parent{
-    @Override
-	public String getInfo() {
-        // 父类的方法只能在子类内部调用
-		return super.getInfo() + "'s Child";
-	}
-}
+    ```java
+    class Parent {
+    	public String getInfo() {
+    		return "Parent";
+    	}
+    }
+    
+    class Child extends Parent{
+        @Override
+    	public String getInfo() {
+            // 父类的方法只能在子类内部调用
+    		return super.getInfo() + "'s Child";
+    	}
+    }
+    
+    public class Test {
+    	public static void main(String[] args) {
+            Child c = new Child();
+            // 在外部，此时调用的是子类方法，实例化子类无法再调用父类重写之前的父类方法
+            System.out.println(c.getInfo());
+        } 
+    }
+    ```
 
-public class Test {
-	public static void main(String[] args) {
-        Child c = new Child();
-        // 在外部，此时调用的是子类方法，实例化子类无法再调用父类重写之前的父类方法
-        System.out.println(c.getInfo());
-    } 
-}
-```
+- 子类方法的返回类型和父类返回类型一样，或者是**父类返回类型的子类**。
+
+    ```java
+    // 父类
+    Object printName() {}
+    // 子类
+    public String printName() {}
+
+- 子类方法**不能缩小**父类方法的访问权限。
+
+    ```java
+    // 错误：子类只能增大权限
+    // 父类
+    public void eat() {}
+    // 子类
+    void eat() {}
+    ```
 
 #### `@override` 注解
 
@@ -1193,6 +1210,8 @@ class Test {
 ```
 
 #### `this` 关键字
+
+**访问本类的属性，没有则向上查找，找到为止。**
 
 当局部变量（例如方法的参数）与实例变量（类的属性）同名时，可以使用 `this` 来区分实例变量和局部变量。
 
@@ -1325,13 +1344,15 @@ class Son extends Father {
 }
 
 Son son = new Son();
-// 自下而上的找。
+// 自下而上的找。一直都没找到就会报错
 System.out.println(son.name);  // Rob
 System.out.println(son.age);   // 20
 System.out.println(son.hobby); // Tour
 ```
 
 #### `super` 关键字
+
+**访问父类的属性，没有则向上查找，找到为止。**
 
 如果子类和父类有同名的成员变量，使用 `super` 可以访问父类的成员变量，而避免与子类的同名变量产生冲突。
 
@@ -1452,9 +1473,88 @@ class Dog extends Animal {
 
 ### 多态（Polymorphism）
 
-- 多态就是同一个接口，使用不同的实例而执行不同操作。
-- 对象可以表现为多种形态，主要通过**方法重载**和**方法重写**实现。
-- **父类引用指向子类对象**：这是实现运行时多态的核心。尽管父类引用指向的是子类对象，调用方法时会执行子类的方法，而不是父类的。
+多态就是同一个接口，使用不同的实例而执行不同操作。
+
+> 对象的编译类型与运行类型：
+>
+> ```java
+> Animal animal = new Dog();
+> animal = new Cat();
+> ```
+>
+> - 编译类型（编译时确定）：`Animal`
+> - 运行类型（运行时可以改变）：`Dog`，`Cat`
+
+#### 实现多态的条件
+
+1. **封装与继承**：两个对象存在继承关系。
+
+2. **方法重载与方法重写**：方法名相同，但参数列表（数量、类型或顺序）不同；子类重写父类或接口中的方法。
+
+3. **向上转型**：**父类引用指向子类对象**，使用父类或接口类型的引用指向子类对象。如 `Animal animal = new Dog();`    `Animal(getName)` ，`Dog(getName, bark)`。
+
+    > 能否调用看编译类型：
+    >
+    > - 可以**调用**父类中的**所有**成员。
+    >
+    >     ```java
+    >     animal.getName(); // 可以
+    >     ```
+    >
+    > - 不能**调用**子类中的**特有**成员。
+    >
+    >     ```java
+    >     animal.bark(); // 不行
+    >     ```
+    >
+    > 能否执行看运行类型：
+    >
+    > - **执行**时由子类子类实现。
+    >
+    >     ```java
+    >     animal.getName(); // 这里运行时还是从子类开始找。
+    >     ```
+
+    **向下转型**：将父类类型的引用转换为子类类型。如 `Dog dog = (Dog) animal;`
+
+    > 前提：要有通过**向上转型**创建的引用。
+    >
+    > 作用：**调用**子类中的**特有**成员。
+    >
+    > 要求：父类的引用必须指向当前目标类型的对象，否则报错。`animal -> Dog -> new Dog()`
+
+4. **动态绑定机制**：
+
+    - 当调用**对象方法**时，该方法会和该对象的**内存地址/运行类型**绑定。
+    - 当调用**对象属性**时，没有动态绑定机制，**哪里声明，哪里调用。**
+
+    ```java
+    class Calculator {
+        public int a = 20;
+        
+        public int getA() {
+            return a;
+        }
+        public int add() {
+            return a + 3;
+        }
+        public int addA() {
+            return getA() + 3;
+        }
+    }
+    
+    class Adder extends Calculator {
+        public int a = 10;
+    
+        public int getA() {
+            return a;
+        }
+    }
+    
+    Adder a = new Adder();
+    a.add();  // 23		A: add[没有] -> C: add -> C: a(20)
+    a.addA(); // 13		A: addA[没有] -> C: addA -> A: getA[] -> A: a(10)
+    ```
 
 #### 编译时多态
 
@@ -1486,48 +1586,159 @@ public class Demo {
 
 通过**方法重写（Overriding）**实现，即子类重写父类的方法，具体调用哪个方法由实际对象的类型决定（通常通过父类引用指向子类对象实现）。
 
-##### 动态绑定
-
 **方法调用顺序**：在 Java 中，方法调用遵循**动态绑定**原则。如果当前类没有，JVM 会通过继承链向上查找，直到找到方法为止。
 
 ```java
-class Parent {
-	public String getInfo() {
-		return "Parent";
-	}
-    public void printInfo() {
-        System.out.println(getInfo());
+// Animal.java (name, getName)
+// Animal子类：Dog(bark), Cat, Pig
+
+// Food.java (name)
+// Food子类：Bone, Fish, Rice
+
+// Master.java (name)
+public void feed(Animal animal, Food food) {
+    System.out.println(name + " feeds " + animal.getName() + " with " + food.getName());
+}
+// 不需要每种动物写一个feed方法。
+public void feed(Dog dog, Bone bone) {
+    System.out.println(name + " feeds " + dog.getName() + " with " + bone.getName());
+}
+public void feed(Cat cat, Fish fish) {
+    System.out.println(name + " feeds " + cat.getName() + " with " + fish.getName());
+}
+...
+
+// Daily.java
+Master tom = new Master("Tom");
+
+// 向上转型。
+Animal dog = new Dog("Webb");
+Animal cat = new Cat("Sands");
+Animal pig = new Pig("Dave");
+
+Food bone = new Bone("bone");
+Food fish = new Fish("fish");
+Food rice = new Rice("rice");
+
+tom.feed(dog, bone);
+
+// 向下转型。
+Dog dogLower = (dog) dog;
+dogLower.bark();
+
+// 与直接创建对象的区别。
+Dog dog = new Dog("Leoooooo");
+Bone bone = new Bone("bone");
+tom.feed(dog, bone); // 无法使用feed。不是多态。
+
+```
+
+#### 多态的应用
+
+##### 多态数组
+
+多态数组是一个数组的创建时**向上转型**，而遍历时**动态绑定**。
+
+```java
+// 父类
+class Animal {
+    void makeSound() {
+        System.out.println("Some generic sound");
     }
 }
 
-class Child_1 extends Parent{
+// 子类1
+class Dog extends Animal {
     @Override
-	public String getInfo() {
-        // 父类的方法只能在子类内部调用
-		return super.getInfo() + "'s Child 1";
-	}
-    @Override
-    public void printInfo() {
-        System.out.println(getInfo());
+    void makeSound() {
+        System.out.println("Woof!");
+    }
+    void bark() {
+        System.out.println("WangWang!");
     }
 }
 
-class Child_2 extends Parent{
+// 子类2
+class Cat extends Animal {
     @Override
-    public void printInfo() {
-        System.out.println(getInfo());
+    void makeSound() {
+        System.out.println("Meow!");
     }
 }
 
-public class Test {
-	public static void main(String[] args) {
-        Child_1 c1 = new Child_1();
-        Child_2 c2 = new Child_2();
-        // 在 printInfo() 中, 先找子类的 getInfo() 方法。
-        // 如果子类没有才循着，继承链向上直到找到为止。
-        c1.printInfo();
-        c2.printInfo();
-    } 
+public class Main {
+    public static void main(String[] args) {
+        // 创建数组，声明类型为Animal
+        Animal[] animals = new Animal[3];
+        // 向上转型，存储不同子类对象
+        animals[0] = new Dog();
+        animals[1] = new Cat();
+        animals[2] = new Dog();
+
+        // 遍历数组，调用makeSound方法
+        for (Animal animal : animals) {
+            // 动态绑定，调用实际类型的makeSound
+            animal.makeSound();
+            if (animal instanceof Dog) {
+                ((Dog) animal).bark();
+            }
+        }
+    }
+}
+```
+
+##### 多态参数
+
+方法的形参类型是父类，但传入的实参类型是子类。通过**动态绑定**，方法内部调用参数的方法时，会根据实参类型执行对应的重写方法。
+
+```java
+// 父类
+class Animal {
+    void makeSound() {
+        System.out.println("Some generic sound");
+    }
+}
+
+// 子类1
+class Dog extends Animal {
+    @Override
+    void makeSound() {
+        System.out.println("Woof!");
+    }
+}
+
+// 子类2
+class Cat extends Animal {
+    @Override
+    void makeSound() {
+        System.out.println("Meow!");
+    }
+}
+
+// 类包含多态参数方法
+class Zoo {
+    // 多态参数：参数类型为Animal
+    void performSound(Animal animal) {
+        animal.makeSound(); // 动态绑定，调用实际类型的makeSound
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Zoo zoo = new Zoo();
+
+        // 创建不同子类对象
+        Animal dog = new Dog();
+        Animal cat = new Cat();
+
+        // 传入多态参数
+        zoo.performSound(dog); // 输出: Woof!
+        zoo.performSound(cat); // 输出: Meow!
+
+        // 直接传入子类对象（向上转型）
+        zoo.performSound(new Dog()); // 输出: Woof!
+        zoo.performSound(new Cat()); // 输出: Meow!
+    }
 }
 ```
 
@@ -2220,6 +2431,260 @@ public class ArrayList<T> implements List<T> {
 
 
 # 内置包装类
+
+## Object
+
+`Object`类是所有类的根类，位于`java.lang`包中。
+
+
+
+### 常用方法
+
+```java
+// 示例类，实现Cloneable以支持clone()
+class Person implements Cloneable {
+    private String name;
+    private int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // 重写toString
+    @Override
+    public String toString() {
+        return "Person{name='" + name + "', age=" + age + "}";
+    }
+
+    // 重写equals
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Person)) return false;
+        Person other = (Person) obj;
+        return this.name.equals(other.name) && this.age == other.age;
+    }
+
+    // 重写hashCode
+    @Override
+    public int hashCode() {
+        return 31 * name.hashCode() + age;
+    }
+
+    // 重写clone
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+}
+
+public class ObjectMethodsDemo {
+    public static void main(String[] args) {
+        try {
+            // 创建测试对象
+            Person p1 = new Person("Alice", 25);
+            Person p2 = new Person("Alice", 25);
+            Person p3 = new Person("Bob", 30);
+
+            // 1. getClass()
+            Class<?> clazz = p1.getClass(); // 获取对象的运行时类
+            System.out.println("Class of p1: " + clazz.getName()); // 输出: Person
+
+            // 2. hashCode()
+            int hashCode = p1.hashCode(); // 获取对象的哈希码
+            System.out.println("HashCode of p1: " + hashCode); // 输出: 哈希码（整数）
+
+            // 3. equals(Object obj)
+            boolean isEqual = p1.equals(p2); // 比较两个对象的内容是否相同 -> true
+            System.out.println("Equals p2: " + isEqual); // 输出: true
+            boolean notEqual = p1.equals(p3); // 比较不同对象 -> false
+            System.out.println("Equals p3: " + notEqual); // 输出: false
+
+            // 4. toString()
+            String str = p1.toString(); // 获取对象的字符串表示
+            System.out.println("toString of p1: " + str); // 输出: Person{name='Alice', age=25}
+
+            // 5. clone()
+            Person p1Clone = (Person) p1.clone(); // 创建p1的副本
+            System.out.println("Cloned object: " + p1Clone); // 输出: Person{name='Alice', age=25}
+            System.out.println("Clone equals p1: " + p1.equals(p1Clone)); // 输出: true
+
+            // 6. wait() 和 notify()
+            Object lock = new Object();
+            Thread waiter = new Thread(() -> {
+                synchronized (lock) {
+                    try {
+                        System.out.println("Thread waiting...");
+                        lock.wait(); // 线程等待
+                        System.out.println("Thread awakened");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            waiter.start();
+            Thread.sleep(1000); // 确保waiter线程先运行
+            synchronized (lock) {
+                lock.notify(); // 唤醒等待的线程
+                System.out.println("Notified waiting thread");
+            }
+
+        } catch (CloneNotSupportedException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+#### `equals()`
+
+`Object` 类的 `equals()` 方法比较两个对象的引用地址（即是否是同一个对象）是否相同。
+
+> 何时重写：
+>
+> - 需要基于内容比较相等性时（如自定义类）。如`String`，`Integer`...
+> - 用于集合（如 HashSet、HashMap）时。
+
+##### `==` vs `equals()`
+
+| 特性         | ==                                     | equals()                                                     |
+| ------------ | -------------------------------------- | ------------------------------------------------------------ |
+| **类型**     | 关系运算符                             | Object 类的方法                                              |
+| **适用对象** | 基本类型和引用类型                     | 仅适用于引用类型（对象）                                     |
+| **默认行为** | 基本类型：比较值；引用类型：比较地址   | Object 默认实现：比较引用地址；**但许多类（如 String, Integer）重写了 equals() 以比较内容。** |
+| **可自定义** | 不可重定义                             | **可重写**自定义内容比较逻辑                                 |
+| **典型用途** | 检查对象是否为同一实例或基本类型值相等 | 检查对象的内容是否逻辑上相等                                 |
+
+###### `==`
+
+`==`可以比较基本类型和引用类型。
+
+```java
+// 1.
+class Parent;
+class Child extends Parent;
+Child c = new Child();
+Child c1 = c;
+Parent p = c;
+c == c1;	// true
+c == p;		// true
+
+// 2.
+int a = 5; 
+int b = 5; 
+a == b; // true（值相等） 
+
+Integer i1 = new Integer(1000);
+Integer i2 = new Integer(1000);
+i1 == i2; // false（不同对象，地址不同）
+
+// 3.
+String s1 = new String("Hello"); 
+String s2 = new String("Hello"); 
+s1 == s2; // false（不同对象，地址不同）
+```
+
+###### `equals()`
+
+`equals()`仅适用于引用类型（对象）。
+
+```java
+// 1.
+class Parent;
+class Child extends Parent;
+Child c = new Child();
+
+Child c1 = c;
+Parent p = c;
+
+c.equals(c1);	// true
+c.equals(p);	// true
+
+// 2.
+int i1 = 1;
+int i2 = 2;
+i1.equals(i2); // 基本类型，不能比较
+
+Integer i1 = new Integer(1);
+Integer i2 = new Integer(2);
+i1.equals(i2); // false（内容不同）
+
+// 3.
+String s1 = new String("Hello"); 
+String s2 = new String("Hello"); 
+s1.equals(s2); // true（内容相同）
+```
+
+以下是部分类`equals`的源码。
+
+```java
+// 1. Object.java
+public boolean equals(Object obj) {
+    return (this == obj);
+}
+// 2. String.java
+public boolean equals(Object anObject) {
+	if (this == anObject) {
+	    return true;
+	}
+	return (anObject instanceof String aString)
+	        && (!COMPACT_STRINGS || this.coder == aString.coder)
+	        && StringLatin1.equals(value, aString.value);
+}
+// 3. Integer.java
+public boolean equals(Object obj) {
+    if (obj instanceof Integer) {
+        return value == ((Integer)obj).intValue();
+    }
+    return false;
+}
+```
+
+#### `hashCode()`
+
+`Object` 类中的 `hashCode()` 方法，用于返回对象的哈希码，即一个整数值，通常用于哈希表（如 `HashMap`、`HashSet`）等数据结构中，以优化对象的存储和查找。
+
+> 何时重写：
+>
+> - 重写 `equals()` 后，必须同时重写 `hashCode()`，确保相等对象有相同哈希码。
+
+##### hashCode() 的作用
+
+- 性能优化：
+
+    - 在哈希表中，`hashCode()` 确定对象存储的桶位置。哈希码相等的对象会被放入同一个桶，减少查找范围。减少哈希冲突（不同对象映射到同一桶），提高哈希表性能。
+
+    - 示例：`HashMap` 使用 `key.hashCode()` 计算键的存储位置。
+
+- 对象比较：
+
+    - 两个引用，如果指向的是同一个对象，则哈希值肯定是一样的。
+
+```java
+A a1 = new A();
+A a2 = new A();
+A a3 = a1;
+
+a1.hashCode() == a2.hashCode(); // false
+a1.hashCode() == a3.hashCode(); // true
+```
+
+#### `toString()`
+
+`Object` 类中的 `toString()` 方法，用于返回对象的字符串表示，返回格式为 `getClass().getName() + "@" + Integer.toHexString(hashCode())` 表示类名（包括包名）+ `@` + 哈希码的十六进制表示。
+
+> 何时重写：
+>
+> - 当需要以人类可读的方式展示对象内容时。如`String`，`Integer`...
+
+```java
+Object obj = new Object();
+System.out.println(obj.toString()); // 输出: java.lang.Object@15db9742
+System.out.println(obj); // 默认调用toString()
+```
+
+
 
 ## Arrays
 

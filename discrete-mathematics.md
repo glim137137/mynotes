@@ -145,7 +145,7 @@ $$
 
 **2. 证明**
 
-##### **组合数的计数方法**
+**组合数的计数方法**
 
 我们有 $n$ 个元素，要选 $r$ 个。假设固定选取一个特定元素 $A$：
 
@@ -171,7 +171,7 @@ $$
 - $C(n, r-k)$ 代表从 $n$ 个元素中选 $r-k$ 个的方法数。
 - 右侧的求和表示所有可能的拆分情况。
 
-##### **2. 直观理解**
+**2. 直观理解**
 
 Vandermonde’s Identity 说明：
 
@@ -310,7 +310,7 @@ $$
 
 ---
 
-#### **2. 与经典概率的区别**
+#### 2. 与经典概率的区别
 | **经典概率（频率学派）**               | **贝叶斯概率**                 |
 | -------------------------------------- | ------------------------------ |
 | 基于长期重复事件的频率（如骰子实验）。 | 基于主观信念和证据的动态更新。 |
@@ -466,7 +466,7 @@ $$
 
 **路径** 是指一个顶点序列 $v_0,v_1,v_2,…,v_k$，使得对任意 $0≤i<k$，边 $(v_i,v_{i+1})$ 都存在于图中。
 
-**长度**：路径的边数（如 k 条边）。
+**长度**：路径的边数（如 $k$ 条边）。
 
 **简单路径（Simple Path）**：所有顶点**不重复**（无重复访问的顶点）。
 
@@ -568,9 +568,34 @@ Let H and G be graph
 
 
 
-## 3.8.Tree
+## 3.8.Deletion
+
+### Edge Deletion
+
+- Let $$G$$ be a graph.
+
+- **删边（只删边不删点）**： For $$M⊆ E(G)$$,$$G/\ M$$ is the graph obtained from $$G$$ by removing the edges from $$M$$. So $$G /\ M = (V(G),E(G) /\ M) $$. 
+- **Lemma**：Let G be a connected graph. An edge e is not a cut-edge if and only if it belongs to a cycle.
+
+### Vertex Deletion
+
+- For $$S ⊆V(G)$$, $$G[S]$$ is the subgraph of $$G$$ induced by $$S$$.
+
+- **删点（删点也删边）**： For $$ S ⊆V(G)$$, $$G /\ S$$ is the graph obtained from $$G$$ by removing the vertices from $$S$$（and we also remove all edges of $$E(G)$$ that are incident to a vertex in $$S$$). So $$G/\ S = G[V(G) /\ S]$$.
 
 
+
+
+
+## 3.9.Tree
+
+- **树**：A tree is a connected graph with no cycles.
+
+- **叶**：A leaf is a vertex of degree 1.
+
+- **Lemma**：
+    1. Every tree with at least two vertices has at least two leaves.
+    2. Delete a leaf from a tree with n vertices, results in a tree with n − 1 vertices.(删点也删边)
 
 
 
