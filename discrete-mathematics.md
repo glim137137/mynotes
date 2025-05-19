@@ -504,7 +504,7 @@ $$
 
 **简单环（Simple Cycle）**：如果环中所有的顶点（除了起始点和终止点）都不重复，那么这个环是一个简单环。**（无重复边，除起点外无重复点）**
 
-> A simple cycle is a cycle from v to v in which, **except for the beginning and ending vertices** that are both equal to v, there are no repeated vertices . 
+> A simple cycle is a cycle from v to v in which, **except for the beginning and ending vertices** that are both equal to v, there are no repeated vertices. 
 
 **欧拉回路（Euler Cycle）**：通过图中每条边且每条边只被经过一次的路径。
 
@@ -564,7 +564,7 @@ Let H and G be graph
 
     > 注意：every even closed path contains an even simple cycle 这句话是错的。
 
-- **Theorem**：Agraph is bipartite if and only if it contains no odd simple cycle.
+- **Theorem**：A graph is bipartite if and only if it contains no odd simple cycle.
 
 
 
@@ -581,7 +581,7 @@ Let H and G be graph
 
 - For $$S ⊆V(G)$$, $$G[S]$$ is the subgraph of $$G$$ induced by $$S$$.
 
-- **删点（删点也删边）**： For $$ S ⊆V(G)$$, $$G /\ S$$ is the graph obtained from $$G$$ by removing the vertices from $$S$$（and we also remove all edges of $$E(G)$$ that are incident to a vertex in $$S$$). So $$G/\ S = G[V(G) /\ S]$$.
+- **删点（删点也删边）**： For $$ S ⊆V(G)$$, $$G /\ S$$ is the graph obtained from $$G$$ by removing the vertices from $$S$$（and we also remove all edges of $E(G)$ that are incident to a vertex in $$S$$). So $G/\ S = G[V(G) /\ S]$.
 
 
 
