@@ -12,11 +12,19 @@
 
 ## 1.1.File-based System
 
+“史前时代：基于文件的系统”: 
+
+> Prehistoric age: File-based system
+
 **文件系统 FBS 与 数据库系统 DB 的对比**
 
 - **文件系统**：
-  - 定义：一系列应用程序，为终端用户提供服务，如生成报告。Each  program defines and manages its own data. 每个程序定义和管理自己的数据。
+  - 定义：基于文件的系统是一组应用程序，这些程序为最终用户提供服务，例如生成报告。每个程序都定义并管理自己的数据。
+  
+      > Def: A collection of application programs that perform services for the end-users, such as the production of reports. Each program defines and manages its own data.
+  
   - 例子：销售文件、租赁合同、客户信息等。
+  
   - 局限性：
     - Big volume 数据量大：无法处理大量数据（TB、PB、EB）。32位计算机上单个文件不超过4GB（2^32），64位计算机上为16TB。
     - Concurrent Access 并发访问：多个用户同时访问时无效。
@@ -32,14 +40,27 @@
 
 **数据库方法** **Database Approach**
 
-- 起因：数据定义嵌入在应用程序中，而不是独立存储。数据的访问和操作控制仅由应用程序施加。
+- 起因：
+
+- 数据定义嵌入在应用程序中，而不是独立存储。
+
+    > Definition of **data was embedded in application  programs**, rather than being stored separately and  independently. 
+
+- 数据的访问和操作控制仅由应用程序施加。
+
+    > **No control over access and manipulation** of data  beyond that imposed by application programs. 
+
 - 结果：数据库和数据库管理系统（DBMS）的诞生。
 
 **数据库的定义**
 
-- 数据库：Shared collection of logically related data (and a  description of this data), designed to meet the  information needs of an organization.  一个组织内逻辑相关的数据（及其描述）的共享集合，旨在满足组织的信息需求。
+- 数据库：一个组织内逻辑相关的数据（及其描述）的共享集合，旨在满足组织的信息需求。
 
-- System catalog (**metadata**) 系统目录（元数据）：提供数据描述，实现程序与数据的独立性  program–data independence。
+    > Shared collection of logically related data (and a  description of this data), designed to meet the  information needs of an organization.  
+
+- System catalog (**metadata**) 系统目录（元数据）：提供数据描述，实现程序与数据的独立性
+
+  > System catalog (**metadata**) provides description of  data to **enable program–data independence**.
 
   > **Metadata** ，即**元数据** ，是一种非常重要的数据类型，它用于**描述其他数据的特征、属性和结构** ，以便更好地理解、管理、检索和利用数据。以下是关于 metadata 的详细介绍：
   >
@@ -47,6 +68,8 @@
   > - **广义定义** ：它涵盖了对各种数据对象的描述，包括但不限于数据的内容、质量、条件、其他数据的来源、数据的结构等。
 
 - 逻辑相关的数据：包括实体、属性和组织信息之间的关系。
+
+    > Logically related data comprises entities, attributes,  and relationships of an organization’s information
 
 **数据库的优势**
 
@@ -62,8 +85,13 @@
 
 **数据库管理系统**
 
-- 定义：使用户能够定义、创建、维护和控制数据库访问的软件系统 software system。
+- 定义：使用户能够定义、创建、维护和控制数据库访问的软件系统。
+
+    > A **software system** that enables users to define, create, maintain, and control access to the database. 
+
 - 数据库应用程序：与数据库交互的计算机程序，通过向DBMS发出适当的请求（SQL语句）。
+
+    > (Database) application program: a computer  program that interacts with database by issuing an  appropriate request (SQL statement) to the DBMS.
 
 ![image-20250226105742306](images/image-20250226105742306.png)
 
@@ -116,6 +144,32 @@
 
 ## 2.1.ANSI-SPARC 3-level architecture
 
+Objectives of Three-Level Architecture
+
+- All users should be able to access same data. 
+
+    > 所有用户应该能够访问相同的数据。
+
+- A user’s view is immune （免疫） to changes made  in other views. 
+
+    > 用户的视图应对其他视图中的更改免疫。
+
+- Users should not need to know physical database  storage details.  
+
+    > 用户不需要了解数据库的物理存储细节。
+
+- DBA should be able to change database storage  structures without affecting the users’ views.  
+
+    > 数据库管理员（DBA）应该能够在不影响用户视图的情况下更改数据库存储结构。
+
+- Internal structure of database should be unaffected  by changes to physical aspects of storage.
+
+    > 数据库的内部结构应不受物理存储方面变化的影响。
+
+- DBA should be able to change conceptual structure  of database without affecting all users.
+
+    > 数据库管理员（DBA）应该能够在不影响所有用户的情况下更改数据库的概念结构。
+
 ![image-20250226112711074](images/image-20250226112711074.png)
 
 - **外部层 External Level**：
@@ -134,10 +188,22 @@
 
 - **逻辑数据独立性 Logical Data Independence**：
   - 指外部模式对概念模式变化的免疫。
+  
+      > Refers to immunity of external schemas to  changes in conceptual schema. 
+  
   - 概念模式的变化（如实体的添加/删除）不应要求更改外部模式或重写应用程序。
+  
+      > Conceptual schema change (e.g. addition/removal  of entities) should not require changes to external  schema or rewrites of application programs.
+  
 - **物理数据独立性 Physical Data Independence**：
+  
   - 指概念模式对内部模式变化的免疫。
+  
+      > Refers to immunity of conceptual schema to  changes in the internal schema.
+  
   - 内部模式的变化（如使用不同的文件组织、存储结构/设备）不应要求更改概念或外部模式。
+  
+      > Internal schema change (e.g. using different file  organizations, storage structures/devices)  should not require change to **conceptual or external** schemas.
 
 ![image-20250226113356593](images/image-20250226113356593.png)
 
@@ -147,19 +213,48 @@
 
 ## 2.3.Database Languages
 
+Data Definition Language (DDL)  defines database schema.
 
+Data Manipulation Language (DML) provides basic data manipulation operations on data held  in the database. 
 
+ 程序化DML Procedural DML
 
+- 允许用户精确地告诉系统如何操作数据。
+
+    > allows user to tell system exactly how to manipulate  data. 
+
+非程序化DML Non-Procedural DML
+
+- 允许用户指定所需的数据，而不是指定如何检索这些数据。
+
+    > allows user to state what data is needed rather than  how it is to be retrieved. 
+
+第四代语言（4GLs） Fourth Generation Languages 
+
+- 表单生成器、报告生成器、图形生成器、应用程序生成器
+
+    > Form generators, Report generators, Graphics  generators Application generators
 
 ## 2.4.Data Model
 
 **数据模型**
 
-- **定义**：用于描述数据、数据之间的关系以及组织中数据约束的一组概念。Integrated collection of concepts for describing  data , relationships between data constraints on the data , and  in an organization.
+- **定义**：用于描述数据、数据之间的关系以及组织中数据约束的一组概念。
+
+    > Integrated collection of concepts for **describing  data , relationships between data, constraints on the data** in an organization.
+
 - **目的**：以可理解的方式表示数据。
+
 - **类别**：
+  
   - **基于对象的数据模型**：Entity-Relationship (ER) 实体-关系（ER）、语义、功能、面向对象。
+  
+      > Entity-Relationship (ER)  − Semantic  − Functional  − Object-Oriented. 
+  
   - **基于记录的数据模型**：Relational Data Model（RDB）关系数据模型、网络数据模型、层次数据模型。
+  
+      > Relational Data Model − Network Data Model  − Hierarchical Data Model.
+  
   - **物理数据模型**。
 
 **关系数据模型**
@@ -185,8 +280,15 @@
 ## 2.5.Conceptual Modeling
 
 - **定义**：开发一个独立于实现细节的信息模型的过程。
+
+    > Conceptual modeling is  process of developing a  model of information that is  independent of  implementation details. 
+
 - **结果**：概念数据模型。
+
 - **概念模式**：支持所有用户视图的系统的核心。
+
+    > Conceptual schema is the core of a system supporting all  user views.
+
 - **应是组织数据需求的完整和准确的表示**。
 
 
@@ -213,22 +315,39 @@
 - **定义**：描述数据库中数据的信息（元数据）的存储库。
 - **DBMS的基本组件之一**。
 - **通常存储**：
-  - 数据项的名称、类型和大小。
-  - 数据的约束。
-  - 授权用户的名称。
-  - 用户可访问的数据项及其访问类型。
-  - 使用统计信息。
+  - 数据项的名称、类型和大小。names, types, and sizes of data items; 
+  - 数据的约束。constraints on the data; 
+  - 授权用户的名称。names of authorized users; 
+  - 用户可访问的数据项及其访问类型。data items accessible by a user and the type of  access;
+  - 使用统计信息。usage statistics
 
 
 
 **DBMS的组件**
 
 - **查询处理器 Query processor**：将查询转换为一系列低级指令，指向数据库管理器。
+
+    > Query processor is a major DBMS component  that transforms queries into a series of low-level  instructions directed to the database manager.
+
 - **数据库管理器 Database manager（DM）**：与用户提交的应用程序和查询交互。DM检查外部和概念模式，确定满足请求所需的概念记录。DM然后调用文件管理器执行请求。
+
+    > Database manager (DM) interfaces with user submitted application programs and queries. The  DM examines the external and conceptual  schemas to determine what conceptual records  are required to satisfy the request. The DM then  places a call to the file manager to perform the  request.
+
 - **文件管理器 File manager**：操纵底层存储文件，管理磁盘上的存储空间分配。它建立和维护内部模式中定义的结构和索引列表。
+
+    > File manager manipulates the underlying storage  files and manages the allocation of storage space  on disk. It establishes and maintains the list of  structures and indexes defined in the internal  schema.
+
 - **DML预处理器 DML preprocessor**：将嵌入在应用程序中的DML语句转换为主机语言的标准函数调用。DML预处理器必须与查询处理器交互以生成适当的代码。
+
+    > DML preprocessor converts DML statements  embedded in an application program into  standard function calls in the host language. The  DML preprocessor must interact with the query  processor to generate the appropriate code.
+
 - **DDL编译器 DDL compiler**：将DDL语句转换为包含元数据的一组表。这些表存储在系统目录中，而控制信息存储在数据文件头中。
+
+    > DDL compiler converts DDL statements into a set  of tables containing metadata. These tables are  then stored in the system catalog while control  information is stored in data file headers. 
+
 - **目录管理器 Catalog manager**：管理对系统目录的访问并维护系统目录。系统目录被大多数DBMS组件访问。
+
+    > Catalog manager manages access to and  maintains the system catalog. The system catalog  is accessed by most DBMS components. 
 
 ![image-20250226210300824](images/image-20250226210300824.png)
 
@@ -237,15 +356,36 @@
 **数据库管理器的组件**
 
 - **授权控制**：确认用户是否有执行所需操作的必要权限。
+
+    > Authorization control to confirm whether the  user has the necessary permission to carry out  the required operation.
+
 - **命令处理器**：在确认用户权限后，控制权传递给命令处理器。
+
+    > Command processor on confirmation of user  authority, control is passed to the command  processor.
+
 - **完整性检查器**：确保请求的操作满足所有必要的完整性约束（例如键约束）。
+
+    > Integrity checker ensures that requested  operation satisfies all necessary integrity  constraints (e.g. key constraints) for an operation  that changes the database.
+
 - **查询优化器**：确定查询执行的最优策略。
+
+    > Query optimizer determines an optimal strategy  for the query execution. 
+
 - **事务管理器**：执行从事务接收到的操作。
+
+    > Transaction manager performs the required  processing of operations that it receives from  transactions.
+
 - **调度器**：确保对数据库的并发操作不会相互冲突。它控制事务操作的执行顺序。
+
+    > Scheduler ensures that concurrent operations  on the database proceed without conflicting  with one another. It controls the relative order  in which transaction operations are executed.
+
 - **恢复管理器**：确保数据库在发生故障时保持一致状态。它负责事务提交和中止。
+
+    > **Recovery manager (aka. data manager)** ensures that the database  remains in a consistent state in the presence of  failures. It is responsible for transaction commit  and abort. 
+
 - **缓冲管理器**：负责在主存储器和二级存储（如磁盘和磁带）之间传输数据。
 
-
+    > **Buffer manager (aka. cache manager)** responsible for the transfer of  data between main memory and secondary  storage, such as disk and tape. 
 
 
 
@@ -254,6 +394,8 @@
 - **多用户DBMS架构 Multi-User DBMS Architectures**：
 
   - **远程处理 Teleprocessing**：传统架构，单个大型机连接多个终端。Single mainframe with a number of terminals attached  (directly).
+
+      ![image-20250520113810495](images/image-20250520113810495.png)
 
   - **文件服务器架构 File-server **：传统两层客户端-服务器架构。
 
@@ -266,7 +408,7 @@
       ![image-20250226214233050](images/image-20250226214233050.png)
 
     - **三层客户端/服务器 3-tier Client/Server**：客户端提出业务请求，显示结果。应用服务器控制事务，平衡负载。DBMS服务器处理数据I/O和数据处理。
-
+  
   - **浏览器/服务器架构 Browser/Server**：客户端通过浏览器提出业务请求，显示结果。Web服务器通过HTTP与应用服务器和DBMS服务器交互。
 
 
@@ -290,13 +432,13 @@
 
 **关系模型术语**
 
-- **关系 Relation**：一个逻辑结构的表，具有列和行。
-- **属性 Attribute**：关系中的命名列。
-- **域 Domain**：一个或多个属性的允许值集。
-- **元组 Tuple**：关系中的一**行**。
-- **度数 Degree**：关系中的属性数量。
-- **基数 Cardinality**：关系中的元组数量。
-- **关系数据库**：具有不同关系名称的规范化关系的集合。
+- **关系 Relation**：一个逻辑结构的表，具有列和行。A relation is a table with columns and rows.
+- **属性 Attribute**：关系中的命名列。Attribute is a named column of a relation.
+- **域 Domain**：一个或多个属性的允许值集。Domain is the set of allowable values for one or more  attributes. 
+- **元组 Tuple**：关系中的一**行**。Tuple is a row of a relation.
+- **度数 Degree**：关系中的属性数量。Degree is the number of attributes in a relation.
+- **基数 Cardinality**：关系中的元组数量。Cardinality is the number of tuples in a relation. 
+- **关系数据库**：具有不同关系名称的规范化关系的集合。Relational Database is a collection of **normalized relations** with **distinct relation names.**
 
 
 
@@ -319,7 +461,7 @@
 
   > **rel-1(a1:d1, a2:d2, a3:d3,…, an:dn), ai∊Ai , di∊Di** 
 
-- **关系型数据库模式 Relational database schema **: Set of relation schemas,  each with a distinct name. 
+- **关系型数据库模式 Relational database schema **: **Set of relation schemas,  each with a distinct name.** 
 
 ![Understanding Database Diagram Relationship Symbols: A Comprehensive Guide](images/mqq-database-diagram-relationship-symbols.jpg)
 
@@ -329,15 +471,15 @@
 
 ## 3.3.Properties of Relations
 
-- 关系名称在关系模式中是唯一的 。 (no two same table names)
+- 关系名称在关系模式中是唯一的 。Relation name is distinct from all other relation names in  relational schema. (no two same table names)
 
-- 每个单元格包含一个原子值 。 (no more than one value of a certain attribute in one  tuple) 
+- 每个单元格包含一个原子值 。 Each cell of relation contains exactly one atomic  (no more than one value of a certain attribute in one  tuple) 
 
-- 每个属性在表中有一个不同的名称 。
+- 每个属性在表中有一个不同的名称 。Each attribute in the table has a distinct name.
 
-- 一个属性的所有值都来自同一个域 。
+- 一个属性的所有值都来自同一个域 。Values of an attribute are all from the same domain.
 
-- 每个元组是唯一的，没有重复的元组 。
+- 每个元组是唯一的，没有重复的元组 。Each tuple is distinct; there are no duplicate tuples.
 
 - 关系中的列（即属性）**没有特别的数学顺序**或排名意义；然而，一旦数据库管理系统（DBMS）定义了属性，属性位置顺序就确定了，**不能变动**。
 
@@ -393,7 +535,7 @@
 
 - **外键（Foreign Key）**：
 
-  - **定义**：外键是一个关系中的属性，它对应另一个关系中的候选键。外键用于在不同的关系之间建立连接和关联。外键可以是一个属性或一组属性，它们指向其他关系中的主键或候选键。
+  - **定义**：外键是一个关系中的属性，它对应另一个关系中的**候选键**。外键用于在不同的关系之间建立连接和关联。外键可以是一个属性或一组属性，它们指向其他关系中的主键或候选键。
   - **举例**：假设有一个“课程表”与“学生表”相关联。在“课程表”中，可能有一个属性“学生ID”作为外键，它对应的是“学生表”中的主键“学生ID”。这样，"课程表"中的“学生ID”作为外键，用来表示每门课程与特定学生的关联。
 
 **总结**：
@@ -412,15 +554,34 @@
 
 1. **空值（Null Value）**：
    - **定义**：空值（NULL）表示当前属性值的未知或不适用状态。它与空字符串、零或任何其他实际的值不同。空值表示没有数据，可能是因为信息尚未提供，或者该字段对某些记录来说不相关。
+   
+       > Represents value for an attribute that is currently unknown  or not applicable for tuple.
+       >
+       > Deals with incomplete or exceptional data. 
+   
    - **举例**：例如，在一个学生表中，"出生日期"字段可能为空，表示该信息未知或没有提供。在这种情况下，"出生日期"字段的值为NULL。
+   
 2. **实体完整性（Entity Integrity）**：
    - **定义**：实体完整性要求基关系（表）中每个记录的主键（Primary Key）值必须是唯一的，并且**主键的任何属性都不能为空**。换句话说，主键不能有NULL值。主键的作用是唯一标识表中的每一行记录，如果主键允许为空，数据库就无法有效地标识每一条记录，导致数据不一致。
+   
+       > In a base relation, no attribute of a primary key can be null.
+   
    - **举例**：假设在一个“学生表”中，"学生ID"是主键。根据实体完整性要求，"学生ID"字段不能为NULL，否则该记录就无法唯一标识。即每个学生必须有一个唯一且非空的学生ID。
+   
 3. **参照完整性（Referential Integrity）**：
-   - **定义**：参照完整性确保外键（Foreign Key）与另一个表（主表）的主键或候选键（Candidate Key）之间保持一致性。如果一个表包含指向另一个表的外键，那么外键的值必须匹配主表中的候选键值，或者外键值可以为空（NULL）。参照完整性防止数据库中出现无效的引用。
+   - **定义**：参照完整性确保外键（Foreign Key）与另一个表（主表）的主键或候选键（Candidate Key）之间保持一致性。
+   
+   - 如果一个表包含指向另一个表的外键，那么外键的值必须匹配主表中的**候选键值**，或者外键值**可以为空**（NULL）。参照完整性防止数据库中出现无效的引用。
+   
+       > If foreign key  exists in a relation, either foreign key  value must **match a candidate key** value of some tuple in its home relation  or foreign key value must be **wholly null**.
+   
    - **举例**：假设有一个“课程表”与“学生表”之间的关系。在“课程表”中，可能有一个“学生ID”字段作为外键，它指向“学生表”中的“学生ID”字段。参照完整性要求“课程表”中的“学生ID”必须存在于“学生表”的“学生ID”字段中，或者该字段可以为空（如果课程没有学生选修）。如果“课程表”中的“学生ID”引用了“学生表”中不存在的“学生ID”，就会违反参照完整性。
+   
 4. **一般约束（General Constraints）**：
    - **定义**：一般约束（有时称为业务规则）是用户或数据库管理员根据特定应用场景和业务需求定义的规则。它们用于进一步限制数据的有效范围和格式，确保数据的业务一致性。一般约束通常包括数据类型约束、取值范围约束、正则表达式等。
+   
+       > Additional rules specified by users or database  administrators that define or constrain some aspect of the  enterprise.
+   
    - 举例：
      - 一个业务规则可能要求“年龄”字段只能接受介于18到100之间的整数。
      - 如果在“员工表”中定义“工资”字段，可能有一个规则要求工资不能小于最低工资标准。
@@ -435,21 +596,36 @@
 1. **Base Relation（基表）**
 
 - **定义**：基表是数据库中的基本关系，它对应于概念模型中的一个实体，并且这些关系（表）中的元组（记录）是物理存储在数据库中的。基表直接存储数据，它包含了实际的数据，并且可以通过查询（SQL）进行操作。
+
+    > Named relation **corresponding to an entity** in conceptual  schema, whose tuples are physically stored in database.
+
 - **特点**：
+  
   - 基表是实际存在于数据库中的表，它们持久化存储数据。
   - 每个基表通常有一个固定的结构（字段），并且这些字段与概念模型中的实体属性相关联。
   - 基表中的数据通常直接来自现实世界的记录。
+  
 - **例子**： 假设你有一个学生表（`Students`），它包含了学生的基本信息，如学生ID、姓名、年龄等。这个表就是一个基表，因为它实际存储了关于学生的信息。
 
 2. **View（视图）**
 
 - **定义**：视图是通过对一个或多个基表进行操作（如选择、连接、聚合等）所产生的一个虚拟关系。视图并不直接存储数据，而是从基表中动态生成的结果。它表现为一个查询结果集，通常用于简化复杂查询、提高安全性或为用户提供定制化的数据视图。
+
+    > Dynamic result of one or more relational operations operating on base relations (基表） to produce another relation.
+
 - **特点**：
   - **动态性**：视图的内容并不在数据库中实际存储。每次查询视图时，数据库会基于定义的查询语句动态生成视图的内容。
-  - **虚拟表**：视图可以看作是一个虚拟表，它看起来像是一个普通的表，但它实际上是基于查询语句对基表的数据进行动态计算和展示。
-  - **方便性**：视图简化了查询，用户可以像查询表一样查询视图，而无需关心底层表的复杂结构或查询逻辑。
-  - **安全性**：视图可以隐藏某些敏感数据字段，通过限制用户访问视图而非基表，可以提高数据安全性。
-
+  
+      > Views are **dynamic**, meaning that changes made to base relations that affect view attributes are immediately reflected in the view. 
+  
+  - **虚拟关系**：视图是一个虚拟关系，它不一定实际存在于数据库中，而是在请求时动态生成。
+  
+      > **A virtual relation** that does not necessarily actually exist  in the database but is produced upon request, at time of  request.
+  
+  - 视图的内容是通过对一个或多个基础关系的查询定义的。
+  
+      > Contents of a view are defined as a query on one or more **base relations**.
+  
 - **例子**： 假设你有一个 `Employees`（员工）表和一个 `Departments`（部门）表。你可以定义一个视图来显示每个员工的姓名及其所在的部门名称：
 
   ```sql
@@ -467,13 +643,26 @@
 
 1. **安全机制**：
    - 视图通过**隐藏数据库的某些部分**，为不同用户提供**强大而灵活的安全机制**。
+   
+       > Provides powerful and flexible security mechanism by  hiding parts of database from certain users. 
+   
    - 在一些情况下，某些用户不应访问所有数据。比如，敏感信息（如薪资或个人信息）可以通过创建视图来隐藏，确保根据用户角色进行访问控制。
+   
 2. **定制化的数据访问**：
    - 视图允许用户**以定制化的方式访问数据**。同一份数据可以以不同的方式呈现给不同的用户或用户组。
+   
+       > Permits users to access data in a customized way, so  that same data can be seen by different users in different  ways, at same time.
+   
    - 例如，在一个销售数据库中，经理可能看到的是带有销售数字和利润的完整数据，而其他员工可能只看到基本的交易数据，尽管他们都在使用同一份数据库。
+   
    - 这种定制化的方式允许不同的用户以适合他们需求的方式与同一份数据进行交互，而无需更改数据库的原始结构。
+   
 3. **简化复杂操作**：
+   
    - 视图可以**简化对基础关系的复杂操作**。
+   
+       > Can simplify complex operations on base relations.
+   
    - 如果经常需要执行复杂的SQL查询（如连接、聚合或过滤操作），可以创建一个视图，将这些操作封装在其中。用户只需查询视图，就像查询一个简单的表一样，避免了重复编写和优化复杂查询的需要。
 
 

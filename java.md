@@ -3247,7 +3247,7 @@ public boolean equals(Object obj) {
 
 - 对象比较：
 
-    - 两个引用，如果指向的是同一个对象，则哈希值肯定是一样的。
+    - 两个引用，如果指向的是同一个对象，则哈希值肯定是一样的。**不同对象哈希值不一样**。
 
 ```java
 A a1 = new A();
@@ -3272,7 +3272,33 @@ System.out.println(obj.toString()); // 输出: java.lang.Object@15db9742
 System.out.println(obj); // 默认调用toString()
 ```
 
+#### `getClass`
 
+`getClass()` 是 `Object` 类的一个方法，它返回当前对象的**运行类型**。这是一个 `Class` 类型的对象。
+
+```java
+class Animal {
+    void sound() {
+        System.out.println("Animal makes a sound");
+    }
+}
+
+class Dog extends Animal {
+    @Override
+    void sound() {
+        System.out.println("Dog barks");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal myAnimal = new Dog();
+        
+        // 输出 Dog 类的类型
+        System.out.println(myAnimal.getClass().getName()); // java.lang.Dog
+    }
+}
+```
 
 
 
@@ -3958,7 +3984,7 @@ public class BigDecimalMethodsExample {
 
 
 
-## Arrays
+## Arrays 工具类
 
 `Arrays` 类是 `java.util` 包中的一个实用工具类，提供了大量静态方法来操作数组，包括排序、搜索、比较、填充、复制等操作。
 
@@ -4080,7 +4106,7 @@ public class ArraysMethodsExample {
 
 
 
-## Math
+## Math 工具类
 
 在 Java 中，`Math` 类是一个提供了多种数学运算的方法的工具类，它位于 `java.lang` 包中。该类是 **不可实例化** 的，即不能通过 `new Math()` 来创建对象，所有方法都是静态的，直接通过类名调用。
 
@@ -4908,7 +4934,7 @@ public class DateTimeFormatterMethodsExample {
 
 集合（Collections）和映射（Maps）是 Java 集合框架（Java Collections Framework）的两大核心组成部分，用于存储和操作一组数据。
 
-## Collection
+## Collection 接口
 
 ![image-20250517170506364](images/image-20250517170506364.png)
 
@@ -4985,11 +5011,15 @@ for (String obj : col) {
 
 
 
-## List
+## List 接口
 
 `List` 接口是 Java 集合框架中的核心接口之一，位于 `java.util` 包中，继承自 `Collection` 接口。
 
 它表示一个**有序集合**，允许**存储重复元素**，并支持通过索引访问元素。
+
+### List 接口特点
+
+
 
 ### List 接口方法
 
@@ -5286,6 +5316,1167 @@ private static class Node<E> {
 | **避免场景** | - 多线程无同步 - 频繁中间插入/删除 | - 高性能单线程 - 现代并发需求     | - 随机访问 - 大量索引操作                    |
 
 在程序中，百分之八九十都是查询，因此大部分情况选`ArrayList`。
+
+
+
+## Set 接口
+
+`Set` 接口是 `java.util` 包中的一个核心集合接口，继承自 `Collection` 接口。它表示一个**不允许重复元素**的集合，元素的**顺序通常不固定**（具体取决于实现类）。
+
+### Set 接口的特点
+
+- **无重复元素**：`Set` 不允许存储相同的元素（通过 `equals()` 方法判断是否相同）。
+
+    ```java
+    Set set = new HashSet();
+    
+    // 一个
+    set.add("a");
+    set.add("a");
+    // 一个
+    set.add(new String("a"));
+    set.add(new String("a"));
+    // 两个
+    set.add(new Dog("pete"));
+    set.add(new Dog("pete"));
+    for (Object obj : set) {
+        System.out.println(obj);
+    }
+
+- **无序性**：大多数实现（如 `HashSet`）不保证元素的顺序，`LinkedHashSet` 除外（维护插入顺序），`TreeSet` 按排序顺序存储。取出的顺序是固定的。
+
+- **允许 null**：某些实现（如 `HashSet`、`LinkedHashSet`）**允许包含一个** `null` 元素，但 `TreeSet` 不允许 `null`。
+
+- **线程不安全**：Set 的常见实现类（如 `HashSet`、`TreeSet`）都不是线程安全的。如果需要线程安全，可以使用 `Collections.synchronizedSet`() 或 `ConcurrentHashMap.newKeySet`()。
+
+### Set 接口方法
+
+```java
+import java.util.*;
+import java.time.LocalDateTime;
+
+public class SetMethodsExample {
+    public static void main(String[] args) {
+        // 初始化 Set 对象（当前时间：2025-05-19 17:53:00 HKT）
+        Set<String> set = new HashSet<>();
+        // 添加初始元素
+        set.add("Apple");
+        set.add("Banana");
+
+        // 1. add(E e)
+        set.add("Orange"); // 添加元素，若不存在则添加 -> [Apple, Banana, Orange]
+        System.out.println("After add: " + set);
+
+        // 2. addAll(Collection<? extends E> c)
+        Set<String> moreFruits = new HashSet<>(Arrays.asList("Mango", "Orange"));
+        set.addAll(moreFruits); // 添加另一个集合的所有元素，重复元素不会添加 -> [Apple, Banana, Orange, Mango]
+        System.out.println("After addAll: " + set);
+
+        // 3. remove(Object o)
+        set.remove("Banana"); // 删除指定元素 -> [Apple, Orange, Mango]
+        System.out.println("After remove Banana: " + set);
+
+        // 4. removeAll(Collection<?> c)
+        Set<String> toRemove = new HashSet<>(Arrays.asList("Orange", "Grape"));
+        set.removeAll(toRemove); // 删除另一个集合中的所有元素 -> [Apple, Mango]
+        System.out.println("After removeAll: " + set);
+
+        // 5. contains(Object o)
+        boolean contains = set.contains("Apple"); // 检查是否包含指定元素 -> true
+        System.out.println("Contains Apple: " + contains);
+
+        // 6. containsAll(Collection<?> c)
+        Set<String> checkSet = new HashSet<>(Arrays.asList("Apple", "Mango"));
+        boolean containsAll = set.containsAll(checkSet); // 检查是否包含另一个集合的所有元素 -> true
+        System.out.println("Contains all [Apple, Mango]: " + containsAll);
+
+        // 7. isEmpty()
+        boolean isEmpty = set.isEmpty(); // 检查集合是否为空 -> false
+        System.out.println("Is empty: " + isEmpty);
+
+        // 8. size()
+        int size = set.size(); // 获取集合元素数量 -> 2
+        System.out.println("Size of set: " + size);
+
+        // 9. iterator()
+        Iterator<String> iterator = set.iterator(); // 获取迭代器
+        System.out.print("Traverse with iterator: ");
+        while (iterator.hasNext()) {
+            System.out.print(iterator.next() + " ");
+        }
+        System.out.println(); // Apple Mango
+
+        // 10. toArray()
+        Object[] array = set.toArray(); // 转换为 Object 数组
+        System.out.println("To array: " + Arrays.toString(array)); // [Apple, Mango]
+
+        // 11. toArray(T[] a)
+        String[] strArray = set.toArray(new String[0]); // 转换为指定类型的数组
+        System.out.println("To String array: " + Arrays.toString(strArray)); // [Apple, Mango]
+
+        // 12. clear()
+        set.clear(); // 清空集合 -> []
+        System.out.println("After clear: " + set);
+
+        // 13. isEmpty() (after clear)
+        isEmpty = set.isEmpty(); // 检查集合是否为空 -> true
+        System.out.println("Is empty after clear: " + isEmpty);
+
+        // 14. size() (after clear)
+        size = set.size(); // 获取集合元素数量 -> 0
+        System.out.println("Size after clear: " + size);
+    }
+}
+```
+
+
+
+## HashSet
+
+`HashSet` 类是 `java.util` 包中的一个集合类，实现了 Set 接口，基于哈希表（`HashMap` 内部实现）存储元素。
+
+### 底层机制
+
+`HashSet` 内部使用 `HashMap`，元素存储在 `HashMap` 的键中，值为一个固定对象（`PRESENT`）。
+
+```java
+public HashSet() {
+    map = new HashMap<>();
+}
+```
+
+执行`add`方法。添加一个元素时先计算出一个hash索引，
+
+```java
+public boolean add(E e) {
+    return map.put(e, PRESENT)==null;
+}
+
+// HashMap 的 put 方法
+public V put(K key, V value) {
+    return putVal(hash(key), key, value, false, true);
+}
+
+// HashMap 的 hash 方法（不同对象哈希值不一样）
+static final int hash(Object key) {
+    int h;
+    return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+}
+```
+
+如果这个索引位置没有元素，直接加入。如果有对此索引上链表的每个元素比较后再加入。
+
+```java
+final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
+                   boolean evict) {
+    // 定义辅助变量。
+    Node<K,V>[] tab; Node<K,V> p; int n, i;
+    // table 是 HashMap 的一个Node数组
+    if ((tab = table) == null || (n = tab.length) == 0)
+        n = (tab = resize()).length; // resize() 扩容函数
+    
+    // 根据(n - 1) 与 hash计算索引，并检查table当前索引是否为空
+    if ((p = tab[i = (n - 1) & hash]) == null)
+        // 创建新节点
+        tab[i] = newNode(hash, key, value, null);
+    else {
+        Node<K,V> e; K k; // skill: 在一个代码块顶部创建局部辅助变量
+        // 判断：新加元素的 hash相同 && 内容相同
+        if (p.hash == hash &&
+            ((k = p.key) == key || (key != null && key.equals(k))))
+            e = p;
+        // 判断：该索引是否为红黑树
+        else if (p instanceof TreeNode)
+            e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
+        // 逐个检查是否相同，若没有，则添加；若有，则break。
+        else {
+            for (int binCount = 0; ; ++binCount) {
+                // 检查是否到达末尾
+                if ((e = p.next) == null) {
+                    p.next = newNode(hash, key, value, null);
+                    // 检查是否树化
+                    if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                        treeifyBin(tab, hash);
+                    break;
+                }
+                // 检查相等
+                if (e.hash == hash &&
+                    ((k = e.key) == key || (key != null && key.equals(k))))
+                    break;
+                // 指向下一个
+                p = e;
+            }
+        }
+        // 替换已有键的值
+        if (e != null) { // existing mapping for key
+            V oldValue = e.value;
+            if (!onlyIfAbsent || oldValue == null)
+                e.value = value;
+            afterNodeAccess(e);
+            return oldValue;
+        }
+    }
+    ++modCount;
+    // 大于阈值扩容
+    if (++size > threshold)
+        resize();
+    afterNodeInsertion(evict);
+    return null;
+}
+```
+
+### 扩容机制
+
+`HashSet` 的扩容机制与其底层实现 `HashMap` 密切相关，因为 `HashSet` 使用 `HashMap` 存储元素。
+
+#### 基本概念
+
+**容量（Capacity）**：哈希表的桶（bucket）数量，即 `HashMap` 的数组长度。
+
+**加载因子（Load Factor）**：决定哈希表在何时扩容的阈值比例，默认为 0.75。
+
+**阈值（Threshold）**：当元素数量达到 容量 × 加载因子 时触发扩容。公式：`threshold = capacity * loadFactor`。
+
+#### 扩容触发条件
+
+如果添加新元素后元素数量（size）将超过或等于阈值，则触发扩容。即`size + 1 > threshold`。
+
+初始情况下，默认容量为 16，加载因子为 0.75，因此初始阈值为 16 * 0.75 = 12。当第 12 个元素添加后，扩容被触发。
+
+#### 扩容过程
+
+1. **容量翻倍**：`New Capacity = Old Capacity<< 1`。哈希表容量通常扩大为原来的 **2 倍**（例如，从 16 变为 32）。
+
+2. **重新分配桶（Rehashing）**：
+
+- 创建一个新的、更大的数组。
+
+- 遍历旧哈希表中的所有元素（键值对），根据元素的 hashCode 重新计算在新数组中的桶位置。
+
+- 将元素迁移到新数组的对应桶中。
+
+- 如果桶内有冲突（多个元素映射到同一桶），使用链表存储。
+
+- 在Java8中，如果一条链表的元素个数  >= `TREEIFY_THRESHOLD`(默认8)，调用`treeifyBin`方法。若 table大小 >= `MIN_TREEIFY_CAPACITY`(默认64) ，就会进化为红黑树；如果小于64，则调用`resize()`扩容。
+
+    ```java
+    static final int TREEIFY_THRESHOLD = 8;
+    static final int MIN_TREEIFY_CAPACITY = 64;
+
+3. **更新阈值**：`New Threshold = New Capacity × Load Factor`。例如，容量从 16 扩到 32，阈值变为 32 * 0.75 = 24。
+
+    ```java
+    final Node<K,V>[] resize() {
+        Node<K,V>[] oldTab = table;
+        int oldCap = (oldTab == null) ? 0 : oldTab.length;
+        int oldThr = threshold;
+        int newCap, newThr = 0;
+        // 情况 1: 哈希表已初始化 (oldCap > 0)
+        if (oldCap > 0) {
+            if (oldCap >= MAXIMUM_CAPACITY) {
+                threshold = Integer.MAX_VALUE;
+                return oldTab;
+            }
+            // 容量大于等于16，则容量翻倍，阈值也翻倍
+            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+                     oldCap >= DEFAULT_INITIAL_CAPACITY)
+                newThr = oldThr << 1; // double threshold
+        }
+        // 情况 2: 哈希表未初始化，但阈值已设置（通过构造函数指定初始容量）
+        else if (oldThr > 0) // initial capacity was placed in threshold
+            newCap = oldThr;
+        // 情况 3: 哈希表未初始化，使用默认值
+        else {               // zero initial threshold signifies using defaults
+            newCap = DEFAULT_INITIAL_CAPACITY;
+            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY);
+        }
+        if (newThr == 0) {
+            float ft = (float)newCap * loadFactor;
+            newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+                      (int)ft : Integer.MAX_VALUE);
+        }
+        threshold = newThr;
+        /* 树化机制...*/
+    }
+
+
+
+## LinkedHashSet
+
+`LinkedHashSet` 类是 `java.util` 包中的一个集合类，继承自 `HashSet`，并通过维护一个**双向链表**来保持元素的**插入顺序**。
+
+![](images/7294e8d256ad47199604c88288dbbfe5.png)
+
+**唯一性**：与 `HashSet` 一样，`LinkedHashSet` 不允许存储重复元素（根据 `equals()` 和 `hashCode()` 判断）。
+
+**插入顺序**：按照元素插入的顺序进行迭代，区别于 `HashSet` 的无序性。
+
+**性能**：提供接近 O(1) 的查找、插入和删除操作效率，但由于维护链表，性能略低于 `HashSet`。
+
+**线程不安全**：`LinkedHashSet` 不是线程安全的，多线程环境下需外部同步（如使用 `Collections.synchronizedSet`）。
+
+### 底层原理
+
+添加原理其实和HashSet一样，底层都维护了一个**哈希表的桶** `LinkedHashMap`。
+
+一开始直接创建一个大小为16的集合。
+
+```java
+public LinkedHashSet() {
+    super(16, .75f, true);
+}
+
+// 父类构造器
+HashSet(int initialCapacity, float loadFactor, boolean dummy) {
+    map = new LinkedHashMap<>(initialCapacity, loadFactor);
+}
+```
+
+接入的每个元素都是一个双向链表的节点 `Entry` 继承自 `HashMap.Node`，其中有 `before` 和 `after` 属性。
+
+```java
+// LinkedHashMap.java 内部类Entry
+static class Entry<K,V> extends HashMap.Node<K,V> {
+    Entry<K,V> before, after;
+    Entry(int hash, K key, V value, Node<K,V> next) {
+        super(hash, key, value, next);
+    }
+}
+```
+
+```java
+// LinkedHashMap.java 中的方法
+Node<K,V> newNode(int hash, K key, V value, Node<K,V> e) {
+    LinkedHashMap.Entry<K,V> p =
+        new LinkedHashMap.Entry<>(hash, key, value, e);
+    linkNodeAtEnd(p);
+    return p;
+}
+
+private void linkNodeAtEnd(LinkedHashMap.Entry<K,V> p) {
+    if (putMode == PUT_FIRST) {
+        LinkedHashMap.Entry<K,V> first = head;
+        head = p;
+        if (first == null)
+            tail = p;
+        else {
+            p.after = first;
+            first.before = p;
+        }
+    } else {
+        LinkedHashMap.Entry<K,V> last = tail;
+        tail = p;
+        if (last == null)
+            head = p;
+        else {
+            p.before = last;
+            last.after = p;
+        }
+    }
+}
+```
+
+
+
+## TreeSet
+
+`TreeSet` 是 Java 集合框架中的一个类，位于 `java.util` 包下，实现了 `NavigableSet` 接口，基于 **红黑树**（自平衡二叉搜索树）实现，提供了一个**有序**且**无重复元素**的集合。
+
+**特点**：
+
+- **有序性**：`TreeSet` 中的元素按照**自然顺序**（natural ordering）或提供的**比较器（Comparator）**排序。
+
+    ```java
+    TreeSet<T> treeSet = new TreeSet<>(Comparator<T> comparator);
+    // example
+    TreeSet set = new TreeSet(new Comparator<Object>() {
+        public int compare(Object o1, Object o2) {
+            return o1.toString().length() - o2.toString().length();
+        }
+    });
+
+- **线程不安全**：`TreeSet` 不是线程安全的，多线程环境下需要外部同步（如使用 `Collections.synchronizedSortedSet`）。
+
+他的继承关系是，
+
+```java
+public class TreeSet<E> extends AbstractSet<E>
+    implements NavigableSet<E>, Cloneable, java.io.Serializable
+```
+
+### 底层原理
+
+`TreeSet` 的底层是 `TreeMap`，`comparator` 是 `TreeMap`的属性。
+
+```java
+// TreeSet.java
+public TreeSet(Comparator<? super E> comparator) {
+    this(new TreeMap<>(comparator));
+}
+
+// TreeMap.java
+public TreeMap(Comparator<? super K> comparator) {
+    this.comparator = comparator;
+}
+```
+
+调用`add`方法，`set`中的`value`都是常量`PRESENT`。
+
+```java
+// TreeMap.java
+private V put(K key, V value, boolean replaceOld) {
+    Entry<K,V> t = root;
+    // 初次添加，设置根节点
+    if (t == null) {
+        addEntryToEmptyMap(key, value);
+        return null;
+    }
+    int cmp;
+    Entry<K,V> parent;
+    // split comparator and comparable paths
+    Comparator<? super K> cpr = comparator;
+    if (cpr != null) { // 设置了比较器
+        do { // 遍历所有key
+            parent = t;
+            cmp = cpr.compare(key, t.key); // 动态绑定匿名内部类的compare方法
+            if (cmp < 0)
+                t = t.left;
+            else if (cmp > 0)
+                t = t.right;
+            else { // key相等，只替换值，不替换键
+                V oldValue = t.value;
+                if (replaceOld || oldValue == null) {
+                    t.value = value;
+                }
+                return oldValue;
+            }
+        } while (t != null);
+    } else { // 没有比较器
+        Objects.requireNonNull(key);
+        @SuppressWarnings("unchecked")
+        Comparable<? super K> k = (Comparable<? super K>) key;
+        do {
+            parent = t;
+            cmp = k.compareTo(t.key);
+            if (cmp < 0)
+                t = t.left;
+            else if (cmp > 0)
+                t = t.right;
+            else {
+                V oldValue = t.value;
+                if (replaceOld || oldValue == null) {
+                    t.value = value;
+                }
+                return oldValue;
+            }
+        } while (t != null);
+    }
+    addEntry(key, value, parent, cmp < 0);
+    return null;
+}
+```
+
+
+
+## Map 接口
+
+`Map` 接口是 Java 集合框架中的一部分，位于 `java.util` 包中，用于存储键值对（key-value pairs）。
+
+key 不允许重复，value 可以重复。
+
+在前面的 `Set` 里面，其底层其实就是  `Map` ，只不过数据存在 `key` 中，`value` 用常量 `PRESENT` 代替了。
+
+```java
+// HashSet.java
+static final Object PRESENT = new Object();
+```
+
+![image-20250520195139966](images/image-20250520195139966.png)
+
+### Map 接口特点
+
+- **键唯一性**：Map 中的**键是唯一的**，不能重复。如果插入重复的键，新值会覆盖旧值。
+
+- **键值对**：每个键可以映射到一个值，**值可以重复**。
+
+- **无序性**：Map 接口本身不保证键值对的顺序（某些实现类如 LinkedHashMap 除外）。
+
+- **非集合**：Map 不是 Collection 的子接口，因此不能直接使用 Collection 的方法。
+
+- **允许空值**：key和value都可以为`null`，但是key中的`null`只能有一个。
+- **只允许引用类型**：Map中的key和value可以是任何类型的数据，会封装到 `HashMap$Node[]` 。
+
+### 底层原理
+
+`HashMap` 中，`table` 是一个内部数组（`Node[] table`），用于存储键值对的哈希表结构。
+
+```java
+// HashMap.java
+transient Node<K,V>[] table;
+
+Node<K,V> newNode(int hash, K key, V value, Node<K,V> next) {
+    return new Node<>(hash, key, value, next);
+}
+
+// 静态内部类 Node，实现了Entry接口
+static class Node<K,V> implements Map.Entry<K,V> { 
+    final int hash;
+    final K key;
+    V value;
+    HashMap.Node<K,V> next;
+
+    Node(int hash, K key, V value, HashMap.Node<K,V> next) {
+        this.hash = hash;
+        this.key = key;
+        this.value = value;
+        this.next = next;
+    }
+
+    public final K getKey()        { return key; }
+    public final V getValue()      { return value; }
+    public final String toString() { return key + "=" + value; }
+
+    public final int hashCode() {
+        return Objects.hashCode(key) ^ Objects.hashCode(value);
+    }
+
+    public final V setValue(V newValue) {
+        V oldValue = value;
+        value = newValue;
+        return oldValue;
+    }
+
+    public final boolean equals(Object o) {
+        if (o == this)
+            return true;
+
+        return o instanceof Map.Entry<?, ?> e
+                && Objects.equals(key, e.getKey())
+                && Objects.equals(value, e.getValue());
+    }
+}
+```
+
+### Map 接口方法
+
+```java
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Collection;
+
+public class MapMethodsExample {
+    public static void main(String[] args) {
+        Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> anotherMap = new HashMap<>();
+        anotherMap.put("Dave", 40);
+        anotherMap.put("Eve", 45);
+
+        // 1. put(K key, V value)
+        map.put("Alice", 25);  // 插入键值对到 Map 中，若键已存在则更新值 -> 返回 null（新插入）或旧值
+        map.put("Bob", 30);
+        System.out.println("Put 'Alice': " + map.put("Alice", 26));  // 更新 Alice 的值 -> 返回旧值 25
+
+        // 2. putAll(Map<? extends K, ? extends V> m)
+        map.putAll(anotherMap);  // 将另一个 Map 的所有键值对添加到当前 Map -> Dave:40, Eve:45
+        System.out.println("After putAll: " + map);  // 输出: {Alice=26, Bob=30, Dave=40, Eve=45}
+
+        // 3. get(Object key)
+        Integer value = map.get("Bob");  // 根据键获取值，若键不存在返回 null -> 30
+        System.out.println("Get 'Bob': " + value);
+
+        // 4. remove(Object key)
+        Integer removedValue = map.remove("Dave");  // 移除指定键及其值，返回被移除的值 -> 40
+        System.out.println("Remove 'Dave': " + removedValue);
+
+        // 5. clear()
+        Map<String, Integer> tempMap = new HashMap<>(map);
+        tempMap.clear();  // 清空 Map 中的所有键值对 -> 空 Map
+        System.out.println("After clear: " + tempMap);  // 输出: {}
+
+        // 6. containsKey(Object key)
+        boolean hasKey = map.containsKey("Alice");  // 检查是否包含指定键 -> true
+        System.out.println("Contains key 'Alice': " + hasKey);
+
+        // 7. containsValue(Object value)
+        boolean hasValue = map.containsValue(30);  // 检查是否包含指定值 -> true
+        System.out.println("Contains value 30: " + hasValue);
+
+        // 8. size()
+        int size = map.size();  // 返回 Map 中的键值对数量 -> 3
+        System.out.println("Size: " + size);
+
+        // 9. isEmpty()
+        boolean isEmpty = tempMap.isEmpty();  // 检查 Map 是否为空 -> true
+        System.out.println("Is tempMap empty: " + isEmpty);
+
+        // 10. keySet()
+        Set<String> keys = map.keySet();  // 返回所有键的 Set 视图 -> [Alice, Bob, Eve]
+        System.out.print("Keys: ");
+        for (String key : keys) {
+            System.out.print(key + " ");
+        }
+        System.out.println();
+
+        // 11. values()
+        Collection<Integer> values = map.values();  // 返回所有值的 Collection 视图 -> [26, 30, 45]
+        System.out.print("Values: ");
+        for (Integer val : values) {
+            System.out.print(val + " ");
+        }
+        System.out.println();
+
+        // 12. entrySet()
+        Set<Map.Entry<String, Integer>> entries = map.entrySet();  // 返回所有键值对的 Set 视图
+        System.out.print("Entries: ");
+        for (Map.Entry<String, Integer> entry : entries) {
+            System.out.print(entry.getKey() + "=" + entry.getValue() + " ");
+        }
+        System.out.println();
+
+        // 13. getOrDefault(Object key, V defaultValue)
+        Integer defaultValue = map.getOrDefault("Charlie", 0);  // 获取键的值，若键不存在返回默认值 -> 0
+        System.out.println("GetOrDefault 'Charlie': " + defaultValue);
+
+        // 14. putIfAbsent(K key, V value)
+        Integer oldValue = map.putIfAbsent("Bob", 31);  // 若键不存在则插入，否则返回现有值 -> 30
+        System.out.println("PutIfAbsent 'Bob': " + oldValue);
+        map.putIfAbsent("Charlie", 35);  // 新插入 -> Charlie=35
+        System.out.println("After putIfAbsent 'Charlie': " + map);
+
+        // 15. computeIfAbsent(K key, Function<? super K, ? extends V> mappingFunction)
+        Integer computedValue = map.computeIfAbsent("Frank", k -> k.length() * 10);  // 若键不存在，计算值并插入 -> 50
+        System.out.println("ComputeIfAbsent 'Frank': " + computedValue);
+        System.out.println("After computeIfAbsent: " + map);
+
+        // 16. replace(K key, V value)
+        Integer replacedValue = map.replace("Alice", 27);  // 替换指定键的值，返回旧值 -> 26
+        System.out.println("Replace 'Alice': " + replacedValue);
+
+        // 17. replace(K key, V oldValue, V newValue)
+        boolean replaced = map.replace("Bob", 30, 31);  // 若键存在且旧值匹配，替换为新值 -> true
+        System.out.println("Replace 'Bob' 30 with 31: " + replaced);
+        System.out.println("After replace: " + map);
+    }
+}
+```
+
+### 遍历 Map
+
+#### 底层原理
+
+为了**方便遍历**，java在Map接口设计时提供了**一系列集合**单独引用 所有的 key `keySet()`，所有的 value `values()`，所有的 key-value `entrySet()`。
+
+```java
+// Map.java
+interface Entry<K, V> {
+    K getKey();
+    V getValue();
+    /* 还许多其他方法 */
+}
+
+Set<K> keySet();
+Collection<V> values();
+Set<Map.Entry<K, V>> entrySet();
+```
+
+#### 六种遍历方法
+
+使用 `keySet()`
+
+```java
+for (K key : map.keySet()) {
+    V value = map.get(key);
+    System.out.println("Key: " + key + ", Value: " + value);
+}
+```
+
+使用 `values()`
+
+```java
+for (V value : map.values()) {
+    System.out.println("Value: " + value);
+}
+```
+
+使用 `entrySet()`
+
+```java
+for (Map.Entry<K, V> entry : map.entrySet()) {
+    K key = entry.getKey();
+    V value = entry.getValue();
+    System.out.println("Key: " + key + ", Value: " + value);
+}
+```
+
+使用 `Iterator`
+
+```java
+Iterator<Map.Entry<K, V>> iterator = map.entrySet().iterator();
+
+while (iterator.hasNext()) {
+    Map.Entry<K, V> entry = iterator.next();
+    K key = entry.getKey();
+    V value = entry.getValue();
+    System.out.println("Key: " + key + ", Value: " + value);
+    // 如果需要移除：iterator.remove();
+}
+```
+
+使用 `forEach` 方法 (Java 8+)
+
+```java
+map.forEach((key, value) -> {
+    System.out.println("Key: " + key + ", Value: " + value);
+});
+```
+
+
+
+## HashMap
+
+`HashMap` 是 Java 集合框架中的一个类，位于 java.util 包中，实现了 Map 接口，用于存储键值对（key-value pairs）。
+
+`HashMap` **非线程安全**，适合单线程环境，多线程需使用 `ConcurrentHashMap` 或外部同步。
+
+**其底层机制见之前的 `HashSet` 。**
+
+以下是`HashMap`的继承关系，
+
+```java
+public class HashMap<K,V> extends AbstractMap<K,V>
+    implements Map<K,V>, Cloneable, Serializable {}
+```
+
+
+
+## HashTable
+
+`Hashtable` 是 Java 集合框架中的一个类，位于 `java.util` 包中，实现了 `Map` 接口，用于存储键值对（key-value pairs）。
+
+**特点**：
+
+- **线程安全**：所有方法都用 `synchronized` 修饰，适合多线程环境，但性能较低。
+- **键值限制**：键和值都不能为 `null`。否则抛出 **`NullPointerException`**
+
+以下是`Hashtable`的继承关系，
+
+```java
+public class Hashtable<K,V>
+    extends Dictionary<K,V>
+    implements Map<K,V>, Cloneable, java.io.Serializable {}
+```
+
+### 底层机制
+
+```java
+Hashtable map = new Hashtable();
+```
+
+调用构造器，初始容量为11，
+
+```java
+public Hashtable() {
+    this(11, 0.75f);
+}
+```
+
+ 执行`put`方法，
+
+```java
+public synchronized V put(K key, V value) {
+    // Make sure the value is not null
+    if (value == null) {
+        throw new NullPointerException();
+    }
+
+    // Makes sure the key is not already in the hashtable.
+    Hashtable.Entry<?,?> tab[] = table;
+    int hash = key.hashCode();
+    int index = (hash & 0x7FFFFFFF) % tab.length;
+    @SuppressWarnings("unchecked")
+    Hashtable.Entry<K,V> entry = (Hashtable.Entry<K,V>)tab[index];
+    for(; entry != null ; entry = entry.next) {
+        if ((entry.hash == hash) && entry.key.equals(key)) {
+            V old = entry.value;
+            entry.value = value;
+            return old;
+        }
+    }
+
+    addEntry(hash, key, value, index); // 添加键值对，必要时扩容
+    return null;
+}
+```
+
+### 扩容机制
+
+当 `Hashtable` 中的键值对数量（size）超过或等于阈值时，会触发扩容。
+
+`New Capacity = Old Capacity × 2 + 1`。这种扩容方式（2n + 1）与 `HashMap`（直接翻倍）不同，旨在**保持容量为奇数**以减少哈希冲突。
+
+例如，初始容量 = 11，负载因子 = 0.75，阈值 = 11 × 0.75 = 8（取整）。当存储第 8 个键值对后，尝试添加第 9 个键值对时，size + 1 = 9 > 8，触发扩容。
+
+```java
+// Hashtable.java
+private void addEntry(int hash, K key, V value, int index) {
+    Hashtable。.Entry<?,?> tab[] = table
+    // 超过阈值，扩容
+    if (count >= threshold) {
+        // Rehash the table if the threshold is exceeded
+        rehash(); // 两倍加一的大小扩容
+
+        tab = table;
+        hash = key.hashCode();
+        index = (hash & 0x7FFFFFFF) % tab.length;
+    }
+
+    // Creates the new entry.
+    @SuppressWarnings("unchecked")
+    Hashtable.Entry<K,V> e = (Hashtable.Entry<K,V>) tab[index];
+    tab[index] = new Hashtable.Entry<>(hash, key, value, e);
+    count++;
+    modCount++;
+}
+
+protected void rehash() {
+    int oldCapacity = table.length;
+    Hashtable.Entry<?,?>[] oldMap = table;
+
+    // overflow-conscious code
+    int newCapacity = (oldCapacity << 1) + 1; // 两倍加一的大小扩容
+    if (newCapacity - MAX_ARRAY_SIZE > 0) {
+        if (oldCapacity == MAX_ARRAY_SIZE)
+            // Keep running with MAX_ARRAY_SIZE buckets
+            return;
+        newCapacity = MAX_ARRAY_SIZE;
+    }
+    // 创建新数组
+    Hashtable.Entry<?,?>[] newMap = new Hashtable.Entry<?,?>[newCapacity];
+
+    modCount++;
+    // 更新阈值
+    threshold = (int)Math.min(newCapacity * loadFactor, MAX_ARRAY_SIZE + 1);
+    table = newMap;
+
+    // 重新哈希（因为数组长度变化，哈希函数的结果会变）
+    for (int i = oldCapacity ; i-- > 0 ;) {
+        for (Hashtable.Entry<K,V> old = (Hashtable.Entry<K,V>)oldMap[i]; old != null ; ) {
+            Hashtable.Entry<K,V> e = old;
+            old = old.next;
+
+            // 根据键的 hashCode() 和新数组的容量，重新计算每个键的索引位置
+            int index = (e.hash & 0x7FFFFFFF) % newCapacity;
+            e.next = (Hashtable.Entry<K,V>)newMap[index];
+            newMap[index] = e;
+        }
+    }
+}
+```
+
+
+
+## Properties
+
+`Properties` 类是 `java.util` 包中的一个类，用于处理键值对形式的配置数据。
+
+**特点**：
+
+- **键值对存储**：`Properties` 是一个**线程安全**的类，键和值都是**字符串**（String），适合存储配置信息。
+- **文件操作**：支持从文件（`.properties` 文件或 `XML` 文件）加载数据或将数据保存到文件中。
+- **默认值**：支持设置默认属性，当查找某个键不存在时返回默认值。
+
+他的继承关系是，
+
+```java
+public class Properties extends Hashtable<Object,Object> {}
+```
+
+### 私有方法
+
+```java
+import java.util.Properties;
+import java.util.Set;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
+public class PropertiesUniqueMethodsExample {
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.setProperty("app.name", "MyApp");
+        props.setProperty("app.port", "8080");
+
+        // 1. setProperty(String key, String value)
+        String oldValue = props.setProperty("app.name", "NewApp");  // 设置字符串键值对，若键存在则更新值 -> 返回旧值或 null
+        System.out.println("Set 'app.name': " + oldValue);  // 输出: MyApp
+
+        // 2. getProperty(String key)
+        String value = props.getProperty("app.port");  // 获取指定键的字符串值，若键不存在返回 null -> 8080
+        System.out.println("Get 'app.port': " + value);
+
+        // 3. getProperty(String key, String defaultValue)
+        String defaultValue = props.getProperty("app.user", "admin");  // 获取键的值，若键不存在返回默认值 -> admin
+        System.out.println("GetOrDefault 'app.user': " + defaultValue);
+
+        // 4. stringPropertyNames()
+        Set<String> keys = props.stringPropertyNames();  // 返回所有字符串键的 Set 视图 -> [app.name, app.port]
+        System.out.print("Keys: ");
+        for (String key : keys) {
+            System.out.print(key + " ");
+        }
+        System.out.println();
+
+        // 5. load(InputStream inStream)
+        Properties loadedProps = new Properties();
+        try (FileInputStream fis = new FileInputStream("config.properties")) {
+            loadedProps.load(fis);  // 从输入流加载 .properties 文件
+            System.out.println("Loaded Properties: " + loadedProps);  // 输出: 取决于文件内容
+        } catch (IOException e) {
+            System.out.println("Load failed: " + e.getMessage());
+        }
+
+        // 6. load(Reader reader)
+        loadedProps.clear();
+        try (InputStreamReader reader = new InputStreamReader(
+                new FileInputStream("config.properties"), "UTF-8")) {
+            loadedProps.load(reader);  // 从字符流加载，支持指定编码（如 UTF-8）
+            System.out.println("Loaded with Reader: " + loadedProps);  // 输出: 取决于文件内容
+        } catch (IOException e) {
+            System.out.println("Load with Reader failed: " + e.getMessage());
+        }
+
+        // 7. store(OutputStream out, String comments)
+        try (FileOutputStream fos = new FileOutputStream("config.properties")) {
+            props.store(fos, "Application Configuration");  // 将 Properties 保存到输出流，带注释
+            System.out.println("Properties saved to config.properties");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 8. store(Writer writer, String comments)
+        try (OutputStreamWriter writer = new OutputStreamWriter(
+                new FileOutputStream("config_utf8.properties"), "UTF-8")) {
+            props.store(writer, "UTF-8 Configuration");  // 保存到字符流，支持指定编码
+            System.out.println("Properties saved to config_utf8.properties");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 9. storeToXML(OutputStream out, String comment)
+        try (FileOutputStream fos = new FileOutputStream("config.xml")) {
+            props.storeToXML(fos, "XML Configuration");  // 将 Properties 保存为 XML 文件
+            System.out.println("Properties saved to config.xml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 10. storeToXML(OutputStream out, String comment, String encoding)
+        try (FileOutputStream fos = new FileOutputStream("config_utf8.xml")) {
+            props.storeToXML(fos, "XML UTF-8 Configuration", "UTF-8");  // 保存为 XML 文件，指定编码
+            System.out.println("Properties saved to config_utf8.xml");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 11. loadFromXML(InputStream in)
+        Properties xmlProps = new Properties();
+        try (FileInputStream fis = new FileInputStream("config.xml")) {
+            xmlProps.loadFromXML(fis);  // 从 XML 文件加载 Properties
+            System.out.println("Loaded from XML: " + xmlProps);  // 输出: {app.name=NewApp, app.port=8080}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // 12. list(PrintStream out)
+        System.out.println("List all properties:");
+        props.list(System.out);  // 输出所有键值对到指定 PrintStream
+    }
+}
+```
+
+
+
+## TreeMap
+
+`TreeMap` 是 Java 集合框架中的一个类，位于 `java.util` 包下，实现了 `NavigableMap` 接口，基于**红黑树**（自平衡二叉搜索树）实现，提供了一个**键值对存储**的集合，键（key）按照**自然顺序**或**自定义 `Comparator`** 排序。
+
+`TreeMap` 是**线程不安全**的，多线程环境下需外部同步（如使用 `Collections.synchronizedSortedMap`）。
+
+```java
+public class TreeMap<K,V>
+    extends AbstractMap<K,V>
+    implements NavigableMap<K,V>, Cloneable, java.io.Serializable
+```
+
+`TreeMap`可以指定 `Comparator` 自定义键的排序
+
+```java
+TreeMap map = new TreeMap(new Comparator<Object>() {
+    public int compare(Object o1, Object o2) {
+        return o1.toString().length() - o2.toString().length();
+    }
+});
+
+map.put(1, 1);
+map.put(222, 223);
+map.put(333, 33);
+
+// 222与333长度相等，所以key相等
+// key相等, 只替换值，不替换键
+System.out.println(map); // {1=1, 222=33}
+```
+
+其底层机制，见 `TreeSet`。
+
+
+
+## Collections 工具类
+
+`Collections` 是 `java.util` 包中的一个工具类，提供了许多静态方法，用于操作和处理集合（如 `List`、`Set`、`Map` 等）。
+
+### Collections 类的作用
+
+Collections 类提供了以下几类静态方法：
+
+1. **排序操作**：对集合进行排序、反转等。
+2. **搜索操作**：如二分查找。
+3. **同步化**：将非线程安全的集合转换为线程安全的集合。
+4. **不可修改集合**：创建只读集合。
+5. **其他工具方法**：如最大/最小值、替换、填充等。
+
+### 常用方法
+
+```java
+import java.util.*;
+import java.time.LocalDateTime;
+
+public class CollectionsMethodsExample {
+    public static void main(String[] args) {
+        // 初始化 TreeSet 和 TreeMap 对象（当前时间：2025-05-21 10:09:00 HKT）
+        TreeSet<String> treeSet = new TreeSet<>(); // 使用自然顺序
+        TreeMap<String, Integer> treeMap = new TreeMap<>(); // 使用自然顺序
+        // 添加初始元素
+        treeSet.add("Apple");
+        treeSet.add("Banana");
+        treeMap.put("Apple", 1);
+        treeMap.put("Banana", 2);
+
+        // 1. sort(List<T> list)
+        // 对 List 排序（TreeSet/TreeMap 已有序，此处转换为 List 演示）
+        List<String> list = new ArrayList<>(treeSet); // 从 TreeSet 转换为 List
+        Collections.sort(list); // 触发 sort，保持自然顺序
+        System.out.println("After Collections.sort (List from TreeSet): " + list); // 输出: [Apple, Banana]
+
+        // 2. sort(List<T> list, Comparator<? super T> c)
+        // 使用自定义 Comparator 排序 List
+        Comparator<String> lengthComparator = Comparator.comparing(String::length);
+        Collections.sort(list, lengthComparator); // 按长度排序
+        System.out.println("After Collections.sort with lengthComparator: " + list); // 输出: [Apple, Banana]
+
+        // 3. reverseOrder()
+        // 创建逆序 Comparator，用于 TreeSet/TreeMap
+        TreeSet<String> reverseSet = new TreeSet<>(Collections.reverseOrder());
+        reverseSet.addAll(treeSet);
+        System.out.println("After Collections.reverseOrder (TreeSet): " + reverseSet); // 输出: [Banana, Apple]
+
+        // 4. reverseOrder(Comparator<T> cmp)
+        // 反转自定义 Comparator
+        TreeMap<String, Integer> reverseLengthMap = new TreeMap<>(Collections.reverseOrder(lengthComparator));
+        reverseLengthMap.putAll(treeMap);
+        System.out.println("After Collections.reverseOrder(lengthComparator) (TreeMap): " + reverseLengthMap); // 输出: {Banana=2, Apple=1}
+
+        // 5. binarySearch(List<? extends Comparable<? super T>> list, T key)
+        // 在有序 List 中进行二分查找
+        int index = Collections.binarySearch(list, "Banana"); // 需确保 List 已排序
+        System.out.println("After Collections.binarySearch (Banana): " + index); // 输出: 1
+
+        // 6. binarySearch(List<? extends T> list, T key, Comparator<? super T> c)
+        // 使用自定义 Comparator 进行二分查找
+        index = Collections.binarySearch(list, "Apple", lengthComparator);
+        System.out.println("After Collections.binarySearch with lengthComparator (Apple): " + index); // 输出: 0
+
+        // 7. synchronizedSortedSet(SortedSet<T> s)
+        // 将 TreeSet 转换为线程安全的 SortedSet
+        SortedSet<String> syncSet = Collections.synchronizedSortedSet(new TreeSet<>(treeSet));
+        syncSet.add("Orange"); // 线程安全添加
+        System.out.println("After Collections.synchronizedSortedSet: " + syncSet); // 输出: [Apple, Banana, Orange]
+
+        // 8. synchronizedSortedMap(SortedMap<K, V> m)
+        // 将 TreeMap 转换为线程安全的 SortedMap
+        SortedMap<String, Integer> syncMap = Collections.synchronizedSortedMap(new TreeMap<>(treeMap));
+        syncMap.put("Orange", 3); // 线程安全添加
+        System.out.println("After Collections.synchronizedSortedMap: " + syncMap); // 输出: {Apple=1, Banana=2, Orange=3}
+
+        // 9. unmodifiableSortedSet(SortedSet<T> s)
+        // 创建只读 TreeSet
+        SortedSet<String> unmodifiableSet = Collections.unmodifiableSortedSet(treeSet);
+        System.out.println("After Collections.unmodifiableSortedSet: " + unmodifiableSet); // 输出: [Apple, Banana]
+        try {
+            unmodifiableSet.add("Orange"); // 抛出 UnsupportedOperationException
+        } catch (UnsupportedOperationException e) {
+            System.out.println("After unmodifiableSortedSet (add attempt): " + e.getMessage());
+        }
+
+        // 10. unmodifiableSortedMap(SortedMap<K, V> m)
+        // 创建只读 TreeMap
+        SortedMap<String, Integer> unmodifiableMap = Collections.unmodifiableSortedMap(treeMap);
+        System.out.println("After Collections.unmodifiableSortedMap: " + unmodifiableMap); // 输出: {Apple=1, Banana=2}
+        try {
+            unmodifiableMap.put("Orange", 3); // 抛出 UnsupportedOperationException
+        } catch (UnsupportedOperationException e) {
+            System.out.println("After unmodifiableSortedMap (put attempt): " + e.getMessage());
+        }
+
+        // 12. max(Collection<? extends T> coll[, Comparator<? super T> comp])
+        // 使用自定义 Comparator 查找最大元素
+        String maxLength = Collections.max(treeSet, lengthComparator);
+        System.out.println("After Collections.max with lengthComparator: " + maxLength); // 输出: Banana
+
+        // 14. min(Collection<? extends T> coll[, Comparator<? super T> comp])
+        // 使用自定义 Comparator 查找最小元素
+        String minLength = Collections.min(treeSet, lengthComparator);
+        System.out.println("After Collections.min with lengthComparator: " + minLength); // 输出: Apple
+
+        // 15. reverse(List<?> list)
+        // 反转 List（需从 TreeSet/TreeMap 转换为 List）
+        List<String> reverseList = new ArrayList<>(treeSet);
+        Collections.reverse(reverseList);
+        System.out.println("After Collections.reverse (List from TreeSet): " + reverseList); // 输出: [Banana, Apple]
+    
+    	// 16. shuffle(List<?> list[, Random random]) 使用指定随机源打乱 List
+    	List<String> listFromMapKeys = new ArrayList<>(treeMap.keySet());
+    	Random random = new Random(123); // 设置固定种子以便结果可重现
+    	Collections.shuffle(listFromMapKeys, random); // 使用指定随机源打乱
+    	System.out.println("After Collections.shuffle with Random (List from TreeMap keys): " + listFromMapKeys);
+        // 输出示例: [Apple, Banana]（种子固定时结果一致）
+    
+    	// 17.swap(List<?> list, int i, int j)
+    	List<String> listFromSet = new ArrayList<>(treeSet);
+    	System.out.println("Before swap (List from TreeSet): " + listFromSet); // 输出: [Apple, Banana]
+        Collections.swap(listFromSet, 0, 1); // 交换索引 0 和 2 的元素
+        System.out.println("After Collections.swap (indexes 0 and 2): " + listFromSet); // 输出: [Banana, Apple]
+    }
+    
+        // 18.frequency(Collection<?> c, Object o)
+    	int appleFreqInSet = Collections.frequency(treeSet, "Apple");
+        System.out.println("After Collections.frequency (Apple in TreeSet): " + appleFreqInSet); // 输出: 1
+    
+    	// 19.replaceAll(List<T> list, T oldVal, T newVal) 返回 true 如果至少替换了一个元素
+    	List<String> listFromSet = new ArrayList<>(treeSet); // 从 TreeSet 转换为 List
+        listFromSet.add("Apple"); // 添加重复元素
+        System.out.println("Before replaceAll (List from TreeSet): " + listFromSet); // 输出: [Apple, Banana, Apple]
+        boolean replacedInSet = Collections.replaceAll(listFromSet, "Apple", "Grape");
+        System.out.println("After Collections.replaceAll (Apple -> Grape): " + listFromSet); // 输出: [Grape, Banana, Grape]
+        System.out.println("Replaced: " + replacedInSet); // 输出: true
+}
+```
+
+
+
+# IO流
 
 ## File
 
