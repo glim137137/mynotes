@@ -2914,29 +2914,48 @@ class Child extends Parent {} // Child自动继承@MyAnnotation
 
 ## 泛型
 
-泛型（）是 Java 5 引入的重要特性，它提供了编译时类型安全检查机制，并消除了强制类型转换的需要。
+泛型（Generics）是 Java 5 引入的重要特性，它提供了编译时类型安全检查机制，并消除了强制类型转换的需要。
 
 泛型的本质是**参数化类型**，也就是说所操作的数据类型被指定为一个参数。
 
-### 泛型标记符
+### 为什么需要泛型
 
-| 标记符   | 常见用途               | 示例            |
-| :------- | :--------------------- | :-------------- |
-| `T`      | Type（任意类型）       | `Box<T>`        |
-| `E`      | Element（集合元素）    | `List<E>`       |
-| `K`      | Key（键）              | `Map<K,V>`      |
-| `V`      | Value（值）            | `Map<K,V>`      |
-| `N`      | Number（数字类型）     | `Calculator<N>` |
-| `S`, `U` | 第二、第三类型参数     | `Pair<T,U>`     |
-| `?`      | 表示不确定的 java 类型 | `List<?>`       |
+```java
+ArrayList l = new ArrayList ();
+l.add(new People("Webb"));
+l.add(new People("Peter"));
+l.add(new People("Anna"));
 
-### 泛型类
+l.add(new Dog("Leo"));
+
+// 到Dog时出现异常，ClassCastException
+for (Object o : l) {
+    // 向下转型
+    People p = (People) o;
+    System.out.println(p);
+}
+
+// 编译只允许 Object 
+// ArrayList l 是原始类型，编译器只知道它存储 Object 类型，而不是 People 类型。
+for (People p : l) {
+    System.out.println(p);
+}
+```
+
+**原始类型（Raw Type）**如 ArrayList 不使用泛型，允许添加任意 Object 类型的对象，失去了类型安全性。
+
+所以通过使用泛型，可以在编译期确保类型安全，避免运行时的 `ClassCastException`。
+
+### 使用泛型
+
+#### 泛型类
 
 泛型类允许我们创建可以操作多种数据类型的类，同时保持类型安全。
 
 ```java
 public class Box<T> {
-    private T content;
+    // T 表示 content 的数据类型，在定义Box对象时指定
+    private T content; 
     
     public void setContent(T content) {
         this.content = content;
@@ -2962,58 +2981,189 @@ int num = intBox.getContent(); // 自动拆箱
 #### 多类型参数的泛型类
 
 ```java
-public class Pair<K, V> {
-    private K key;
-    private V value;
-    
-    public Pair(K key, V value) {
-        this.key = key;
-        this.value = value;
+public class People<K, V, T> {
+    private K name; // 例如 ID 或键
+    private V age;      // 主要数据，如名称或属性
+    private T metadata;  // 附加信息，如状态或标签
+
+    // 构造方法
+    public People(K name, V age, T metadata) {
+        this.name = name;
+        this.age = age;
+        this.metadata = metadata;
     }
+
+    // Getter 方法
+    public String getMetadataClass() {
+        return metadata.getClass().getName();
+    }
+
+    // toString 用于打印
+    @Override
+    public String toString() {
+        return "People [Name: " + name + ", Age: " + age + ", Metadata: " + metadata + "]";
+    }
+}
+
+People<String, Integer, String> person1 = new People<>("Alice", 25, "Active");
+System.out.println(person1.getMetadataClass());
+
+People<Integer, String, Boolean> person2 = new People<>(1001, "Bob", true);
+System.out.println(person2.getMetadataClass());
+```
+
+#### 泛型接口
+
+```java
+public interface Network<T> {
+    void add(T element);
+    T get(int index);
+}
+
+// 继承接口
+public interface Ethernet_1 extends Network<Integer> {
     
-    public K getKey() { return key; }
-    public V getValue() { return value; }
-    
-    public void setKey(K key) { this.key = key; }
-    public void setValue(V value) { this.value = value; }
+}
+
+public interface Ethernet_2<M> extends Network<Integer> { // 子接口添加泛型参数 M
+    void setMetadata(M metadata);
+    M getMetadata();
+}
+
+// 实现接口
+public class Wifi_1 implements Ethernet_2<String> { // M 设置为 String
+    // 实现接口方法
+}
+
+public class Wifi_2 implements Network<Integer> { // Network中的方法类型都为Integer
+    // 实现接口方法
+    @Override
+    void add_1(Integer element) {
+        System.out.println(element + 1);
+    }
 }
 ```
 
-### 泛型方法
+#### 泛型方法
 
 所有泛型方法声明都有一个类型参数声明部分（由尖括号`<>`分隔），该类型参数声明部分**在方法返回类型之前**。
 
 泛型方法体的声明和其他方法一样。注意类型参数只能代表**引用型类型**，不能是原始类型（像 int、double、char 等）。
 
 ```java
-public class Util {
+class Util<U> {
+    U name;
+    public Util(U name) {
+        this.name = name;
+    }
     // 泛型方法
-    public static <T> void printArray(T[] array) {
-        for (T element : array) {
-            System.out.print(element + " ");
-        }
-        System.out.println();
+    public static<U> void printClass(U className) {
+        System.out.println(className.getClass().getName());
+    }
+
+    // 不是一个泛型方法，而是方法使用了泛型
+    public void printName() {
+        System.out.println(name);
     }
 }
 
 // 使用泛型方法
-Integer[] intArray = {1, 2, 3};
-String[] stringArray = {"A", "B", "C"};
-Util.printArray(intArray);
-Util.printArray(stringArray);
+Util.printClass("sss");
+// 方法使用了泛型
+Util<Integer> u = new Util("Tool");
+u.printName();
 ```
 
-### 泛型接口
+### 泛型标记符
+
+| 标记符        | 常见用途                         | 示例                |
+| :------------ | :------------------------------- | :------------------ |
+| `T`           | Type（任意类型）                 | `Box<T>`            |
+| `E`           | Element（集合元素）              | `List<E>`           |
+| `K`           | Key（键）                        | `Map<K,V>`          |
+| `V`           | Value（值）                      | `Map<K,V>`          |
+| `N`           | Number（数字类型）               | `Calculator<N>`     |
+| `S`, `U`      | 第二、第三类型参数               | `Pair<T,U>`         |
+| `?`           | 表示不确定的 java 类型（通配符） | `List<?>`           |
+| `? extends T` | 表示 T 或 T 的子类（上界通配符） | `List<? extends T>` |
+| `? super T`   | 表示 T 或 T 的父类（下界通配符） | `List<? super T>`   |
+
+> 通配符 ?（包括 ? extends T 和 ? super T）只能用于**方法参数**、**变量声明**或**泛型实例化**时，而不能用于类或接口的泛型参数定义。
 
 ```java
-public interface List<T> {
-    void add(T element);
-    T get(int index);
+public static void main(String[] args) {
+    // 变量声明
+    Util<?> n1;
+    // 泛型实例化
+    Util<? super Integer> n = new Util(1);
+    
+	Util<Integer> n3 = new Util(3);
+    use(u);
 }
 
-public class ArrayList<T> implements List<T> {
-    // 实现接口方法
+// 方法参数
+public static void use(Util<?> u) {
+    u.printName();
 }
+```
+
+### 一些细节
+
+`T` 和 `E` 只能是引用类型。
+
+```java
+List<int> l = new List(); // 错误
+```
+
+在指定泛型具体类型后，可以传入该类型或者其子类类型。
+
+```java
+Animals<Frog> frog = new Animals<Frog>(new Frog());
+Animals<Frog> tadpole = new Animals<Frog>(new Tadpole());
+
+class Tadpole extends Frog {};
+```
+
+泛型可以**简写**。
+
+```java
+// 传统写法
+A<Frog> frog = new A<Frog>(new Frog());
+A<Frog> tadpole = new A<Frog>(new Tadpole());
+
+// 简写，编译器自动推断
+A<Frog> frog = new A<>(new Frog());
+A<Frog> tadpole = new A<>(new Tadpole());
+```
+
+不写**泛型默认** `E = Object`。
+
+```java
+ArrayList arr = new ArrayList();
+// 报错
+for (People p : arr) {
+    System.out.println(p);
+}
+```
+
+**静态成员**中不能使用泛型；泛型方法可以是静态的。
+
+```java
+static T num; // 报错
+public static void f(T num) {} // 报错
+public static <T> void printArray(T[] array) {} // 正确
+```
+
+使用泛型的数组不能初始化。
+
+```java
+T[] arr = new T[10]; // 报错
+```
+
+泛型**没有继承性**。
+
+```java
+List<Object> l = new ArrayList<String>(); // 报错,必须一样
 ```
 
 
