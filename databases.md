@@ -540,7 +540,7 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
 
 **总结**：
 
-- **超键** 是一个能够唯一标识元组的属性集，可能包含冗余。
+- xxxxxxxxxx5 1#!/bin/bash2​3set -e4​5# 您的脚本放在这里bash
 - **候选键** 是最小的超键，没有冗余属性。
 - **主键** 是从候选键中选出的唯一标识元组的属性。
 - **替代键** 是未被选为主键的候选键。
@@ -706,7 +706,16 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
 ## 4.2.Writing SQL Commands
 
 - **组成**：保留字 **reserved words**（如SELECT、FROM、WHERE、CREATE）和用户定义字 **user defined words**（如关系、列、视图名称）。
-- **大小写敏感性**：除字符数据外，大多数组件不区分大小写  **case  insensitive**。
+
+    > SQL statement consists of reserved words and user defined words.
+    >
+    > **Reserved words**: fixed part of SQL and must be spelt  exactly -> SELECT, FROM, WHERE, CREATE
+    >
+    > **User-defined words**: made up by users such as names for relations, columns, views
+
+- **大小写敏感性**：除字符数据外，大多数组件不区分大小写  **case insensitive**。
+
+    > Most components of an SQL statement are case  insensitive, except for literal character data.
 
 
 
@@ -715,8 +724,19 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
 ## 4.3.Data Definition Language  (DDL)
 
 - **环境 environment**：关系和其他数据库对象存在于环境中，每个环境包含一个或多个目录  **catalogs**，每个目录包含一组模式 **Schema**
+
+    > Relations and other database objects exist in an **environment**. 
+    >
+    > Each environment contains **one or more catalogs**,  and each catalog consists of set of schemas.
+
 - **模式 Schema **：命名的数据库对象集合，对象包括表、视图、域等，所有对象具有相同所有者。
+
+    > Schema is named collection of related database  objects.
+    >
+    > Objects in a schema can be **tables, views, domains,  assertions, collations（校对）, translations, and  character sets.** All have same owner.
+
 - **主要DDL语句**：
+  
   - **CREATE SCHEMA**：创建模式。
   - **CREATE/ALTER DOMAIN**：创建或修改域。
   - **CREATE/ALTER TABLE**：创建或修改表。
@@ -743,7 +763,6 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
       }, ...}
       [[CHECK (searchCondition)] ...]
   ) [ON {filegroup | DEFAULT}];
-  
   ```
 
   **语法说明：**
@@ -820,10 +839,24 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
 
 - **规范**：
   1. 创建一个包含一个或多个列的表，并指定数据类型：
+  
+      > Creates a table with one or more columns of the  specified **dataType**.
+  
   2. **使用 `NOT NULL`**，**系统拒绝插入空值**（NULL）：
+  
+      > With **NOT NULL**, system rejects any attempt to insert  a null in the column.
+  
   3. 可以为列指定默认值（DEFAULT）：
+  
+      > Can specify a **DEFAULT** value for the column
+  
   4. 主键（Primary Key）**应总是**指定为 `NOT NULL`：
+  
+      > **Primary keys should always be specified as NOT  NULL.**
+  
   5. 外键（FOREIGN KEY）约束和引用操作（Referential Action）：
+  
+      > **FOREIGN KEY** clause specifies FK along with the referential action.
 
 
 
@@ -886,11 +919,37 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
 
 - **功能**：删除表及其所有行，RESTRICT表示如果其他对象依赖于该表则不允许删除，CASCADE表示删除所有依赖对象。
 
+    > with RESTRICT,  if any other objects depend for  their existence on continued existence of this table, SQL  does not allow request.
+    >
+    > with CASCADE, SQL drops all dependent objects  (and objects dependent on these objects)
+
 - **语法**：
 
   ```sql
+  # 严格/级联
   DROP TABLE TableName [RESTRICT | CASCADE];
   ```
+
+
+
+### 4.3.4. INDEX
+
+索引（Index） 是一种数据库结构，用于加速基于一个或多个列的值的数据访问。它通过为特定列创建一个高效的查找机制，减少查询时需要扫描的数据量，从而提高查询性能。
+
+> Index –structure that provides faster access to data  based on values of one or more columns.
+
+```sql
+# Format
+CREATE [UNIQUE] INDEX indexName
+ ON TableName(columnName[ASC|DESC][,,,])
+ 
+# To create an index
+CREATE INDEX RentInd
+ ON PropertyForRent(city,rent); 
+ 
+# To drop an index
+DROP INDEX IndexName
+```
 
 
 
@@ -916,7 +975,18 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
   - **TableName**：表示要插入数据的表名。
 
   - **columnList**（可选）：指定要插入数据的列名。如果省略 `columnList`，SQL 会认为你在插入数据时为表中的所有列提供了值，并且这些值的顺序应与表在创建时的列顺序一致。
+
+      > columnList is optional; if omitted, SQL assumes a list of all  columns in their original CREATE TABLE order (reviewing that  position order of columns is sensitive after the relation is  defined)
+
   - **dataValueList**：表示要插入的数据值，值的顺序和类型必须与列名对应。
+
+      > dataValueList must match columnList as follows:
+      >
+      > − number of items in each list must be same;
+      >
+      > − must be direct correspondence in position of items in two  lists; 
+      >
+      > − data type of each item in dataValueList must be  compatible with data type of corresponding column.
 
 - **示例**：
 
@@ -945,8 +1015,20 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
   **语法说明**：
 
   - **SET 子句**：`SET` 子句指定要更新的一个或多个列的名称，以及它们的新值。你可以在此子句中同时更新多个列，列和值之间用等号连接，多个列和值之间用逗号分隔。
+
+      > SET clause specifies names of one or more columns that are to be updated.
+
   - **WHERE 子句（可选）**：`WHERE` 子句是可选的，如果省略了 `WHERE` 子句，SQL 会更新表中所有行的指定列。如果包含了 `WHERE` 子句，则只有那些符合 `searchCondition` 的行会被更新。
+
+      > WHERE clause is optional: 
+      >
+      > − if omitted, named columns are updated for all rows in  table; 
+      >
+      > − If specified, only those rows that satisfy  searchCondition are updated.
+
   - **数据类型兼容性**：更新的 `dataValue` 必须与相应列的原数据类型兼容。例如，如果某列的数据类型是 `INT`，你不能给该列赋一个字符串值。
+
+      > New dataValue(s) must be compatible with data type for  corresponding column.
 
 - **示例**：
 
@@ -976,10 +1058,19 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
   **语法说明**：
 
   - **FROM 子句**：`FROM` 子句指定了要从中删除记录的表名。
+
   - **WHERE 子句（可选）**：
     - `WHERE` 子句是可选的，指定删除记录的条件。
+    
+        > searchCondition is optional; 
+    
     - 如果省略 `WHERE` 子句，**所有行**都会被删除，但表结构不会被删除，表本身依然存在。
+    
+        > if omitted, all rows are  deleted from table. This does not delete table .
+    
     - 如果包含 `WHERE` 子句，只有那些符合条件的记录会被删除。
+    
+        > If  searchCondition is specified, only those rows that  satisfy condition are deleted.
 
 - **示例**：
 
@@ -1100,8 +1191,15 @@ Data Manipulation Language (DML) provides basic data manipulation operations on 
 **规则**：
 
 - **ORDER BY**：子查询中不能使用`ORDER BY`，但最外层的`SELECT`可以使用。
-- **单列 a single column  name or expression**：子查询的`SELECT`列表必须是单列，除非使用`EXISTS`。
+
+- **单列 a single column name or expression**：子查询的`SELECT`列表必须是单列，除非使用`EXISTS`。
+
+    > Subquery SELECT list must consist of **a single column  name or expression**, except for subqueries that use  EXISTS.
+
 - **列名引用**：子查询中的列名**默认**引用子查询的`FROM`子句中的表名，可以使用别名。:question::question::question:
+
+    > By default, column names refer to table name in FROM  clause of subquery. Can refer to a table in FROM using an  **alias.**
+
 - **比较操作**：子查询作为比较操作的运算符时，必须出现在**右侧**。
 
 
@@ -1365,7 +1463,15 @@ CREATE TABLE Employees (
 ### 3.Entity Integrity（实体完整性约束）
 
 - **定义**：实体完整性约束确保每个实体（即表中的每一行）都是唯一的，并且可以通过一个唯一的标识符（通常是主键）来区分。
+
+    > Primary key of a table must contain a **unique, non-null value** for each row.
+    >
+    > Can only have one PRIMARY KEY clause per table. 
+    >
+    > Can still ensure uniqueness for alternate keys using  UNIQUE
+
 - **作用**：确保每一行都有唯一标识符，并且不会有重复的记录。
+
 - **实现**：通过使用 `PRIMARY KEY` 约束来保证实体完整性。
 
 **示例**：
@@ -1382,7 +1488,11 @@ CREATE TABLE Employees (
 ### 4.Referential Integrity（参照完整性约束）
 
 - **定义**：参照完整性约束确保两个表之间的关系是有效的，具体来说，确保一个表中的外键值在另一个表中有对应的主键。
+
+    > Referential integrity (参照完整性) means that, if FK contains a value, that value must refer to existing row in parent table.
+
 - **作用**：保证表与表之间的关系正确，防止出现“孤立”记录。
+
 - **实现**：通过使用 `FOREIGN KEY` 约束来定义外键，并确保外键在目标表中有对应的主键值。
 
 **示例**：
@@ -1444,8 +1554,16 @@ CREATE TABLE Employees (
 **视图的特点**：
 
 1. **动态结果**：视图是对一个或多个基本关系（表）通过各种关系操作（如筛选、联接、聚合等）生成的动态结果。它不是存储在数据库中，而是按需生成的。
+
+    > Dynamic result of one or more relational operations  operating on base relations to produce another  relation.
+
 2. **虚拟关系**：视图是一个虚拟的关系，它并不需要在数据库中实际存在。它的内容是在每次请求时，根据查询即时生成的。
+
+    > Virtual relation that does not necessarily actually  exist in the database but is produced upon request,  at time of request.
+
 3. **定义为查询**：视图的内容是通过查询定义的，这些查询通常是对一个或多个基本表的操作。
+
+    > Contents of a view are defined as a query on one or  more base relations
 
 **创建视图的语法**：
 
@@ -1491,6 +1609,8 @@ WHERE branchNo = 'B003';
 ## 5.5.Triggers
 
 **触发器（Triggers）** 是数据库中的一种特殊机制，用于在特定事件发生时自动执行预定义的操作。触发器通常与数据库表的操作（如插入、更新或删除）相关联，并且能够确保在这些操作发生时执行特定的逻辑。
+
+> Defines an action that the database should take when  some event occurs in the application
 
 **触发器的概念**：
 
@@ -1583,7 +1703,7 @@ END;
 
 1. **性能开销 Performance overhead：** 触发器会增加数据库的额外处理，可能影响系统性能，特别是在大量数据操作时。
 2. **级联效应 Cascading effects：** 触发器可能会引起级联的操作，即一个触发器触发另一个触发器，导致复杂的依赖关系。
-3. **不能调度 Cannot be  scheduled：** 触发器的执行是由事件触发的，不能像定时任务那样被调度和控制。
+3. **不能调度 Cannot be scheduled：** 触发器的执行是由事件触发的，不能像定时任务那样被调度和控制。
 4. **可移植性差  Less portable：** 不同的数据库管理系统（DBMS）可能有不同的触发器实现方式，导致跨平台的迁移和兼容性问题。
 
 
@@ -1594,12 +1714,27 @@ END;
 
 ## 6.1.Introduction
 
-- 关系代数和关系演算是**关系模型的形式语言**。Relational algebra（代数） and relational calculus （验算）are formal languages associated with the relational model.
+- 关系代数和关系演算是**关系模型的形式语言**。
 
-- **关系代数**是高级过程语言 relational algebra is a (high-level)  procedural language，关系演算是非过程语言。
+    > Relational algebra（代数） and relational calculus （验算）are formal languages associated with the relational model.
+
+- **关系代数**是高级过程语言
+
+    > relational algebra is a (high-level)  procedural language，关系演算是非过程语言。
+    >
+    > ```sql
+    > σ_{rent > 600}(PropertyForRent) #algebra 
+    > ```
+    >
+    > ```sql
+    > { t | t ∈ PropertyForRent ∧ t.rent > 600 } #calculus
+    > ```
 
 - 两者在形式上**等价**。
-- **关系完备性**：A language that produces a relation that can be derived using relational calculus is **relationally complete**. 
+
+- **关系完备性**：
+
+    > A language that produces a relation that can be derived using relational calculus is **relationally complete**. 
 
 
 
@@ -1608,7 +1743,14 @@ END;
 **特点**:
 
 - 操作基于一个或多个关系，生成新关系，原关系不变。
-- 操作结果仍是关系，支持嵌套操作（闭包性  closure）。
+
+    > Relational algebra operations work on one or more  relations to define another relation without changing  the original relations. 
+
+- 操作结果仍是关系，支持嵌套操作（闭包性  **closure**）。
+
+    > Both operands and results are relations, so output  from one operation can become input to another  operation.
+    >
+    > Allows expressions to be nested, just as in arithmetic.  This property is called closure. 
 
 **基本操作**:
 
@@ -1630,9 +1772,9 @@ END;
 
    - **定义**: 从单一关系中选择满足条件的元组。
 
-       >Works on **a single relation R** and defines a relation  that contains only those tuples (rows) of R that satisfy  the specified condition (predicate).
+       >Works on **a single relation R** and defines a relation  that contains only **those tuples (rows)** of R that satisfy the specified condition (predicate).
 
-   - **符号**: σ~predicate~(R) 
+   - **符号**: σ~predicate~(R)
 
        >=, >, !=, <, ∧, ∨
 
@@ -1646,9 +1788,9 @@ END;
 
 2. **投影 (Projection, π)**
 
-   - **定义**: 从单一关系中提取指定属性，去除重复。
+   - **定义**: 从单一关系中提取指定属性的所有值，去除重复。
 
-       > Works on a single relation R and defines a relation that contains a vertical subset of R, extracting the values of  specified attributes and eliminating duplicates. 
+       > Works on a single relation R and defines a relation that contains **a vertical subset** of R, extracting **the values of specified attributes** and eliminating duplicates. 
 
    - **符号**: π~attributes~(R)
 
@@ -1659,7 +1801,13 @@ END;
 3. **并 (Union, ∪)**
 
    - **定义**: 合并两个关系的元组，去除重复，要求并兼容。
+
+       > Union of two relations R and S defines a relation  that contains all the tuples of R, or S, or both R  and S, duplicate tuples being eliminated.
+       >
+       > R and S must be union-compatible.
+
    - **符号**: R ∪ S
+
    - 示例: 列出有分支机构或出租物业的城市。
      - π~city~(Branch) ∪ π~city~(PropertyForRent)
      - 结果: London, Aberdeen, Glasgow, Bristol
@@ -1667,7 +1815,13 @@ END;
 4. **差 (Set Difference, -)**
 
    - **定义**: 返回在 R 中但不在 S 中的元组，要求并兼容。
+
+       > Defines a relation consisting of the tuples that are  in relation R, but not in S.
+       >
+       > R and S must be union-compatible.
+
    - **符号**: R - S
+
    - 示例: 列出有分支机构但无出租物业的城市。
      - π~city~(Branch) - π~city~(PropertyForRent)
      - 结果: Bristol
@@ -1675,8 +1829,15 @@ END;
 5. **交 (Intersection, ∩)**
 
    - **定义**: 返回 R 和 S 共有的元组，要求并兼容。
+
+       > Defines a relation consisting of the set of all tuples  that are in both R and S. 
+       >
+       > R and S must be union-compatible.
+
    - **符号**: R ∩ S
+
    - **等价表达**: R ∩ S = R - (R - S)
+
    - 示例: 列出既有分支机构又有出租物业的城市。
      - π~city~(Branch) ∩ π~city~(PropertyForRent)
      - 结果: London, Aberdeen, Glasgow
@@ -1684,6 +1845,8 @@ END;
 6. **笛卡尔积 (Cartesian Product, ×)**
 
    - **定义**: 将 R 和 S 的每个元组组合。
+
+       > Defines a relation that is the concatenation (连结） of every tuple of relation R with every tuple of  relation S.
 
    - **符号**: R × S
 
@@ -1693,15 +1856,28 @@ END;
      - π~clientNo,fName,lName~(Client) × π~clientNo,propertyNo,comment~(Viewing)
      - 结果: 20 个元组 (4 个客户 × 5 个查看记录)
      
+     ![image-20250523152301970](images/image-20250523152301970.png)
+     
    - **结合选择**: σ~Client.clientNo~ = Viewing.clientNo(...)
 
 7. **连接 (Join)**
 
    - **定义**: 笛卡尔积后根据条件选择。
+
+       > Join is a very important operation, combines Cartesian product of the two operand relations and a Selection.
+       >
+       > ```sql
+       > Join = σ_c（R X S）
+
    - 类型:
      - **Theta Join (θ-join)**: R ⋈~F~ S = σ~F~ (R×S) 为比较条件。
+     
      - **Equijoin**: F 仅含等值条件。
+     
      - **Natural Join (⋈)**: 等值连接，去除重复属性。
+     
+         ![image-20250523152345940](images/image-20250523152345940.png)
+     
    - 示例: 列出客户姓名和查看评论。
      - π~clientNo,fName,lName~(Client) ⋈ π~clientNo,propertyNo,comment~(Viewing)
      - 结果: CR76 (John Kay, too remote), 等。
@@ -1713,10 +1889,14 @@ END;
    - 示例: 生成物业查看状态报告。
      - π~propertyNo,street,city~(PropertyForRent) ⟕ Viewing
      - 结果: 包括未被查看的物业 (PL94, null)。
+     
+     ![image-20250523152433459](images/image-20250523152433459.png)
 
 9. **半连接 (Semijoin)**
 
    - **定义**: 返回参与连接的 R 的元组。
+
+       > Defines a relation that contains the tuples of R that  participate in the join of R with S.
 
    - **符号**: R ▷~F~ S = π~RAA~ (R ⋈~F~ S)  
 
@@ -1725,7 +1905,10 @@ END;
    - 示例: 列出在 Glasgow 分支工作的员工。
 
      - Staff ▷_Staff.branchNo = Branch.branchNo σ_~city='Glasgow'~(Branch)
+     
    - 结果: SG37, SG14, SG5。
+
+       ![image-20250523153410573](images/image-20250523153410573.png)
 
 10. **除 (Division, ÷)**
 
@@ -1755,7 +1938,7 @@ END;
 
           > ρ~S~(E)  or  ρ~S~(a1, a2, . . . , an)(E) ~ Rename operation ρ
           >
-          > ρ~Q~(myCount) (E) provides a new name Q for the output  relation of operation E
+          > ρ~Q~(myCount) (E) provides a new name Q for the output relation of operation E
       
       - 结果: 5。
     
@@ -1765,9 +1948,7 @@ END;
 
     - **符号**: ~GA~F~AL~(R)
 
-    - 示例
-
-      : 统计每个分支的员工数和薪资总和。
+    - 示例: 统计每个分支的员工数和薪资总和。
 
       - ρ~Q~(branchNo,myCount,mySum) ~branchNo~F~COUNT~ ~staffNo,~ ~SUM~ ~salary~(Staff)
   - 结果: B003 (3, 54000), B005 (2, 39000), B007 (1, 9000)。
@@ -1788,11 +1969,11 @@ END;
 
 **定义**：ER建模通过系统分析数据需求，帮助设计良好的数据库。
 
-> Entity-relationship modeling analyses data  requirements in a systematic way to help produce a  well-designed database.
+> Entity-relationship modeling analyses data  requirements in a systematic way to help produce a well-designed database.
 
 **实施时机**：应在数据库实现之前完成。
 
-> E-R modeling should always be completed before you  implement your database.
+> E-R modeling should always be completed before you implement your database.
 
 **基本概念**：
 
@@ -1810,7 +1991,7 @@ END;
 
 ## 7.2.ER Diagram
 
-![image-20250318120348833](images/image-20250318120348833.png)
+![image-20250523215205237](images/image-20250523215205237.png)
 
 1. Entities with Attributes and Keys
 2. Relations with Arrows, sometimes with Attributes connected with dash line
@@ -1967,7 +2148,7 @@ How to map ERD to the corresponding relations ? :question:
 
 > Main type of constraint on relationships is called multiplicity.
 
-- **参与（Participation）**：所有或部分实体实例是否参与关系。
+- **参与（Participation）**：**所有或部分**实体实例是否参与关系。
 
     > Determines whether all or only some entity occurrences (实体实例) participate in a relationship.
 
@@ -2008,9 +2189,17 @@ How to map ERD to the corresponding relations ? :question:
 
     > Where a model represents a relationship between entity types,  but pathway between certain entity occurrences  is ambiguous
 
+    ![image-20250524004715696](images/image-20250524004715696.png)
+
+    ![image-20250524005205705](images/image-20250524005205705.png)
+
 - **断层陷阱（Chasm Trap）**：模型暗示关系存在，但某些实例间无路径，如Branch-Staff-PropertyForRent中某些物业无关联员工。
 
     > Where a model suggests the existence of a relationship between entity types, but pathway does not exist between certain entity occurrences.
+    
+    ![image-20250524005219995](images/image-20250524005219995.png)
+    
+    ![image-20250524005232137](images/image-20250524005232137.png)
 
 **解决方法**：重构模型，确保路径清晰。
 
@@ -2176,7 +2365,7 @@ Functional dependency describes relationship between attributes.
 
         Given relation R(A, B, C, D, E) with functional  dependencies F {A->B, B->C, D-> E, E-> D}.
 
-        **The closure of attributes**：{A}^+^ = {A, B, C}，{B}^+^={B, C}，{C}^+^={C} • {D}^+^={D, E}，{E}^+^={D, E}，{AB}^+^ = {A, B, C}，etc…
+        **The closure of attributes**：{A}^+^ = {A, B, C}，{B}^+^={B, C}，{C}^+^={C}，{D}^+^={D, E}，{E}^+^={D, E}，{AB}^+^ = {A, B, C}，etc…
 
 3. **Armstrong公理（Armstrong's Axioms）**：
 
@@ -2242,7 +2431,7 @@ Functional dependency describes relationship between attributes.
 
         > Nominate an attribute or group of attributes to act as  the key for the unnormalised table.
 
-    2. **识别重复组**： 在未经规范化的表中，识别出哪些属性是重复出现的，特别是那些与主键属性相关联的重复数据组（Repeating Groups）。这些重复的数据通常存在于一行的多个列中。
+    2. **识别重复组**： 在未经规范化的表中，识别出哪些属性是重复出现的，特别是那些与主键属性相关联的重复数据组**（Repeating Groups）**。这些重复的数据通常存在于一行的多个列中。
 
         > Identify the repeating group(s) in the unnormalised  table which repeats for the key attribute(s).
 
@@ -2262,7 +2451,7 @@ Functional dependency describes relationship between attributes.
 
 - **要求**: 1NF + 无部分依赖（每个非主键属性完全依赖于候选键）。
 
-    > A relation that is in 1NF and every non-primary-key  attribute is fully functionally dependent on  any  candidate key . 
+    > A relation that is in 1NF and every non-primary-key  attribute is fully functionally dependent on  **any  candidate key .** 
 
 - **1NF to 2NF**：
 
@@ -2278,7 +2467,7 @@ Functional dependency describes relationship between attributes.
 
         > If partial dependencies exist on the primary key  remove them by placing then in a new relation along  with a copy of their determinant .
 
-        - 将存在部分依赖的非主属性与其决定因子（Determinant，指的是决定属性值的属性或属性组合）一起，放入一个新的关系（新的表）中。
+        - 将存在部分依赖的非主属性与其决定因子（Determinant，指的是决定属性值的属性或属性组合）一起，放入一个**新的关系（新的表）**中。
         - 原始表中则只保留主键的其他部分和那些完全依赖于整个主键的属性。
 
 ![image-20250319090430410](images/image-20250319090430410.png)
@@ -2302,6 +2491,8 @@ Functional dependency describes relationship between attributes.
     3. **消除传递依赖**： 如果在关系中存在 **传递依赖**（transitive dependencies），则需要通过将这些依赖关系移到一个新的关系中来消除传递依赖，同时保留它们的 **决定因素**（determinant）。
 
         > If transitive dependencies exist on the primary key remove them by placing them in a new relation along  with a copy of their determinant.
+    
+    ![image-20250524101205304](images/image-20250524101205304.png)
 
 **Boyce-Codd范式（BCNF Boyce–Codd Normal Form）**
 
@@ -2320,6 +2511,16 @@ Functional dependency describes relationship between attributes.
     2. **这些候选键有重叠**：即它们有至少一个属性是相同的。
 
         > the candidate keys overlap, that is have at least one attribute in common.
+    
+- **分解规则**
+
+    - 如果 R 不满足 BCNF，找到违反 BCNF 的函数依赖 X→Y。
+
+    - 将 R 分解为两个关系：
+        1. R1=(X∪Y)，包含X和 Y 的属性。
+        2. R2=(R−Y)，包含 R 中除 Y 外的所有属性。
+
+    ![image-20250524101316384](images/image-20250524101316384.png)
 
 
 
@@ -2335,13 +2536,17 @@ Functional dependency describes relationship between attributes.
 
 
 
+ER Diagram -> R(A1, A2, A3, …)
+
+
+
 ## Build and Validate Logical Data Model
 
 **构建和验证逻辑数据模型**
 
 在这一阶段，我们的目标是将概念数据模型转化为逻辑数据模型，并通过规范化等方法验证该模型的结构是否正确，确保它支持所需的事务处理。
 
-> To translate the conceptual data model into a logical  data model and then to validate this model to check  that it is structurally correct using normalization and  supports the required transactions. 
+> To **translate the conceptual data model into a logical  data model** and then to validate this model to check  that it is structurally correct using normalization and  supports the required transactions.
 
 ### Derive relations for logical data model
 
@@ -2375,7 +2580,9 @@ Functional dependency describes relationship between attributes.
 >
 > **The primary key of a weak entity is partially or fully derived from each owner entity** and so the identification of the primary key of a weak entity cannot be made until after all the relationships with the owner entities have been mapped.
 
-**(3) One-to-many binary relationship types 一对多二元关系类型**
+![image-20250524105833646](images/image-20250524105833646.png)
+
+**(3) One-to-many binary relationship types 一对多二元关系类型** (子加父主键)
 
 - 对于每个1:*二元关系，关系中“单方”（一方）的实体被指定为父实体，而“多方”（多方）的实体被指定为子实体。
 - 为了表示这种关系，需要将父实体的主键属性的副本**添加**到表示子实体的关系（表）中，作为外键。
@@ -2395,7 +2602,7 @@ Functional dependency describes relationship between attributes.
 >
 > Instead, **the participation constraints are used** to decide whether it is best  to represent the relationship by combining the entities  involved into one relation or by creating two relations and  posting a copy of the primary key from one relation to the  other.
 
-**(a) Mandatory participation on both sides of 1:1 relationship 1:1关系中双方都必需参与**
+**(a) Mandatory participation on both sides of 1:1 relationship 1:1关系中双方都必需参与**（合并造新表，选一个当主键）
 
 - 在这种情况下，两个参与1:1关系的实体都必须参与关系。
 - 将这两个实体**合并**为一个关系（表），并选择其中一个实体的主键作为新关系的主键。另一个实体的主键（如果存在）将作为备用键（Alternate Key）来使用。
@@ -2407,7 +2614,7 @@ Functional dependency describes relationship between attributes.
 
 **举例**：如果有“员工”和“办公桌”两个实体，每个员工必须有一个办公桌，每个办公桌只能分配给一个员工。在这种情况下，可以将“员工”和“办公桌”两个实体合并为一个表，其中“员工ID”作为主键，“办公桌ID”作为备用键。
 
-**(b) Mandatory participation on one side of a 1:1 relationship 1:1关系中一方必需参与，另一方可选参与**
+**(b) Mandatory participation on one side of a 1:1 relationship 1:1关系中一方必需参与，另一方可选参与**（子加父主键）
 
 - 在这种情况下，首先需要根据参与约束来确定哪个实体是父实体，哪个是子实体。
 - 在1:1关系中，参与关系的实体如果是**可选的**，则它被视为**父实体**；如果是**必需参与的**，则它被视为**子实体**。
@@ -2426,7 +2633,7 @@ Functional dependency describes relationship between attributes.
 
 **举例**：假设有“员工”和“办公室钥匙”两个实体，其中一个员工必定拥有办公室钥匙，而办公室钥匙是可选的（即并非所有员工都有钥匙）。在这种情况下，“员工”是父实体，“办公室钥匙”是子实体。可以将“员工ID”作为外键放入“办公室钥匙”表，并且如果“办公室钥匙”表中有其他属性（如钥匙类型），则这些属性应在外键字段之后添加。
 
-**(c) Optional participation on both sides of a 1:1 relationship 1:1关系中双方都可选参与**
+**(c) Optional participation on both sides of a 1:1 relationship 1:1关系中双方都可选参与**（创新表和加父主键都行）
 
 - 在这种情况下，父实体和子实体的区分是任意的，除非可以通过其他信息（如业务逻辑或其他约束条件）来帮助做出决定。
 - 如果无法从关系中直接判断哪个实体是父实体，哪个是子实体，可以根据实际情况选择任意一个作为父实体，另一个作为子实体。
@@ -2483,7 +2690,7 @@ produce 3 tables. Female Male Married
     - **子类的独立性 (Distinct Relationships)**：如果子类涉及不同的业务逻辑或具有独立的关系，可以考虑为每个子类设计独立的表结构。
     - **参与人数 (Number of Participants)**：即超类/子类关系中的参与实体数量。如果参与实体数量较多或关系复杂，可能需要更加复杂的表示方法来确保数据的完整性和查询效率。
 
-**(7)  Many-to-many (\*:\*) binary relationship types  多对多 (\*:\*) 二元关系类型**
+**(7)  Many-to-many (\*:\*) binary relationship types  多对多 (\*:\*) 二元关系类型**（创新表，分别做为外键形成复合主键）
 
 - 创建关系表来表示多对多关系
 
@@ -2508,7 +2715,7 @@ produce 3 tables. Female Male Married
 >
 > Any **foreign keys that represent a ‘many’ relationship (for  example, 1..*, 0..*) generally will also form the primary  key** of this new relation, possibly in combination with  some of the attributes of the relationship. 
 
-**(9) Multi-valued Attributes 多值属性**
+**(9) Multi-valued Attributes 多值属性**（建新表）
 
 - 创建新关系来表示多值属性，将实体的主键作为外键引入新表
     - 例如，如果“学生”有多个“电话号码”，我们会在新表中存储“学生ID”作为外键。
@@ -2519,7 +2726,11 @@ produce 3 tables. Female Male Married
 >
 > Unless the multi-valued attribute is itself an alternate  key of the entity, the primary key of the new relation is  the combination of the multi-valued attribute and the  primary key of the entity.
 
+![image-20250524143639082](images/image-20250524143639082.png)
 
+![image-20250524143849514](images/image-20250524143849514.png)
+
+![image-20250524143901209](images/image-20250524143901209.png)
 
 **Ex**
 
@@ -2551,7 +2762,7 @@ Offer(<u>number</u>, coNumber{FK}, …)
 
 **使用规范化验证关系**
 
-确保数据表设计符合规范，减少冗余，保证数据的一致性和完整性。To validate the relations in the logical data model using  normalisation.
+确保数据表设计符合规范，减少冗余，保证数据的一致性和完整性。To validate the relations in the logical data model using normalisation.
 
 ### Validate Relations Against User Transactions
 
@@ -2564,6 +2775,8 @@ Offer(<u>number</u>, coNumber{FK}, …)
 **检查完整性约束**
 
 确保逻辑数据模型中的完整性约束被正确表示和遵循，以保证数据的一致性、准确性和完整性。 To check integrity constraints are represented in the  logical data model.
+
+![image-20250524144131616](images/image-20250524144131616.png)
 
 ### Review Logical Data Model with User
 
@@ -2599,7 +2812,7 @@ Offer(<u>number</u>, coNumber{FK}, …)
 
 (9) Check Integrity Constraints.  
 
-(10) Draw the global ER/relation diagram  
+(10) Draw the **global ER/relation diagram**  
 
 (11) Update the documentation. 
 
@@ -2658,7 +2871,7 @@ To review the global logical data model with the users to ensure that they consi
 
 - 需要考虑的不仅仅是数据库中存储的数据，还应涵盖整个生态系统。
 
-    > Need to consider not only the data held in a database but  the whole ecosystem.
+    > Need to consider not only the data held in a database but the whole ecosystem.
 
 - 未能保护数据库可能导致以下后果：
 
@@ -2697,7 +2910,7 @@ To review the global logical data model with the users to ensure that they consi
 
 ### Authorisation
 
-1. **授予特权**：授予用户合法访问系统或对象的权利/特权。。
+1. **授予特权**：授予用户合法访问系统或对象的权利/特权。
 2. **涉及认证（Authentication）**：涉及**认证（Authentication）**，验证用户身份。
 
 > The granting of a right or privilege（特权）, which  enables a subject to legitimately （合理正当） have  access to a system or a system’s object. 
@@ -3126,7 +3339,7 @@ ELSE
     >
     >  **~ write-read conflict**
 
--  读值不可复现 Unrepeatable Read. 
+-  读值不可复现 Nonrepeatable (fuzzy) Read. 
 
     > The unrepeatable problem occurs when two or more read operations of the same transaction read different values of the same variable. 
     >
@@ -3154,7 +3367,7 @@ ELSE
 
 - 如果一个事务写入某个数据项，而另一个事务读取或写入相同的数据项，则执行顺序变得非常重要。
 
-    > **If one transaction writes a data item and another  reads or writes same data item, order of execution is  important.**
+    > **If one transaction writes a data item and another reads or writes same data item, order of execution is  important.**
 
 #### Concurrency Control Techniques
 
@@ -3195,13 +3408,18 @@ ELSE
 ![image-20250416194905487](images/image-20250416194905487.png)
 
 - 问题在于事务过早释放锁，导致丧失了完全的隔离性和原子性。
+
+    > Problem is that transactions release locks too soon,  resulting in loss of total **isolation** and **atomicity**.
+
 - 为了保证串行化，需要在每个事务中增加一个关于锁定和解锁操作顺序的协议。
+
+    > To guarantee **serializability**, need an additional  protocol concerning the positioning of lock and  unlock operations in every transaction.
 
 #### Two-Phase Locking (2PL)
 
 如果所有锁定操作都发生在事务中的**第一个解锁操作之前**，则事务遵循2PL协议。
 
-> Transaction follows 2PL protocol if all locking operations  precede first unlock operation in the transaction. 
+> Transaction follows 2PL protocol if all locking operations precede first unlock operation in the transaction. 
 
 **事务的两个阶段：**
 
@@ -3220,7 +3438,7 @@ Preventing Lost Update Problem using 2PL
 
 Preventing Uncommitted Dependency  Problem using 2PL
 
-Preventing Inconsistent Analysis  Problem using 2PL
+Preventing Inconsistent Analysis Problem using 2PL
 
 #### Cascading Rollback
 
@@ -3266,7 +3484,7 @@ To prevent this with 2PL, leave **release of all locks**  until **end of transac
 2. **死锁预防 Deadlock prevention**
 3. **死锁检测与恢复 Deadlock detection and recovery**
 
-
+![image-20250524161549028](images/image-20250524161549028.png)
 
 ### Timeouts
 
@@ -3350,7 +3568,7 @@ To prevent this with 2PL, leave **release of all locks**  until **end of transac
 
 事务按全局顺序排序，以便较旧的事务（时间戳较小的事务）在发生冲突时优先处理。（技术原则）
 
-> Transactions ordered globally **so that older transactions,  transactions with smaller timestamps, get priority in the  event of conflict.** 
+> Transactions ordered globally **so that older transactions,  transactions with smaller timestamps, get priority in the  event of conflict.**
 
 冲突通过回滚并重新启动事务来解决。
 
@@ -3408,6 +3626,10 @@ T_A restart with ts(T_A);       // 用以前的时间戳，让自己变为旧事
 
 ### Read(x)
 
+这里讨论新事务的优先级高。
+
+**冲突检测通常在事务提交时进行。**
+
 考虑一个时间戳为 ts(T) 的事务 T 请求读取 x：
 
 > Consider a transaction T with timestamp ts(T)  requesting to read(x):
@@ -3457,9 +3679,9 @@ T_A restart with ts(T_A);       // 用以前的时间戳，让自己变为旧事
 
     - 更新 `write_timestamp(x)`
 
-**Thomas’s write rule**这个例子是年轻的优先级高。
+**Thomas’s write rule** 这个例子是年轻的优先级高。
 
-先比较事务，在比较数据。
+**先比较事务，在比较数据。**
 
 ![image-20250422212141102](images/image-20250422212141102.png)
 
