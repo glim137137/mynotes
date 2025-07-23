@@ -1,5 +1,7 @@
 # JavaScript
 
+文章参考：
+
 JS全称JavaScript，是一种轻量级的面向对象的编程语言，既能用在浏览器中控制页面交互，也能用在服务器端作为网站后台（借助 Node.js），因此 JavaScript 是一种全栈式的编程语言。
 
 [TOC]

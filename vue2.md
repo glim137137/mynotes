@@ -1,6 +1,6 @@
 # Vue2
 
-本文参考：[vue2](https://v2.cn.vuejs.org/v2/guide/)
+文章参考：：[vue2](https://v2.cn.vuejs.org/v2/guide/)
 
 [TOC]
 

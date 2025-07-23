@@ -1,5 +1,7 @@
 # Java
 
+文章参考：
+
 [TOC]
 
 
@@ -1932,7 +1934,7 @@ class Dog extends Animal {
     >
     > 能否执行看运行类型：
     >
-    > - **执行**时由子类子类实现。
+    > - **执行**时由子类实现。
     >
     >     ```java
     >     animal.getName(); // 这里运行时还是从子类开始找。
@@ -6819,4 +6821,726 @@ public class FileWriterExample {
 }
 
 ```
+
+# 绘图
+
+`java.awt` (Abstract Window Toolkit) 是 Java 的基础图形用户界面(GUI)工具包，提供了一套丰富的类和接口用于创建图形界面和处理用户输入。
+
+## 核心组件
+
+### 基础类结构
+
+```
+java.lang.Object
+  └─ java.awt.Component (所有GUI组件的基类)
+      ├─ java.awt.Container (容器组件基类)
+      │   ├─ java.awt.Window (窗口类)
+      │   │   └─ java.awt.Frame (主窗口)
+      │   └─ java.awt.Panel (面板)
+      └─ 其他基本组件(Button, Label等)
+```
+
+### 主要组件
+
+| 类名        | 描述                     |
+| ----------- | ------------------------ |
+| `Component` | 所有AWT组件的抽象基类    |
+| `Container` | 可包含其他组件的容器     |
+| `Window`    | 无边框和菜单的顶层窗口   |
+| `Frame`     | 标准窗口，带标题栏、边框 |
+| `Dialog`    | 对话框窗口               |
+| `Panel`     | 通用容器组件             |
+| `Button`    | 按钮                     |
+| `Label`     | 文本标签                 |
+| `TextField` | 单行文本输入框           |
+| `TextArea`  | 多行文本区域             |
+| `Checkbox`  | 复选框                   |
+| `Choice`    | 下拉选择框               |
+| `List`      | 列表组件                 |
+| `Canvas`    | 自定义绘图区域           |
+
+## 图形绘制
+
+### 核心图形类
+
+| 类/接口         | 描述             |
+| --------------- | ---------------- |
+| `Graphics`      | 基本绘图上下文   |
+| `Graphics2D`    | 扩展的2D绘图功能 |
+| `Color`         | 颜色表示         |
+| `Font`          | 字体表示         |
+| `Image`         | 图像抽象类       |
+| `BufferedImage` | 内存中的图像数据 |
+
+### 绘图示例
+
+```java
+import java.awt.*;
+import java.awt.event.*;
+
+public class AWTDrawing extends Frame {
+    public AWTDrawing() {
+        setSize(400, 300);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    public void paint(Graphics g) {
+        g.setColor(Color.RED);
+        g.fillRect(50, 50, 100, 80);
+        
+        g.setColor(Color.BLUE);
+        g.drawOval(200, 100, 120, 80);
+    }
+
+    public static void main(String[] args) {
+        new AWTDrawing().setVisible(true);
+    }
+}
+```
+
+## 布局管理
+
+AWT 提供多种布局管理器：
+
+| 布局管理器      | 描述                         |
+| --------------- | ---------------------------- |
+| `FlowLayout`    | 按添加顺序排列(默认)         |
+| `BorderLayout`  | 分为五个区域(NORTH, SOUTH等) |
+| `GridLayout`    | 网格布局                     |
+| `CardLayout`    | 卡片式布局                   |
+| `GridBagLayout` | 灵活的网格布局               |
+
+```java
+Frame frame = new Frame("布局示例");
+frame.setLayout(new BorderLayout());
+frame.add(new Button("North"), BorderLayout.NORTH);
+frame.add(new Button("Center"), BorderLayout.CENTER);
+```
+
+## 事件处理
+
+AWT 使用**委托事件模型**，它采用了**事件源**与**事件监听器**分离的设计思想，通过委托方式处理事件。
+
+1. **事件源（Event Source）**
+    产生事件的GUI组件，如按钮、文本框等
+2. **事件对象（Event Object）**
+    封装事件相关数据的对象，继承自`java.util.EventObject`
+3. **事件监听器（Event Listener）**
+    定义事件处理方法（回调方法）的接口
+
+工作流程：
+
+```
+[事件发生] → [事件源创建事件对象] → [调用已注册监听器的处理方法] → [监听器执行响应代码]
+```
+
+### 主要事件类
+
+| 事件类        | 描述               |
+| ------------- | ------------------ |
+| `ActionEvent` | 按钮点击等动作事件 |
+| `MouseEvent`  | 鼠标事件           |
+| `KeyEvent`    | 键盘事件           |
+| `WindowEvent` | 窗口事件           |
+| `ItemEvent`   | 选项改变事件       |
+
+### 事件监听器示例
+
+事件监听器是通过实现特定**接口**来创建的，这些接口定义了处理相应事件的方法。当相关事件发生时，事件源会自动调用监听器中对应的方法。
+
+```java
+Button btn = new Button("Click Me");
+btn.addActionListener(new ActionListener() {
+    public void actionPerformed(ActionEvent e) {
+        System.out.println("Button clicked!");
+    }
+});
+```
+
+
+
+## 与 Swing 的关系
+
+1. **基础与扩展**：
+   - AWT 是基础，Swing 构建在 AWT 之上
+   - Swing 组件通常以"J"开头(JFrame, JButton等)
+
+2. **主要区别**：
+   - AWT 使用原生组件(重量级)
+   - Swing 使用纯Java实现(轻量级)
+   - Swing 提供更丰富的组件和功能
+
+## 现代应用中的角色
+
+虽然 Swing 和 JavaFX 更常用，但 AWT 仍然重要：
+
+1. **基础图形操作**：`Graphics2D` 仍是最强2D图形API
+2. **系统集成**：剪贴板、打印、鼠标/键盘处理等
+3. **轻量级应用**：简单GUI或需要最小依赖的场景
+4. **小程序(Applet)**：历史上用于浏览器嵌入
+
+## 高级功能
+
+### 打印支持
+
+```java
+PrinterJob job = PrinterJob.getPrinterJob();
+job.setPrintable(new Printable() {
+    public int print(Graphics g, PageFormat pf, int page) {
+        if (page > 0) return NO_SUCH_PAGE;
+        g.drawString("Hello Printing!", 100, 100);
+        return PAGE_EXISTS;
+    }
+});
+if (job.printDialog()) {
+    job.print();
+}
+```
+
+### 系统托盘支持
+
+```java
+if (SystemTray.isSupported()) {
+    SystemTray tray = SystemTray.getSystemTray();
+    Image image = Toolkit.getDefaultToolkit().getImage("icon.png");
+    TrayIcon trayIcon = new TrayIcon(image, "My App");
+    tray.add(trayIcon);
+}
+```
+
+`java.awt` 作为 Java GUI 开发的基石，虽然部分功能已被更现代的库取代，但它提供的核心图形功能和系统集成能力仍然是 Java 平台不可或缺的部分。
+
+
+
+# 线程
+
+## 基本概念
+
+**程序**是为完成特定任务、用某种语言编写的一组指令的集合。
+
+**进程**是计算机中**正在运行的程序**的实例，是操作系统进行资源分配和调度的基本单位。
+
+> **进程**是程序执行一次的过程，或是正在运行的一个程序。这是一个动态的过程，有他自身的产生、存在和消亡的过程。
+
+**线程**是程序执行的最小单元，是进程中的一个独立执行路径。Java 从语言层面支持多线程编程。CPU 调度的基本单位，共享进程的内存空间。
+
+> **线程**是由进程创建的，是进程的一个实体。一个进程可以拥有多个线程。
+
+**单线程**是指同一个时刻，只允许执行一个线程。
+
+**多线程**是指同一个时刻，可以执行多个线程。
+
+**并发**是指同一个时刻，多个任务交替执行，造成一种“貌似同时”的错觉。简单来说，**单核cpu**实现的多个任务就是并发。
+
+**并行**是指同一个时刻，多个任务同时执行。**多核cpu**可以实现并行。
+
+你可以通过Runtime查看你电脑的cpu个数，
+
+```java
+Runtime runtime = Runtime.getRuntime();
+// 获取当前电脑cpu数量
+int cpuNum = runtime.availableProcessors();
+System.out.println(cpuNum);
+```
+
+## 创建线程
+
+![image-20250723123956492](images/image-20250723123956492.png)
+
+![image-20250722175414597](images/image-20250722175414597.png)
+
+### 继承 Thread 类
+
+当一个类继承了Thread类，该类就可以当作线程使用
+
+```java
+class MyThread extends Thread {
+    @Override
+    public void run() {
+        System.out.println("Thread running: " + Thread.currentThread().getName());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MyThread thread = new MyThread();
+        thread.start(); // 启动线程（调用 run()）
+    }
+}
+```
+
+### 实现 Runnable 接口
+
+如果一个类已经继承了其他父类，无法再通过继承 `Thread` 类创建线程（因为 Java 不支持多继承）。所以 Java 提供了 **实现 `Runnable` 接口** 的方式创建线程，更灵活且符合面向接口编程原则。
+
+```java
+class MyRunnable implements Runnable {
+    @Override
+    public void run() {
+        System.out.println("Thread running: " + Thread.currentThread().getName());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        MyRunnable myrun = new MyRunnable();
+        // 底层使用了代理模式(静态代理)
+        Thread thread = new Thread(myrun);
+        thread.start();
+    }
+}
+```
+
+> ##### **静态代理**
+>
+> 手动编写代理类，在编译时确定代理关系。
+
+```java
+// Thread.java 
+@Override
+    public void run() {
+        Runnable task = holder.task; // 向上转型
+        if (task != null) {
+            // 进行动态绑定
+            Object bindings = scopedValueBindings();
+            runWith(bindings, task);
+        }
+    }
+```
+
+### 对比
+
+| **对比维度**     | **实现 `Runnable` 接口**               | **继承 `Thread` 类**                |
+| :--------------- | :------------------------------------- | :---------------------------------- |
+| **继承灵活性**   | ✅ **可继承其他类**                     | ❌ 占用唯一继承位                    |
+| **代码复用性**   | ✅ 任务逻辑可复用（多线程**共享实例**） | ❌ 任务与线程绑定                    |
+| **资源开销**     | ✅ 轻量（仅任务对象）                   | ❌ 每个线程需独立实例化 `Thread`     |
+| **复杂度**       | ⚠️ 需结合 `Thread` 使用                 | ✅ 直接调用 `start()` 即可           |
+| **线程池兼容性** | ✅ 可直接提交给 `ExecutorService`       | ❌ 需封装为 `Runnable` 或 `Callable` |
+| **Lambda支持**   | ✅ 可用Lambda简化（`() -> {}`）         | ❌ 不适用                            |
+
+
+
+## 多线程机制
+
+Java 采用 **1:1 线程模型**（内核级线程模型），每个 Java 线程直接映射到一个操作系统原生线程。
+
+![image-20250723121111782](images/image-20250723121111782.png)
+
+```java
+public class Test extends Thread {
+    public static void main(String[] args) throws InterruptedException {
+        // 使用线程
+        Test test = new Test();
+        test.start(); // 启动线程 Thread-0
+
+        // 主线程名称就叫 main
+        System.out.println("主线程继续执行");
+        for (int i = 1; i < 11; i++) {
+            System.out.println(i + ".线程名:" + Thread.currentThread().getName());
+
+            Thread.sleep(1000);
+        }
+    }
+
+    int times = 0;
+    // 重写run方法
+    @Override
+    public void run() {
+        while (true) {
+            System.out.println((++times) + ".线程名:" + Thread.currentThread().getName());
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // 当times=20时，退出while，这是线程也就退出。
+            if (times == 20) {
+                break;
+            }
+        }
+    }
+}
+```
+
+可见，主线程结束后进程并不会结束，而是会等所有子线程全部结束后才会结束。
+
+
+
+### 为什么用 start()，而不直接调用 run()
+
+![image-20250722205020623](images/image-20250722205020623.png)
+
+**start() 的内部工作原理**
+
+1. **检查线程状态**：
+    - 确保线程处于 NEW 状态
+    - 如果已经启动过（≠NEW），抛出 `IllegalThreadStateException`
+2. **加入线程组**：
+    - 将线程添加到创建它的线程组中
+3. **调用 native 方法**：
+    - 最终调用 `start0()` 这个 native 方法
+    - 通过 JNI 调用操作系统 API 创建系统级线程
+4. **线程准备**：
+    - 分配线程栈
+    - 设置线程优先级等属性
+    - 将线程状态改为 RUNNABLE
+5. **执行 run()**：
+    - 在新创建的线程上下文中调用 run() 方法
+
+```java
+// Thread.java 
+public void start() {
+        synchronized (this) {
+            // zero status corresponds to state "NEW".
+            if (holder.threadStatus != 0)
+                throw new IllegalThreadStateException();
+            start0();
+        }
+    }
+
+private native void start0();
+```
+
+**start() 与 run() 的区别**
+
+| 对比项       | start()                          | run()                           |
+| :----------- | :------------------------------- | :------------------------------ |
+| 调用结果     | 启动新线程，异步执行             | 在当前线程同步执行              |
+| 调用次数限制 | 每个线程对象只能调用一次         | 可以多次调用                    |
+| JVM 行为     | 创建新调用栈，在新线程执行 run() | 直接在当前调用栈执行 run() 内容 |
+| 线程状态变化 | NEW → RUNNABLE                   | 不改变线程状态                  |
+
+
+
+### 售票问题
+
+假设一共有一百张票，三个窗口同时出售（用三个线程模拟），如下的代码就可能出现超售问题，即，
+
+```txt
+...
+窗口Thread-1售出一张票剩余票数1
+窗口Thread-1售出一张票剩余票数0
+售票结束
+窗口Thread-0售出一张票剩余票数-1
+售票结束
+窗口Thread-2售出一张票剩余票数-2
+售票结束
+```
+
+`窗口Thread-1` 还没来得及减票，`窗口Thread-0` 与 `窗口Thread-2` 就进行判断了。
+
+```java
+public class Test extends Thread {
+    public static void main(String[] args) {
+        
+        SellTicket s = new SellTicket2();
+
+        new Thread(s).start();
+        new Thread(s).start();
+        new Thread(s).start();
+    }
+}
+
+class SellTicket implements Runnable {
+    private static int num = 100;
+
+    @Override
+    public void run() {
+        while (true) {
+            
+            if (num <= 0) {
+                System.out.println("售票结束");
+                break;
+            }
+
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            System.out.println(
+                    "窗口"+Thread.currentThread().getName() + "售出一张票" + "剩余票数" + (--num)
+            );
+        }
+    }
+}
+
+```
+
+
+
+
+
+## 线程终止
+
+
+
+
+
+
+
+
+
+# javax
+
+## swing (GUI 组件)
+
+**Swing** 是 Java 提供的一套用于构建图形用户界面(GUI)的工具包，是 Java Foundation Classes (JFC)的一部分。他的核心特点为：
+
+1. **跨平台**：在所有支持 Java 的平台上表现一致
+2. **轻量级组件**：不依赖本地操作系统的原生组件
+3. **丰富的组件库**：提供按钮、文本框、表格等完整组件
+4. **可扩展性**：可以自定义组件外观和行为
+5. **双缓冲技术**：减少图形闪烁
+
+### 主要组件
+
+#### 顶层容器
+
+| 组件      | 描述                           |
+| :-------- | :----------------------------- |
+| `JFrame`  | 主窗口，带标题栏、边框和菜单栏 |
+| `JDialog` | 对话框窗口                     |
+
+#### 常用组件
+
+| 组件           | 描述         |
+| :------------- | :----------- |
+| `JButton`      | 按钮         |
+| `JLabel`       | 文本标签     |
+| `JTextField`   | 单行文本框   |
+| `JTextArea`    | 多行文本区域 |
+| `JCheckBox`    | 复选框       |
+| `JRadioButton` | 单选按钮     |
+| `JComboBox`    | 下拉列表     |
+| `JList`        | 列表组件     |
+| `JTable`       | 表格         |
+| `JTree`        | 树形结构     |
+
+#### 容器组件
+
+| 组件          | 描述           |
+| :------------ | :------------- |
+| `JPanel`      | 通用容器       |
+| `JScrollPane` | 带滚动条的容器 |
+| `JTabbedPane` | 选项卡面板     |
+| `JSplitPane`  | 分割面板       |
+
+### 屏幕坐标体系
+
+**原点(0,0)**：位于屏幕的左上角
+
+**X轴**：向右为正方向
+
+**Y轴**：向下为正方向
+
+**单位**：像素(pixel)
+
+**坐标范围**：
+
+- 水平坐标范围：0 到 (水平分辨率-1)
+- 垂直坐标范围：0 到 (垂直分辨率-1)
+
+> 例如1920×1080分辨率的屏幕：
+>
+> - X轴坐标范围：0-1919
+> - Y轴坐标范围：0-1079
+
+### 简单绘图
+
+```java
+import javax.swing.*;
+import java.awt.*; // Abstract Window Toolkit
+
+@SuppressWarnings({"all"})
+public class DrawPanel extends JFrame {
+
+    private MyPanel mp = null;
+
+    public DrawPanel() {
+        mp = new MyPanel();
+        this.add(mp);
+        this.setSize(400, 300);
+        // 点击窗口退出按钮，程序自动退出
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        new DrawPanel();
+    }
+}
+
+class MyPanel extends JPanel {
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        System.out.println("paint 被调用了");
+        g.drawOval(10, 10, 100, 100);
+    }
+}
+```
+
+**`paint`** 方法是从 **Java AWT/Swing 组件继承体系** 中继承而来的。最初定义在 **`java.awt.Component`** 类中。
+
+#### 继承链分析
+
+```
+java.lang.Object
+  └─ java.awt.Component
+      └─ java.awt.Container
+          └─ javax.swing.JComponent
+              └─ javax.swing.JPanel (您的 MyPanel 父类)
+```
+
+#### 绘图原理
+
+**`java.awt.Component`** 类提供了两个和绘图相关的重要方法
+
+1. `paint(Graphics g)`绘制组件的外观
+2. `repaint()`刷新组件的外观
+
+当组件第一次在屏幕显示的时候,程序会自动的调用`paint()`方法来绘制组件。
+
+在以下情况 `paint()` 将会被调用:
+
+1. 窗口最小化，再最大化
+2. 窗口的大小发生变化
+3. `repaint()` 方法被调用
+
+#### `Graphics` 类
+
+`Graphics` 是 Java AWT (Abstract Window Toolkit) 中的一个核心抽象类，用于所有 2D 图形绘制操作。它提供了在组件上绘制图形、文本和图像的基本方法。
+
+```
+java.lang.Object
+  └─ java.awt.Graphics (抽象类)
+      └─ java.awt.Graphics2D (更强大的子类)
+```
+
+##### 绘制图形
+
+| 方法                                                         | 描述         |
+| :----------------------------------------------------------- | :----------- |
+| `drawLine(int x1, int y1, int x2, int y2)`                   | 绘制直线     |
+| `drawRect(int x, int y, int width, int height)`              | 绘制矩形边框 |
+| `fillRect(int x, int y, int width, int height)`              | 填充矩形     |
+| `drawOval(int x, int y, int width, int height)`              | 绘制椭圆边框 |
+| `fillOval(int x, int y, int width, int height)`              | 填充椭圆     |
+| `drawArc(int x, int y, int width, int height, int startAngle, int arcAngle)` | 绘制圆弧     |
+| `fillArc(int x, int y, int width, int height, int startAngle, int arcAngle)` | 填充圆弧     |
+| `drawPolygon(int[] xPoints, int[] yPoints, int nPoints)`     | 绘制多边形   |
+| `fillPolygon(int[] xPoints, int[] yPoints, int nPoints)`     | 填充多边形   |
+
+##### 绘制文本
+
+| 方法                                   | 描述         |
+| :------------------------------------- | :----------- |
+| `drawString(String str, int x, int y)` | 绘制文本     |
+| `setFont(Font font)`                   | 设置字体     |
+| `getFont()`                            | 获取当前字体 |
+| `getFontMetrics()`                     | 获取字体度量 |
+
+##### 颜色控制
+
+| 方法                | 描述         |
+| :------------------ | :----------- |
+| `setColor(Color c)` | 设置绘图颜色 |
+| `getColor()`        | 获取当前颜色 |
+
+##### 图像操作
+
+| 方法                                                         | 描述     |
+| :----------------------------------------------------------- | :------- |
+| `drawImage(Image i mg, int x, int y, ImageObserver observer)` | 绘制图像 |
+| `drawImage(Image img, int x, int y, int width, int height, ImageObserver observer)` |          |
+
+#### `Image` 类
+
+`Image` 类是 Java AWT (Abstract Window Toolkit) 中用于表示图形图像的抽象类，是所有图像表示类的超类。
+
+```
+java.lang.Object
+  └─ java.awt.Image (抽象类)
+      ├─ java.awt.image.BufferedImage
+      └─ java.awt.image.VolatileImage
+```
+
+##### 核心方法
+
+| 方法                                                  | 描述                                    |
+| :---------------------------------------------------- | :-------------------------------------- |
+| `getWidth(ImageObserver observer)`                    | 获取图像宽度                            |
+| `getHeight(ImageObserver observer)`                   | 获取图像高度                            |
+| `getScaledInstance(int width, int height, int hints)` | 创建缩放后的图像版本                    |
+| `getGraphics()`                                       | 获取图像的绘图上下文 (仅适用于缓冲图像) |
+| `flush()`                                             | 释放图像占用的资源                      |
+
+##### 使用 `Toolkit` 加载图像
+
+```java
+import java.awt.*;
+import javax.swing.*;
+
+public class ImageExample {
+    public static void main(String[] args) {
+        Image image = Toolkit.getDefaultToolkit().getImage("path/to/image.jpg");
+        
+        // 或者用相对路径
+        Image image2 = Toolkit.getDefaultToolkit().getImage(Panel.getClass().getResource("/bg.png"));
+        
+        // 使用Swing的ImageIcon也可以加载图像
+        ImageIcon icon = new ImageIcon("path/to/image.png");
+        Image image3 = icon.getImage();
+    }
+}
+```
+
+##### 使用 `ImageIO` 加载图像
+
+```java
+import javax.imageio.ImageIO;
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+
+public class ImageIOExample {
+    public static void main(String[] args) {
+        try {
+            Image image = ImageIO.read(new File("path/to/image.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,5 +1,7 @@
 # Node.js
 
+文章参考：
+
 Node.js 是一个基于 Chrome V8 引擎 (Google Chrome 的内核) 的 JavaScript 运行时环境，它使得 JavaScript 不仅可以在浏览器中运行，还可以在服务器端运行。
 
 Node.js 的主要特点包括：

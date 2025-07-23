@@ -1,4 +1,4 @@
-# JSON（JavaScript Object Notation）JS对象标记语言
+# JSON（JavaScript Object Notation）
 
 [TOC]
 

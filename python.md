@@ -1,18 +1,26 @@
 # Python
 
+文章参考：
+
 [TOC]
 
+# 介绍
+
+Python 是一门易于学习、功能强大的编程语言。它提供了高效的高级数据结构，还能简单有效地面向对象编程。Python 优雅的语法和动态类型以及解释型语言的本质，使它成为多数平台上写脚本和快速开发应用的理想语言。
+
+Python 解释器易于扩展，使用 C 或 C++（或其他 C 能调用的语言）即可为 Python 扩展新功能和数据类型。Python 也可用作定制软件中的扩展程序语言。
+
+# 基本语法
 
 
 
-
-# 1.字符串
+## 字符串
 
 所有对字符串的操作（如拼接、分割、替换、转换等）都会**创建并返回一个新的字符串对象**，而**不会修改原始字符串**。这是因为字符串在 Python 中是**不可变的（immutable）**。
 
 
 
-## 1.1.字符串方法
+### 字符串方法
 
 1. **基本操作**
    - `str.upper()`：将字符串转换为大写。
@@ -41,11 +49,11 @@
 
 
 
-# 2.字典
+## 2.字典
 
 
 
-## 2.1.字典方法
+### 2.1.字典方法
 
 1. **基本操作**
 
@@ -124,7 +132,7 @@
 
 
 
-# 3.元组
+## 3.元组
 
 所有对元组的操作（如查找、计数等）都会**返回新的结果**，而**不会修改原始元组**。这是因为元组在 Python 中是**不可变的（immutable）**。
 
@@ -138,11 +146,11 @@
    - `tuple1 + tuple2`：将两个元组连接成一个新元组。
    - `tuple * n`：将元组重复 `n` 次，返回一个新元组。
 
-# 4.列表
+## 4.列表
 
 所有对列表的操作（如添加、删除、排序、查找等）都会**直接修改原始列表**，因为列表在 Python 中是**可变的（mutable）**。
 
-## 4.1.列表方法
+### 4.1.列表方法
 
 1. **基本操作**
 
@@ -202,9 +210,9 @@
 
 
 
-# 5.集合
+## 5.集合
 
-## 5.1.集合方法
+### 5.1.集合方法
 
 1. **集合的创建**
 
@@ -247,7 +255,7 @@
 
 
 
-# 6.类
+## 6.类
 
 A ***class*类** allows us to group data (**attributes属性**) and methods (note that we call **methods方法** instead of functions here) together in a way that is easy to be reuse and build upon if needed.
 
@@ -258,7 +266,7 @@ Class Student:
 
 
 
-## 6.1.类的实例
+### 6.1.类的实例
 
 A `class` is a blueprint for creating **instances**. For example, each unique student that we create using the `Student` class will be an instance of that class. In the following code snippet, we create two instances of `Student` class. Note that class instantiation uses the same function notation with **round brackets ()** after the name of the class.
 
