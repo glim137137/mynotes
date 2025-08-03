@@ -704,13 +704,36 @@ try {
 `finally` 语句块无论是否发生异常都会执行，通常用于**关闭资源**。
 
 ```java
+FileReader reader = null;
+BufferedReader bufferedReader = null;
+
 try {
-    int[] arr = new int[3];
-    System.out.println(arr[5]); // 访问越界
-} catch (ArrayIndexOutOfBoundsException e) {
-    System.out.println("捕获异常：" + e.getMessage());
+    reader = new FileReader("example.txt");
+    bufferedReader = new BufferedReader(reader);
+    
+    // 使用 bufferedReader 进行文件读取
+    String line = bufferedReader.readLine();
+    // 处理数据...
+    
+} catch (IOException e) {
+    // 处理 IOException 异常
+    e.printStackTrace();
 } finally {
-    System.out.println("执行 finally 代码块");
+    // 确保资源被关闭
+    if (bufferedReader != null) {
+        try {
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    if (reader != null) {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 ```
 
@@ -6630,9 +6653,201 @@ public class CollectionsMethodsExample {
 
 # IO流
 
+
+
+## 基本概念
+
+**文件流**：文件在程序中是以流的形式来操作的，主要分为**字节流**和**字符流**两大类。
+
+![image-20250730221251844](images/image-20250730221251844.png)
+
+Java I/O 系统的核心是四个抽象基类，它们构成了整个Java I/O体系的基石。
+
+### 字节流 & 字符流
+
+| 基类           | 方向 | 数据单位 | 直接子类示例                                |
+| :------------- | :--- | :------- | :------------------------------------------ |
+| `InputStream`  | 输入 | 字节     | `FileInputStream`, `ByteArrayInputStream`   |
+| `OutputStream` | 输出 | 字节     | `FileOutputStream`, `ByteArrayOutputStream` |
+| `Reader`       | 输入 | 字符     | `FileReader`, `StringReader`                |
+| `Writer`       | 输出 | 字符     | `FileWriter`, `StringWriter`                |
+
+![io](images/java-io-stream-preview-compression.png)
+
+
+
+### 节点流 & 处理流
+
+**节点流**：是直接与数据源/目的地连接的流，也称为低级流(low-level stream)。
+
+| 数据源类型 | 输入流                               | 输出流                                |
+| :--------- | :----------------------------------- | :------------------------------------ |
+| 文件       | FileInputStream FileReader           | FileOutputStream FileWriter           |
+| 内存       | ByteArrayInputStream CharArrayReader | ByteArrayOutputStream CharArrayWriter |
+| 管道       | PipedInputStream PipedReader         | PipedOutputStream PipedWriter         |
+
+**处理流（包装流）**：是对节点流或其他处理流的包装[装饰器模式]，也称为高级流(high-level stream)。
+
+| 功能         | 输入流                             | 输出流                              |
+| :----------- | :--------------------------------- | :---------------------------------- |
+| 缓冲         | BufferedInputStream BufferedReader | BufferedOutputStream BufferedWriter |
+| 数据转换     | DataInputStream                    | DataOutputStream                    |
+| 对象序列化   | ObjectInputStream                  | ObjectOutputStream                  |
+| 字符编码转换 | InputStreamReader                  | OutputStreamWriter                  |
+| 行处理       | LineNumberReader                   | -                                   |
+
+
+
+### 序列化 & 反序列化
+
+**序列化** (Serialization)： 是将对象转换为字节流的过程。
+
+**反序列化** (Deserialization)： 是将字节流转换回对象的过程。
+
+序列化对象时，要求里面的属性的类型也需要实现序列化接口。
+
+#### Serializable 接口
+
+`Serializable` 是 Java 提供的**标记接口**（没有方法的接口），用于标识类的对象可以被序列化。它是 Java 对象序列化机制的核心。
+
+```java
+import java.io.*;
+
+// 实现Serializable接口的类
+class Person implements Serializable {
+    private String name;
+    private int age;
+    
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    @Override
+    public String toString() {
+        return "Person{name='" + name + "', age=" + age + "}";
+    }
+}
+
+public class SerializationDemo {
+    public static void main(String[] args) {
+        // 序列化
+        try (ObjectOutputStream oos = new ObjectOutputStream(
+                new FileOutputStream("person.ser"))) {
+            Person person = new Person("张三", 25);
+            oos.writeObject(person);
+            System.out.println("对象已序列化");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        // 反序列化
+        try (ObjectInputStream ois = new ObjectInputStream(
+                new FileInputStream("person.ser"))) {
+            Person restoredPerson = (Person) ois.readObject();
+            System.out.println("反序列化得到的对象: " + restoredPerson);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+#### Externalizable 接口
+
+`Externalizable` 是 Java 提供的另一个序列化接口，它继承自 `Serializable` 接口，但提供了更细粒度的控制，允许开发者完全**自定义序列化和反序列化**的过程，也就是必须实现`writeExternal/readExternal` 方法。
+
+```java
+import java.io.*;
+
+class Book implements Externalizable {
+    private String title;
+    private String author;
+    
+    // 必须有无参构造函数
+    public Book() {}
+    
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+    }
+    
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeUTF(title);
+        out.writeUTF(author);
+    }
+    
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        title = in.readUTF();
+        author = in.readUTF();
+    }
+    
+    @Override
+    public String toString() {
+        return "Book{title='" + title + "', author='" + author + "'}";
+    }
+}
+```
+
+
+
+#### `serialVersionUID`
+
+`serialVersionUID` 是用来验证序列化对象和反序列化对象版本一致性的标识符，为了提高版本兼容性。
+
+##### 基本概念
+
+**1. 什么是 serialVersionUID**
+
+- 每个可序列化类都有一个版本号
+- 静态 final long 类型变量
+- 用于验证序列化的发送者和接收者是否加载了与序列化兼容的类
+
+**2. 默认行为**
+
+如果类没有显式声明 `serialVersionUID`，序列化运行时将基于类的各个方面自动计算一个默认值：
+
+```java
+// 没有显式声明时，JVM会自动生成
+private static final long serialVersionUID = 456789123L; // 示例值
+```
+
+##### 为什么重要
+
+**1. 版本兼容性控制**
+
+当类的结构发生变化时：
+
+- **serialVersionUID 相同**：认为版本兼容
+- **serialVersionUID 不同**：抛出 `InvalidClassException`
+
+**2. 避免意外不兼容**
+
+自动生成的 serialVersionUID 对类细节非常敏感，任何改变都会导致值变化：
+
+- 添加/删除方法 - 不影响
+- 添加/删除字段 - 影响
+- 改变字段类型 - 影响
+- 改变类继承结构 - 影响
+
+#### transient 关键字
+
+`transient` 是 Java 中的一个关键字，用于标记类的成员变量在对象序列化过程中应该被忽略。
+
+- 标记为`transient`或`static`字段不应被序列化
+- 反序列化时，transient 字段会被赋予默认值（null、0 或 false）
+
+
+
+
+
 ## File
 
 在 Java 中，`File` 类用于表示文件和目录。
+
+![image-20250730224409059](images/image-20250730224409059.png)
 
 ### 创建 File 对象
 
@@ -6740,15 +6955,364 @@ public class FileExample {
 
 
 
-## FileWriter
+## 字节流
 
-`FileWriter` 是 Java 中的一个类，用于向文件中写入字符数据。
+字节流以字节(8位)为单位进行读写，适合处理二进制文件(如图片、音频等)。
 
-![image-20250421150409243](images/image-20250421150409243.png)
 
-### 创建 FileWriter 对象
 
-创建`FileWriter` 对象时，一般配合`try-catch`使用。
+### FileOutputStream
+
+`FileOutputStream` 是 Java I/O 系统中用于向文件写入原始字节流的一个类。它是 `OutputStream` 抽象类的子类，专门用于文件操作。
+
+**常用方法**
+
+| 方法                                     | 描述                         |
+| :--------------------------------------- | :--------------------------- |
+| `void write(int b)`                      | 写入单个字节                 |
+| `void write(byte[] b)`                   | 写入字节数组                 |
+| `void write(byte[] b, int off, int len)` | 写入字节数组的一部分         |
+| `void close()`                           | 关闭流并释放资源             |
+| `FileChannel getChannel()`               | 返回关联的FileChannel        |
+| `void flush()`                           | 刷新输出流，强制写出缓冲数据 |
+
+```java
+// 1.基本写入示例
+try (FileOutputStream fos = new FileOutputStream("output.txt")) {
+    String content = "Hello, World!";
+    fos.write(content.getBytes());
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// 2.追加模式写入
+try (FileOutputStream fos = new FileOutputStream("output.txt", true)) {
+    String content = "\nAppended line";
+    fos.write(content.getBytes());
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// 3.写入二进制数据
+byte[] data = {0x48, 0x65, 0x6C, 0x6C, 0x6F}; // "Hello"的ASCII码
+
+try (FileOutputStream fos = new FileOutputStream("binary.dat")) {
+    fos.write(data);
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+
+
+
+
+### FileInputStream
+
+`FileInputStream` 是 Java I/O 系统中用于从文件中读取原始字节流的一个类。它是 `InputStream` 抽象类的子类，专门用于文件操作。
+
+**常用方法**
+
+| 方法                                   | 描述                                       |
+| :------------------------------------- | :----------------------------------------- |
+| `int read()`                           | 读取单个字节，返回读取的字节或-1(文件结束) |
+| `int read(byte[] b)`                   | 读取字节到数组，返回读取的字节数           |
+| `int read(byte[] b, int off, int len)` | 读取len个字节到数组的off位置               |
+| `long skip(long n)`                    | 跳过并丢弃n个字节                          |
+| `int available()`                      | 返回可读取的估计字节数                     |
+| `void close()`                         | 关闭流并释放资源                           |
+| `FileChannel getChannel()`             | 返回关联的FileChannel                      |
+
+```java
+// 1.基本读取示例
+FileInputStream fis = null;
+
+try {
+    fis = new FileInputStream("example.txt");
+    int content;
+    while ((content = fis.read()) != -1) {
+        System.out.print((char) content);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+} finally {
+    if (fis != null) {
+        try {
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+// 你也可以用 try-with-resources 语句
+try (FileInputStream fis = new FileInputStream("example.txt")) {
+    int content;
+    while ((content = fis.read()) != -1) {
+        System.out.print((char) content);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// 2.使用缓冲区读取
+try (FileInputStream fis = new FileInputStream("largefile.bin")) {
+    byte[] buffer = new byte[1024];
+    int bytesRead;
+    while ((bytesRead = fis.read(buffer)) != -1) {
+        // 处理读取的数据
+        System.out.write(buffer, 0, bytesRead);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+**综合应用：文件拷贝**
+
+```java
+package com.test.java;
+
+import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
+@SuppressWarnings("all")
+
+public class Test {
+    public static void main(String[] args) {
+
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        String srcPath = "d:\\bomb_1.png";
+        String destPath = "d:\\bomb_2.png";
+
+        try {
+            fis = new FileInputStream(srcPath);
+            fos = new FileOutputStream(destPath);
+
+            byte[] buffer = new byte[1024];
+            int length = 0;
+            while ((length = fis.read(buffer)) != -1) {
+                // 从0到length
+                fos.write(buffer, 0, length);
+            }
+            System.out.println("<UNK>");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fis != null) {
+                    fis.close();
+                }
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+
+
+### BufferedOutputStream
+
+`BufferedOutputStream` 是 Java I/O 库中用于高效写入二进制数据的类，它为输出流提供了缓冲功能，可以显著提高写入性能。
+
+```java
+try (BufferedOutputStream bos = new BufferedOutputStream(
+        new FileOutputStream("output.bin"), 16384)) {
+    
+    byte[] data = {0x48, 0x65, 0x6C, 0x6C, 0x6F}; // "Hello"的ASCII码
+    
+    // 写入单个字节
+    bos.write(0x23); // 写入'#'
+    
+    // 写入字节数组
+    bos.write(data);
+    
+    // 写入数组的一部分
+    bos.write(data, 1, 3); // 写入"ell"
+    
+    // 重要数据可以立即刷新
+    bos.flush();
+    
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+
+
+
+
+### BufferedInputStream
+
+`BufferedInputStream` 是 Java I/O 库中的一个类，用于为输入流添加缓冲功能，提高读取效率。它是处理二进制输入数据的高效工具。内部维护一个缓冲区（默认8KB），减少实际的I/O操作次数。
+
+提供了 mark/reset 方法：可以标记流中的位置并稍后重置。
+
+- `mark(int readlimit)`: 标记当前位置
+- `reset()`: 重置到上次标记的位置
+
+**创建BufferedInputStream**
+
+```java
+// 从文件创建
+BufferedInputStream bis = new BufferedInputStream(new FileInputStream("data.bin"));
+
+// 从网络流创建
+// Socket socket = ...;
+BufferedInputStream netBis = new BufferedInputStream(socket.getInputStream());
+
+// 从字节数组创建
+byte[] data = {1, 2, 3, 4, 5};
+BufferedInputStream arrayBis = new BufferedInputStream(new ByteArrayInputStream(data));
+
+// 使用16KB的缓冲区
+BufferedInputStream bis16 = new BufferedInputStream(
+    new FileInputStream("largefile.dat"), 16384);
+```
+
+**示例**
+
+```java
+try (BufferedInputStream bis = new BufferedInputStream(new FileInputStream("data.bin"))) {
+    byte[] buffer = new byte[1024];
+    int bytesRead;
+    while ((bytesRead = bis.read(buffer)) != -1) {
+        // 处理读取的数据
+        processData(buffer, bytesRead);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+
+
+### ObjectOutputStream
+
+`ObjectOutputStream` 是 Java 中用于对象序列化的核心类，它可以将 Java 对象转换为字节流，以便存储到文件或通过网络传输。
+
+**核心方法**
+
+| 方法                        | 描述                      |
+| :-------------------------- | :------------------------ |
+| `writeObject(Object obj)`   | 序列化并写入一个对象      |
+| `writeInt(int val)`         | 写入一个int值             |
+| `writeUTF(String str)`      | 写入一个UTF-8编码的字符串 |
+| `writeBoolean(boolean val)` | 写入一个boolean值         |
+| `writeByte(int val)`        | 写入一个byte值            |
+| `writeChar(int val)`        | 写入一个char值            |
+| `writeDouble(double val)`   | 写入一个double值          |
+| `writeFloat(float val)`     | 写入一个float值           |
+| `writeLong(long val)`       | 写入一个long值            |
+| `writeShort(int val)`       | 写入一个short值           |
+| `flush()`                   | 刷新输出流                |
+| `close()`                   | 关闭输出流                |
+
+**示例**
+
+```java
+public class Test {
+    public static void main(String[] args) throws IOException {
+        String path = "d:\\data.dat";
+
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
+        oos.writeInt(100);
+        oos.writeBoolean(true);
+        oos.writeChar('a');
+        oos.writeDouble(3.14);
+        oos.writeUTF("hello");
+
+        oos.writeObject(new Dog("Ken", 4));
+        
+        oos.close();
+    }
+}
+
+class Dog implements Serializable{
+    String name;
+    int age;
+
+    public Dog(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Dog{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+```
+
+
+
+
+
+### ObjectInputStream
+
+`ObjectInputStream` 是 Java 中用于反序列化对象的核心类，它可以从输入流中读取被序列化的对象，并将其还原为内存中的 Java 对象。
+
+**核心方法**
+
+| 方法                    | 描述                      |
+| :---------------------- | :------------------------ |
+| `readObject()`          | 读取并反序列化一个对象    |
+| `readInt()`             | 读取一个int值             |
+| `readUTF()`             | 读取一个UTF-8编码的字符串 |
+| `readBoolean()`         | 读取一个boolean值         |
+| `readByte()`            | 读取一个byte值            |
+| `readChar()`            | 读取一个char值            |
+| `readDouble()`          | 读取一个double值          |
+| `readFloat()`           | 读取一个float值           |
+| `readLong()`            | 读取一个long值            |
+| `readShort()`           | 读取一个short值           |
+| `readFully(byte[] buf)` | 读取字节填充整个数组      |
+| `skipBytes(int len)`    | 跳过指定数量的字节        |
+
+**示例**：反序列化刚才的`data.dat`
+
+```java
+public class Test {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        String path = "d:\\data.dat";
+
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+        System.out.println(ois.readInt());
+        System.out.println(ois.readBoolean());
+        System.out.println(ois.readChar());
+        System.out.println(ois.readDouble());
+        System.out.println(ois.readUTF());
+
+        Object dog = ois.readObject();
+        System.out.println("运行类型" + dog.getClass());
+        System.out.println(dog);
+
+        ois.close();
+    }
+}
+```
+
+
+
+## 字符流
+
+
+
+### FileWriter
+
+`FileWriter` 是 Java 中用于写入字符文件的便捷类，继承自 `OutputStreamWriter`，专门用于处理字符流。
+
+创建`FileWriter` 对象时，一般配合`try-with-resources`使用。
 
 ```java
 import java.io.FileWriter;
@@ -6775,9 +7339,16 @@ public class FileWriterExample {
 }
 ```
 
+**常用方法**
 
-
-### 常用方法
+| 方法                                       | 描述               |
+| :----------------------------------------- | :----------------- |
+| `void write(int c)`                        | 写入单个字符       |
+| `void write(char[] cbuf)`                  | 写入字符数组       |
+| `void write(String str)`                   | 写入字符串         |
+| `void write(String str, int off, int len)` | 写入字符串的一部分 |
+| `void flush()`                             | 刷新缓冲区         |
+| `void close()`                             | 关闭流并释放资源   |
 
 ```java
 import java.io.FileWriter;
@@ -6801,7 +7372,7 @@ public class FileWriterExample {
             writer.write(message);
             System.out.println("String message written.");
 
-            // 使用 flush() 强制刷新缓冲区内容到文件
+            // 使用 flush() 强制刷新缓冲区(内存)内容到文件
             writer.flush();
             System.out.println("Flushed content to the file.");
 
@@ -6822,11 +7393,433 @@ public class FileWriterExample {
 
 ```
 
+
+
+
+
+### FileReader
+
+`FileReader` 是 Java 中用于读取字符文件的便捷类，继承自 `InputStreamReader`，专门用于从文件中读取字符流。
+
+**常用方法**
+
+| 方法                                      | 描述                                      |
+| :---------------------------------------- | :---------------------------------------- |
+| `int read()`                              | 读取单个字符（返回Unicode值，-1表示结束） |
+| `int read(char[] cbuf)`                   | 读取字符到数组，返回读取的字符数          |
+| `int read(char[] cbuf, int off, int len)` | 读取字符到数组的指定位置                  |
+| `void close()`                            | 关闭流并释放资源                          |
+
+```java
+// 1.读取逐个字符
+try (FileReader reader = new FileReader("input.txt")) {
+    int character;
+    while ((character = reader.read()) != -1) {
+        System.out.print((char) character);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+
+// 2.批量读取
+char[] buffer = new char[1024];
+try (FileReader reader = new FileReader("input.txt")) {
+    int charsRead;
+    while ((charsRead = reader.read(buffer)) != -1) {
+        System.out.print(new String(buffer, 0, charsRead));
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+
+
+### BufferedWriter
+
+提供了特有的`newLine()`方法，可以写入一个系统相关的换行符。
+
+```java
+// 在节点流启用追加模式
+try (BufferedWriter bw = new BufferedWriter(new FileWriter("output.txt", true))) {
+    bw.write("Hello, World!");
+    bw.newLine();  // 换行
+    bw.write("This is a test.");
+    bw.flush();    // 确保数据被写入（try-with-resources会自动调用）
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+
+
+### BufferedReader
+
+`BufferedReader` 是 Java I/O 库中的一个类，用于高效地读取字符输入流。它通过缓冲输入来提高读取效率，特别适合读取大块的文本数据。
+
+提供了特有的`readLine()`等便捷方法，方便逐行读取文本。
+
+**创建BufferedReader**
+
+```java
+// 从文件创建
+BufferedReader reader = new BufferedReader(new FileReader("file.txt"));
+
+// 从标准输入创建
+BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+// 从字符串创建
+BufferedReader strReader = new BufferedReader(new StringReader("Some text"));
+```
+
+**示例**
+
+```java
+try (BufferedReader br = new BufferedReader(new FileReader("test.txt"))) {
+    String line;
+    // 读取完毕返回null
+    while ((line = br.readLine()) != null) {
+        System.out.println(line);
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+
+
+
+
+## 转换流
+
+转换流是Java I/O中用于在字节流和字符流之间进行转换的桥梁类，主要包括`InputStreamReader`和`OutputStreamWriter`。
+
+### OutputStreamWriter
+
+`OutputStreamWriter` 是 Java I/O 系统中将字符流转换为字节流的桥梁类，它继承自 `Writer` 类，能够将写入的字符按照指定编码转换为字节后写入底层字节流。
+
+**构造方法**
+
+```java
+// 使用平台默认字符集
+OutputStreamWriter(OutputStream out)
+
+// 指定字符集
+OutputStreamWriter(OutputStream out, String charsetName)
+OutputStreamWriter(OutputStream out, Charset cs)
+OutputStreamWriter(OutputStream out, CharsetEncoder enc)
+```
+
+**示例**
+
+```java
+// 写入文件并指定UTF-8编码
+try (OutputStreamWriter osw = new OutputStreamWriter(
+        new FileOutputStream("output.txt"), "UTF-8")) {
+    
+    osw.write("这是UTF-8编码的文本\n");
+    osw.write("第二行内容");
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+
+
+### InputStreamReader
+
+`InputStreamReader` 是 Java I/O 系统中将字节流转换为字符流的桥梁类，它继承自 `Reader` 类，能够按照指定编码将字节解码为字符。
+
+**构造方法**
+
+```java
+// 使用平台默认字符集
+InputStreamReader(InputStream in)
+
+// 指定字符集
+InputStreamReader(InputStream in, String charsetName)
+InputStreamReader(InputStream in, Charset cs)
+InputStreamReader(InputStream in, CharsetDecoder dec)
+```
+
+**示例**
+
+```java
+// 读取文件并指定UTF-8编码
+try (InputStreamReader isr = new InputStreamReader(
+        new FileInputStream("file.txt"), "UTF-8")) {
+    
+    char[] buffer = new char[1024];
+    int length;
+    while ((length = isr.read(buffer)) != -1) {
+        System.out.print(new String(buffer, 0, length));
+    }
+} catch (IOException e) {
+    e.printStackTrace();
+}
+```
+
+
+
+## 打印流
+
+打印流是 Java I/O 系统中专门用于输出数据的工具类，主要包括 `PrintStream` 和 `PrintWriter`，它们提供了方便的打印各种数据类型的方法。
+
+| 类名        | 继承关系                         | 主要用途                 |
+| :---------- | :------------------------------- | :----------------------- |
+| PrintStream | FilterOutputStream ← PrintStream | 字节打印流，处理字节输出 |
+| PrintWriter | Writer ← PrintWriter             | 字符打印流，处理字符输出 |
+
+### 输出方法
+
+#### 基本输出方法
+
+| 方法                | 描述                     |
+| :------------------ | :----------------------- |
+| `print(boolean b)`  | 打印boolean值            |
+| `print(char c)`     | 打印字符                 |
+| `print(int i)`      | 打印整数                 |
+| `print(long l)`     | 打印长整数               |
+| `print(float f)`    | 打印浮点数               |
+| `print(double d)`   | 打印双精度数             |
+| `print(char[] s)`   | 打印字符数组             |
+| `print(String s)`   | 打印字符串               |
+| `print(Object obj)` | 打印对象(调用toString()) |
+
+#### 换行输出方法
+
+所有 `print` 方法都有对应的 `println` 版本，在输出后追加换行符。
+
+```java
+PrintStream ps = System.out;
+ps.println("Hello World");  // 输出后换行
+ps.println(100);            // 输出整数后换行
+ps.println();               // 只输出换行
+```
+
+#### 格式化输出
+
+```java
+// printf方法（格式化输出）
+PrintStream ps = System.out;
+ps.printf("当前日期: %tF, 时间: %tT%n", new Date(), new Date());
+
+// format方法与printf相同
+ps.format("PI的值: %.4f, E的值: %.4f%n", Math.PI, Math.E);
+```
+
+#### 其他重要方法
+
+| 方法                       | 描述         |
+| :------------------------- | :----------- |
+| `flush()`                  | 刷新输出流   |
+| `close()`                  | 关闭流       |
+| `checkError()`             | 检查错误状态 |
+| `append(CharSequence csq)` | 追加字符序列 |
+
+### PrintStream
+
+`PrintStream` 是 Java 中用于输出数据的字节打印流，它继承自 `FilterOutputStream`，提供了丰富的打印方法，是 Java I/O 系统中最重要的输出类之一。
+
+**构造方法**
+
+```java
+// 1.常用构造方法
+// 基于现有输出流
+PrintStream(OutputStream out)
+PrintStream(OutputStream out, boolean autoFlush)
+PrintStream(OutputStream out, boolean autoFlush, String encoding)
+
+// 直接创建文件输出
+PrintStream(String fileName)
+PrintStream(String fileName, String csn) // 规定字符集
+PrintStream(File file)
+PrintStream(File file, String csn)
+    
+// 2.示例
+// 创建自动刷新的UTF-8打印流
+PrintStream ps1 = new PrintStream(
+    new FileOutputStream("log.txt"), true, "UTF-8");
+
+// 直接创建文件打印流
+PrintStream ps2 = new PrintStream("data.txt");
+
+// 标准错误输出重定向
+PrintStream ps3 = new PrintStream(new File("error.log"));
+System.setErr(ps3);
+```
+
+
+
+### PrintWriter
+
+`PrintWriter` 是 Java 中面向字符的输出流，提供了格式化的对象打印功能，是处理文本输出的首选类。
+
+**构造方法**
+
+```java
+// 1.常用构造方法
+// 基于Writer
+PrintWriter(Writer out)
+PrintWriter(Writer out, boolean autoFlush)
+
+// 基于OutputStream
+PrintWriter(OutputStream out)
+PrintWriter(OutputStream out, boolean autoFlush)
+
+// 直接创建文件输出
+PrintWriter(String fileName)
+PrintWriter(String fileName, String csn)
+PrintWriter(File file)
+PrintWriter(File file, String csn)
+    
+// 2.示例
+// 创建UTF-8编码的文件打印流(自动刷新)
+PrintWriter pw1 = new PrintWriter(
+    new OutputStreamWriter(
+        new FileOutputStream("log.txt"), "UTF-8"), 
+    true);
+
+// 直接创建文件打印流
+PrintWriter pw2 = new PrintWriter("data.txt");
+
+// 创建网络输出打印流
+Socket socket = new Socket("example.com", 80);
+PrintWriter pw3 = new PrintWriter(
+    new OutputStreamWriter(
+        socket.getOutputStream(), "UTF-8"));
+```
+
+
+
+## 标准流
+
+Java的标准输入输出流是Java程序与外界进行基本I/O操作的重要接口，主要包括System.in、System.out和System.err三个标准流。
+
+**三种标准流**
+
+| 流类型       | 对应对象   | 描述             | 默认设备 |
+| :----------- | :--------- | :--------------- | :------- |
+| 标准输入     | System.in  | 用于程序输入     | 键盘     |
+| 标准输出     | System.out | 用于正常程序输出 | 控制台   |
+| 标准错误输出 | System.err | 用于错误信息输出 | 控制台   |
+
+### System.in
+
+```java
+// System.java
+public static final InputStream in = null;
+```
+
+### System.out
+
+```java
+// System.java
+public static final PrintStream out = null;
+```
+
+### System.err
+
+```java
+// System.java
+public static final PrintStream err = null;
+```
+
+
+
+## Properties 读取配置文件
+
+`Properties` 是 Java 中用于处理配置文件的工具类，它继承自 `Hashtable<Object,Object>`，专门用于管理键值对格式的配置信息。
+
+### 核心特性
+
+1. **键值对存储**：基于 String 类型的 key-value 存储
+2. **配置文件支持**：可直接读写 .properties 文件
+3. **层次化加载**：支持从多个输入流加载并合并
+4. **编码感知**：正确处理 Unicode 转义字符
+5. **线程安全**：继承自 Hashtable 的线程安全特性
+
+### 常用方法
+
+#### 加载方法
+
+| 方法                          | 描述                       | 示例                                                   |
+| :---------------------------- | :------------------------- | :----------------------------------------------------- |
+| `load(InputStream in)`        | 从字节输入流加载           | `props.load(new FileInputStream("config.properties"))` |
+| `load(Reader reader)`         | 从字符输入流加载(指定编码) | `props.load(new InputStreamReader(in, "UTF-8"))`       |
+| `loadFromXML(InputStream in)` | 从XML格式加载              | `props.loadFromXML(new FileInputStream("config.xml"))` |
+
+#### 存储方法
+
+| 方法                                                         | 描述                       | 示例                                                         |
+| :----------------------------------------------------------- | :------------------------- | :----------------------------------------------------------- |
+| `store(OutputStream out, String comments)`                   | 保存到输出流               | `props.store(new FileOutputStream("config.properties"), "App Config")` |
+| `store(Writer writer, String comments)`                      | 保存到字符输出流(指定编码) | `props.store(new OutputStreamWriter(out, "UTF-8"), null)`    |
+| `storeToXML(OutputStream os, String comment)`                | 保存为XML格式(UTF-8编码)   | `props.storeToXML(new FileOutputStream("config.xml"), "Settings")` |
+| `storeToXML(OutputStream os, String comment, String encoding)` | 保存为XML格式(指定编码)    | `props.storeToXML(out, "Config", "GBK")`                     |
+
+#### 设置和获取属性
+
+| 方法                                           | 描述                 | 示例                                                |
+| :--------------------------------------------- | :------------------- | :-------------------------------------------------- |
+| `setProperty(String key, String value)`        | 设置属性键值对       | `props.setProperty("username", "admin")`            |
+| `getProperty(String key)`                      | 获取属性值           | `String user = props.getProperty("username")`       |
+| `getProperty(String key, String defaultValue)` | 获取属性值(带默认值) | `String lang = props.getProperty("language", "en")` |
+
+#### 查询和检查方法
+
+| 方法                      | 描述                 | 示例                                              |
+| :------------------------ | :------------------- | :------------------------------------------------ |
+| `contains(Object value)`  | 检查是否包含指定值   | `boolean hasAdmin = props.contains("admin")`      |
+| `containsKey(Object key)` | 检查是否包含指定键   | `boolean hasUser = props.containsKey("username")` |
+| `propertyNames()`         | 返回属性名的枚举     | `Enumeration<?> e = props.propertyNames()`        |
+| `list(PrintStream out)`   | 列出属性到打印流     | `props.list(System.out)`                          |
+| `list(PrintWriter out)`   | 列出属性到打印写入器 | `props.list(new PrintWriter("props.txt"))`        |
+
+### 加载并读取配置
+
+```java
+Properties config = new Properties();
+try (InputStream in = getClass().getResourceAsStream("/app.properties")) {
+    config.load(in);
+    
+    String dbUrl = config.getProperty("db.url");
+    int timeout = Integer.parseInt(config.getProperty("timeout", "30"));
+    
+    System.out.println("数据库URL: " + dbUrl);
+    System.out.println("超时设置: " + timeout + "秒");
+} catch (IOException e) {
+    System.err.println("加载配置文件失败: " + e.getMessage());
+}
+```
+
+### 修改并保存配置
+
+```java
+Properties props = new Properties();
+props.setProperty("theme", "dark");
+props.setProperty("font.size", "14");
+props.setProperty("auto.save", "true");
+
+try (OutputStream out = new FileOutputStream("user_prefs.properties")) {
+    props.store(out, "用户偏好设置");
+    System.out.println("配置保存成功");
+} catch (IOException e) {
+    System.err.println("保存配置失败: " + e.getMessage());
+}
+```
+
+
+
 # 绘图
 
 `java.awt` (Abstract Window Toolkit) 是 Java 的基础图形用户界面(GUI)工具包，提供了一套丰富的类和接口用于创建图形界面和处理用户输入。
 
+
+
 ## 核心组件
+
+
 
 ### 基础类结构
 
@@ -7239,7 +8232,7 @@ private native void start0();
 public class Test extends Thread {
     public static void main(String[] args) {
         
-        SellTicket s = new SellTicket2();
+        SellTicket s = new SellTicket();
 
         new Thread(s).start();
         new Thread(s).start();
@@ -7278,9 +8271,424 @@ class SellTicket implements Runnable {
 
 
 
-## 线程终止
+## 通知线程终止
+
+在 Java 中，线程终止需要遵循安全规范，避免强制杀死线程导致资源泄漏或数据不一致。以下是线程终止方法，
+
+### 自然终止
+
+线程 `run()` 方法执行完毕后自动终止。
+
+```java
+Thread thread = new Thread(() -> {
+    for (int i = 0; i < 5; i++) {
+        System.out.println("执行中: " + i);
+    }
+    // run() 结束，线程自然终止
+});
+thread.start();
+```
+
+### 标志位控制（通知退出）
+
+通过共享变量控制线程退出。这样在主线程里就可以控制子线程的终止。
+
+```java
+class MyTask implements Runnable {
+    private volatile boolean running = true; // volatile 保证可见性
+
+    public void stop() {
+        running = false;
+    }
+
+    @Override
+    public void run() {
+        while (running) {
+            System.out.println("线程运行中...");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // 恢复中断状态
+                break;
+            }
+        }
+        System.out.println("线程安全退出");
+    }
+}
+
+// 使用
+MyTask task = new MyTask();
+Thread thread = new Thread(task);
+thread.start();
+
+Thread.sleep(3000);
+task.stop(); // 优雅终止
+```
 
 
+
+##  常用方法
+
+```java
+import java.util.*;
+import java.time.LocalDateTime;
+
+public class ThreadMethodsExample {
+    public static void main(String[] args) throws InterruptedException {
+        // 初始化线程对象
+        Thread thread = new Thread(() -> {
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    System.out.println("Thread is running...");
+                    Thread.sleep(1000);
+                }
+            } catch (InterruptedException e) {
+                System.out.println("Thread was interrupted during sleep");
+                Thread.currentThread().interrupt(); // 恢复中断状态
+            }
+        });
+
+        // 1. start()
+        thread.start(); // 启动线程
+        System.out.println("Thread started at: " + LocalDateTime.now());
+
+        // 2. sleep(long millis)
+        Thread.sleep(2000); // 主线程休眠2秒
+        System.out.println("Main thread woke up at: " + LocalDateTime.now());
+
+        // 3. currentThread()
+        Thread current = Thread.currentThread(); // 获取当前线程引用
+        System.out.println("Current thread name: " + current.getName());
+
+        // 4. getName() 和 setName(String name)
+        System.out.println("Worker thread name: " + thread.getName()); // Thread-0
+        thread.setName("Worker-Thread");
+        System.out.println("Renamed worker thread: " + thread.getName());
+
+        // 5. getPriority() 和 setPriority(int priority)
+        System.out.println("Default priority: " + thread.getPriority()); // 5
+        thread.setPriority(Thread.MAX_PRIORITY); // 设置为最高优先级(10)
+        System.out.println("New priority: " + thread.getPriority());
+
+        // 6. isAlive()
+        System.out.println("Is thread alive? " + thread.isAlive()); // true
+
+        // 7. interrupt() 中断休眠中的线程。该线程会立即中断休眠状态，抛出 InterruptedException 异常。
+        thread.interrupt(); // 中断线程
+        System.out.println("Thread interrupted at: " + LocalDateTime.now());
+
+        // 8. isInterrupted()
+        System.out.println("Is thread interrupted? " + thread.isInterrupted()); // true
+
+        // 9. join() 线程插队。例如，在t1的线程里执行t2.join(), t1就会等待t2执行完毕再继续执行。
+        thread.join(); // 等待线程终止
+        System.out.println("Thread joined at: " + LocalDateTime.now());
+
+        // 10. getState()
+        System.out.println("Thread state after join: " + thread.getState()); // TERMINATED
+
+        // 11. yield()。线程礼让。提示线程调度器当前线程愿意让出 CPU 资源。
+        Thread.yield(); // 提示调度器当前线程愿意放弃CPU使用
+        System.out.println("Main thread yielded");
+
+        // 12. activeCount()
+        System.out.println("Active threads count: " + Thread.activeCount());
+
+        // 13. daemon 线程相关 （守护线程）
+        Thread daemonThread = new Thread(() -> {
+            while (true) {
+                System.out.println("Daemon thread running...");
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        });
+        daemonThread.setDaemon(true); // 设置为守护线程
+        System.out.println("Is daemon thread? " + daemonThread.isDaemon()); // true
+        daemonThread.start();
+
+        // 14. getId()
+        System.out.println("Main thread ID: " + current.getId());
+
+        // 15. holdsLock(Object obj)
+        Object lock = new Object();
+        synchronized (lock) {
+            System.out.println("Current thread holds lock? " + Thread.holdsLock(lock)); // true
+        }
+
+        // 主线程休眠1秒让守护线程有机会执行
+        Thread.sleep(1000);
+        System.out.println("Main thread ending at: " + LocalDateTime.now());
+    }
+}
+```
+
+
+
+## 守护线程
+
+**用户线程**也叫工作线程，当线程任务执行完或以通知方式终止。
+
+**守护线程**是一种特殊的线程，它在后台运行并为其他线程提供服务。当所有非守护线程（用户线程）结束时，无论守护线程是否执行完毕，JVM 都会自动退出。
+
+守护线程的典型应用场景：
+
+1. **垃圾回收**：GC线程是最著名的守护线程
+2. **日志记录**：后台异步记录日志
+3. **监控系统**：定期检查系统状态
+4. **自动保存**：文档编辑器的自动保存功能
+
+
+
+## 生命周期
+
+### 线程的6种状态（Java 5+）
+
+Java 线程的生命周期由 `Thread.State` 枚举定义，共包含6种状态：
+
+1. **NEW（新建）**
+    - 线程被创建但尚未启动
+    - 示例：`Thread t = new Thread();`
+2. **RUNNABLE（可运行）**
+    - 线程正在JVM中执行或准备执行，等待CPU资源
+    - 包含操作系统线程状态中的就绪(Ready)和运行中(Running)
+3. **BLOCKED（阻塞）**
+    - 线程等待获取监视器锁以进入同步块/方法
+    - 发生在尝试获取已被其他线程持有的锁时
+4. **WAITING（无限期等待）**
+    - 线程等待其他线程执行特定操作（唤醒/通知）
+    - 通过以下方法进入：
+        - `Object.wait()`
+        - `Thread.join()`
+        - `LockSupport.park()`
+5. **TIMED_WAITING（限期等待）**
+    - 线程在指定时间内等待
+    - 通过以下方法进入：
+        - `Thread.sleep(long)`
+        - `Object.wait(long)`
+        - `Thread.join(long)`
+        - `LockSupport.parkNanos()`
+        - `LockSupport.parkUntil()`
+6. **TERMINATED（终止）**
+    - 线程已完成执行或异常终止
+
+### 线程状态转换图
+
+下图中**READY**与**RUNNING**状态都属于上面六种中的**RUNNABLE**状态。
+
+![image-20250727161750504](images/71d1321b345838427313031bd28f1f1f.jpg)
+
+ ![image-20250727161750504](images/17eb3565b5f7c048a9507c2498517812.png)
+
+
+
+## 同步机制
+
+在多线程编程中，一些敏感数据不允许被多个线程同时访问。**同步访问机制**就是**保证数据在任何同一时刻，最多有一个线程访问**，以保证数据完整性。
+
+### 锁
+
+Java 提供了多种锁机制来保证多线程环境下的线程安全和数据一致性。
+
+#### 互斥锁
+
+**互斥锁**（Mutex）是多线程编程中最基本的同步机制，用于确保同一时间只有一个线程可以访问共享资源。
+
+#### 死锁
+
+多个线程都占用了对方的锁资源，但不肯相让。
+
+典型死锁示例，
+
+```java
+class DeadlockDemo {
+    private static final Object lock1 = new Object();
+    private static final Object lock2 = new Object();
+    
+    boolean flag;
+    
+    public DeadlockDemo(boolean flag) {
+        this.flag = flag;
+    }
+    
+    @Override
+    public void run() {
+        if (flag) {
+            synchronized (lock1) {
+                System.out.println("Thread1 holds lock1");
+                synchronized (lock2) {
+                    System.out.println("Thread1 holds lock1 and lock2");
+                }
+            }
+        } else {
+            synchronized (lock2) {
+                System.out.println("Thread2 holds lock2");
+                synchronized (lock1) {
+                    System.out.println("Thread2 holds lock1 and lock2");
+                }
+            }
+        }
+    }
+}
+
+public class Test extends Thread {
+    public static void main(String[] args) {
+        DeadlockDemo a = new DeadlockDemo(true);
+        DeadlockDemo b = new DeadlockDemo(false);
+        Thread t1 = new Thread(a);
+        Thread t2 = new Thread(b);
+
+        t1.start();
+        t2.start();
+    }
+}
+```
+
+#### 锁对象
+
+锁对象（Lock Object）是指被用作同步监视器的任意 Java 对象。
+
+1. **隐式锁（内置锁）**
+
+使用 `synchronized` 关键字实现的锁：
+
+```java
+// 实例锁 - 使用当前对象(this)作为锁对象
+public synchronized void method() { 
+    // 同步代码
+}
+
+// 或显式指定锁对象
+Object lock = new Object();
+public void method() {
+    synchronized(lock) {  // 使用特定对象作为锁
+        // 同步代码
+    }
+}
+```
+
+2. **显式锁**
+
+`java.util.concurrent.locks` 包提供的锁对象：
+
+```java
+Lock lock = new ReentrantLock();  // 可重入锁对象
+
+public void method() {
+    lock.lock();  // 显式获取锁
+    try {
+        // 同步代码
+    } finally {
+        lock.unlock();  // 必须显式释放
+    }
+}
+```
+
+#### 释放锁
+
+
+
+
+
+### `synchronized` 关键字
+
+最基本的同步机制，可用于方法或代码块。Java 中最基本的互斥锁实现方式。
+
+#### 同步实例方法
+
+```java
+public synchronized void syncMethod() {
+    // 同步代码，锁对象是当前实例(this)
+}
+```
+
+#### 同步静态方法
+
+```java
+public static synchronized void staticSyncMethod() {
+    // 同步代码，锁对象是当前类的Class对象
+}
+
+// 或者
+public void method() {
+    synchronized(MyClass.class) { // 该方法的类
+        // 临界区代码
+    }
+}
+```
+
+#### 同步代码块
+
+```java
+public void method() {
+    // 非同步代码
+    
+    synchronized(this) { // 可以使用任意对象作为锁
+        // 同步代码块
+    }
+    
+    // 非同步代码
+}
+
+// 或者, 使用实例变量作为锁
+private final Object lock = new Object();
+
+public void method() {
+    synchronized(lock) {  // 所有线程竞争同一个锁
+        // 真正的同步代码块
+    }
+}
+```
+
+### 解决售票问题
+
+```java
+public class Test extends Thread {
+    public static void main(String[] args) {
+
+        SellTicket s = new SellTicket();
+
+        new Thread(s).start();
+        new Thread(s).start();
+        new Thread(s).start();
+    }
+}
+
+class SellTicket implements Runnable {
+    private static int num = 100;
+    private boolean loop = true;
+
+    public void sell() {
+        synchronized(this) {  // 只同步必要的部分
+            if (num <= 0) {
+                System.out.println("售票结束");
+                loop = false;
+                return;
+            }
+            num--;  // 减少票数
+        }  // 释放锁
+
+        // 非临界区操作放在锁外
+        try {
+            Thread.sleep(50);  // 模拟出票延迟
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("窗口"+Thread.currentThread().getName()
+                + "售出一张票" + "剩余票数" + num);
+    }
+
+    @Override
+    public void run() {
+        while (loop) {
+            sell();
+        }
+    }
+}
+```
 
 
 
