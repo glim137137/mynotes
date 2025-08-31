@@ -1,4 +1,4 @@
-# XML（Extensible Markup Language）可扩
+# XML（Extensible Markup Language）
 
 [TOC]
 

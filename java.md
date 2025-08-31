@@ -1,6 +1,6 @@
 # Java
 
-文章参考：
+文章参考：[JavaGuide](https://javaguide.cn/)，[hsp](https://www.bilibili.com/video/BV1fh411y7R8/?spm_id_from=333.337.search-card.all.click&vd_source=53ce3c6946a5aed7c975753cd24f0e3f)，
 
 [TOC]
 
@@ -1569,6 +1569,25 @@ Constructor() {
 }
 ```
 
+实际上，Java 编译器会将字段的直接初始化**移动到所有构造器的开头**，
+
+```java
+public class Example {
+    private int val = 0;
+}
+// 所以，上面的等价于
+public class Example {
+
+    private int val;
+
+    public Example() {
+        val = 0; // 编译器自动添加的初始化
+    }
+}
+```
+
+
+
 #### 默认构造器（Default Constructor）
 
 - 如果类中**没有显式定义任何构造器**，Java 编译器会自动提供一个无参的默认构造器。
@@ -1617,7 +1636,7 @@ public class Main {
 - 接受参数，用于根据传入的值初始化对象。
 - 支持灵活的初始化方式。
 
-#### 重写构造器（Overloaded Constructor）
+#### 重载构造器（Overloaded Constructor）
 
 - 与普通方法类似，构造器可以被重载。重载的构造器具有相同的名称（类名），但参数列表不同。
 
@@ -6665,7 +6684,7 @@ Java I/O 系统的核心是四个抽象基类，它们构成了整个Java I/O体
 
 ### 字节流 & 字符流
 
-| 基类           | 方向 | 数据单位 | 直接子类示例                                |
+| 抽象基类       | 方向 | 数据单位 | 直接子类示例                                |
 | :------------- | :--- | :------- | :------------------------------------------ |
 | `InputStream`  | 输入 | 字节     | `FileInputStream`, `ByteArrayInputStream`   |
 | `OutputStream` | 输出 | 字节     | `FileOutputStream`, `ByteArrayOutputStream` |
@@ -8692,243 +8711,618 @@ class SellTicket implements Runnable {
 
 
 
+# 网络
 
 
 
+## InetAddress
 
-# javax
+`InetAddress` 是 Java 提供的用于表示 **IP 地址**（IPv4 或 IPv6）的类，位于 `java.net` 包中。它不仅可以封装 IP 地址，还能进行 **DNS 解析**（将域名转换为 IP 地址）。
 
-## swing (GUI 组件)
+### 主要功能
 
-**Swing** 是 Java 提供的一套用于构建图形用户界面(GUI)的工具包，是 Java Foundation Classes (JFC)的一部分。他的核心特点为：
+- 表示 **IP 地址**（如 `192.168.1.1` 或 `2001:db8::1`）。
+- 支持 **DNS 查询**（如 `www.google.com` → `142.250.190.36`）。
+- 提供 **网络可达性检测**（如 `ping` 测试）。
+- 支持 **本地主机 IP 获取**（`localhost`）。
+- **不可变（Immutable）**，线程安全。
 
-1. **跨平台**：在所有支持 Java 的平台上表现一致
-2. **轻量级组件**：不依赖本地操作系统的原生组件
-3. **丰富的组件库**：提供按钮、文本框、表格等完整组件
-4. **可扩展性**：可以自定义组件外观和行为
-5. **双缓冲技术**：减少图形闪烁
+### 常用方法
 
-### 主要组件
-
-#### 顶层容器
-
-| 组件      | 描述                           |
-| :-------- | :----------------------------- |
-| `JFrame`  | 主窗口，带标题栏、边框和菜单栏 |
-| `JDialog` | 对话框窗口                     |
-
-#### 常用组件
-
-| 组件           | 描述         |
-| :------------- | :----------- |
-| `JButton`      | 按钮         |
-| `JLabel`       | 文本标签     |
-| `JTextField`   | 单行文本框   |
-| `JTextArea`    | 多行文本区域 |
-| `JCheckBox`    | 复选框       |
-| `JRadioButton` | 单选按钮     |
-| `JComboBox`    | 下拉列表     |
-| `JList`        | 列表组件     |
-| `JTable`       | 表格         |
-| `JTree`        | 树形结构     |
-
-#### 容器组件
-
-| 组件          | 描述           |
-| :------------ | :------------- |
-| `JPanel`      | 通用容器       |
-| `JScrollPane` | 带滚动条的容器 |
-| `JTabbedPane` | 选项卡面板     |
-| `JSplitPane`  | 分割面板       |
-
-### 屏幕坐标体系
-
-**原点(0,0)**：位于屏幕的左上角
-
-**X轴**：向右为正方向
-
-**Y轴**：向下为正方向
-
-**单位**：像素(pixel)
-
-**坐标范围**：
-
-- 水平坐标范围：0 到 (水平分辨率-1)
-- 垂直坐标范围：0 到 (垂直分辨率-1)
-
-> 例如1920×1080分辨率的屏幕：
->
-> - X轴坐标范围：0-1919
-> - Y轴坐标范围：0-1079
-
-### 简单绘图
+| 方法                                             | 说明                                       |
+| :----------------------------------------------- | :----------------------------------------- |
+| `static InetAddress getByName(String host)`      | 根据主机名或 域名获取 `InetAddress`        |
+| `static InetAddress[] getAllByName(String host)` | 获取主机的所有 IP 地址（适用于多 IP 主机） |
+| `static InetAddress getLocalHost()`              | 获取本机 IP 地址                           |
+| `String getHostAddress()`                        | 返回 IP 地址字符串（如 `"192.168.1.1"`）   |
+| `String getHostName()`                           | 返回主机名（可能触发 DNS 查询）            |
+| `boolean isReachable(int timeout)`               | 检测 IP 是否可达（类似 `ping`）            |
 
 ```java
-import javax.swing.*;
-import java.awt.*; // Abstract Window Toolkit
+import java.net.*;
 
-@SuppressWarnings({"all"})
-public class DrawPanel extends JFrame {
+public class Test {
+    public static void main(String[] args) throws UnknownHostException {
+        InetAddress ip = InetAddress.getLocalHost();
+        System.out.println(ip); // HUAWEI-Matebook-14s/192.168.0.101
 
-    private MyPanel mp = null;
+        InetAddress ip2 = InetAddress.getByName("127.0.0.1");
+        System.out.println(ip2); // /127.0.0.1
 
-    public DrawPanel() {
-        mp = new MyPanel();
-        this.add(mp);
-        this.setSize(400, 300);
-        // 点击窗口退出按钮，程序自动退出
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
-    }
+        InetAddress ip3 = InetAddress.getByName("www.baidu.com");
+        System.out.println(ip3); // www.baidu.com/183.2.172.17
 
-    public static void main(String[] args) {
-        new DrawPanel();
-    }
-}
-
-class MyPanel extends JPanel {
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        System.out.println("paint 被调用了");
-        g.drawOval(10, 10, 100, 100);
+        System.out.println(ip3.getHostName()); // www.baidu.com
+        System.out.println(ip3.getHostAddress()); // 183.2.172.17
     }
 }
 ```
 
-**`paint`** 方法是从 **Java AWT/Swing 组件继承体系** 中继承而来的。最初定义在 **`java.awt.Component`** 类中。
 
-#### 继承链分析
 
-```
-java.lang.Object
-  └─ java.awt.Component
-      └─ java.awt.Container
-          └─ javax.swing.JComponent
-              └─ javax.swing.JPanel (您的 MyPanel 父类)
-```
+## Socket
 
-#### 绘图原理
+`Socket`（套接字）是 Java 网络编程的核心类，位于 `java.net` 包中，用于实现 **TCP/IP 网络通信**。它允许不同主机上的程序进行数据交换，支持 **客户端-服务器（Client-Server）** 模型。
 
-**`java.awt.Component`** 类提供了两个和绘图相关的重要方法
+### TCP 通信
 
-1. `paint(Graphics g)`绘制组件的外观
-2. `repaint()`刷新组件的外观
+TCP 是一种面向连接的、可靠的、基于字节流的传输层通信协议。在 Java 中，可以使用 `Socket` 和 `ServerSocket` 类来实现 TCP 字节流通信。
 
-当组件第一次在屏幕显示的时候,程序会自动的调用`paint()`方法来绘制组件。
-
-在以下情况 `paint()` 将会被调用:
-
-1. 窗口最小化，再最大化
-2. 窗口的大小发生变化
-3. `repaint()` 方法被调用
-
-#### `Graphics` 类
-
-`Graphics` 是 Java AWT (Abstract Window Toolkit) 中的一个核心抽象类，用于所有 2D 图形绘制操作。它提供了在组件上绘制图形、文本和图像的基本方法。
-
-```
-java.lang.Object
-  └─ java.awt.Graphics (抽象类)
-      └─ java.awt.Graphics2D (更强大的子类)
-```
-
-##### 绘制图形
-
-| 方法                                                         | 描述         |
-| :----------------------------------------------------------- | :----------- |
-| `drawLine(int x1, int y1, int x2, int y2)`                   | 绘制直线     |
-| `drawRect(int x, int y, int width, int height)`              | 绘制矩形边框 |
-| `fillRect(int x, int y, int width, int height)`              | 填充矩形     |
-| `drawOval(int x, int y, int width, int height)`              | 绘制椭圆边框 |
-| `fillOval(int x, int y, int width, int height)`              | 填充椭圆     |
-| `drawArc(int x, int y, int width, int height, int startAngle, int arcAngle)` | 绘制圆弧     |
-| `fillArc(int x, int y, int width, int height, int startAngle, int arcAngle)` | 填充圆弧     |
-| `drawPolygon(int[] xPoints, int[] yPoints, int nPoints)`     | 绘制多边形   |
-| `fillPolygon(int[] xPoints, int[] yPoints, int nPoints)`     | 填充多边形   |
-
-##### 绘制文本
-
-| 方法                                   | 描述         |
-| :------------------------------------- | :----------- |
-| `drawString(String str, int x, int y)` | 绘制文本     |
-| `setFont(Font font)`                   | 设置字体     |
-| `getFont()`                            | 获取当前字体 |
-| `getFontMetrics()`                     | 获取字体度量 |
-
-##### 颜色控制
-
-| 方法                | 描述         |
-| :------------------ | :----------- |
-| `setColor(Color c)` | 设置绘图颜色 |
-| `getColor()`        | 获取当前颜色 |
-
-##### 图像操作
-
-| 方法                                                         | 描述     |
-| :----------------------------------------------------------- | :------- |
-| `drawImage(Image i mg, int x, int y, ImageObserver observer)` | 绘制图像 |
-| `drawImage(Image img, int x, int y, int width, int height, ImageObserver observer)` |          |
-
-#### `Image` 类
-
-`Image` 类是 Java AWT (Abstract Window Toolkit) 中用于表示图形图像的抽象类，是所有图像表示类的超类。
-
-```
-java.lang.Object
-  └─ java.awt.Image (抽象类)
-      ├─ java.awt.image.BufferedImage
-      └─ java.awt.image.VolatileImage
-```
-
-##### 核心方法
-
-| 方法                                                  | 描述                                    |
-| :---------------------------------------------------- | :-------------------------------------- |
-| `getWidth(ImageObserver observer)`                    | 获取图像宽度                            |
-| `getHeight(ImageObserver observer)`                   | 获取图像高度                            |
-| `getScaledInstance(int width, int height, int hints)` | 创建缩放后的图像版本                    |
-| `getGraphics()`                                       | 获取图像的绘图上下文 (仅适用于缓冲图像) |
-| `flush()`                                             | 释放图像占用的资源                      |
-
-##### 使用 `Toolkit` 加载图像
+#### 服务器端
 
 ```java
-import java.awt.*;
-import javax.swing.*;
-
-public class ImageExample {
-    public static void main(String[] args) {
-        Image image = Toolkit.getDefaultToolkit().getImage("path/to/image.jpg");
+public class Server {
+    public static void main(String[] args) throws IOException {
+        // 在本机9999端口监听，等待连接
+        ServerSocket ss = new ServerSocket(9999);
+        // 如果有客户端连接，则会返回Socket对象，程序继续
+        Socket s = ss.accept();
+        System.out.println("server: " + s.getClass());
         
-        // 或者用相对路径
-        Image image2 = Toolkit.getDefaultToolkit().getImage(Panel.getClass().getResource("/bg.png"));
-        
-        // 使用Swing的ImageIcon也可以加载图像
-        ImageIcon icon = new ImageIcon("path/to/image.png");
-        Image image3 = icon.getImage();
+        // 获取输入流
+        InputStream is = s.getInputStream();
+        // IO读取
+        byte[] buffer = new byte[1024];
+        int readLen = 0;
+        while ((readLen = is.read(buffer)) != -1) {
+            System.out.println("accepted: " + new String(buffer, 0, readLen));
+        }
+
+        OutputStream os = s.getOutputStream();
+        os.write("hello, client".getBytes());
+        s.shutdownOutput(); // 发送 EOF（End Of File）标记给对端
+
+        // 关闭流, socket, serverSocket
+        os.close();
+        is.close();
+        s.close();
+        ss.close();
     }
 }
 ```
 
-##### 使用 `ImageIO` 加载图像
+#### 客户端
 
 ```java
-import javax.imageio.ImageIO;
-import java.awt.Image;
-import java.io.File;
-import java.io.IOException;
+public class Client {
+    public static void main(String[] args) throws IOException {
+        Socket s = new Socket(InetAddress.getLocalHost(), 9999);
+        System.out.println("client: " + s.getClass());
+        
+        // 获取输出流
+        OutputStream os = s.getOutputStream();
+        os.write("hello, server".getBytes());
+        s.shutdownOutput(); // 禁用此套接字的输出流
+         
+    	InputStream is = s.getInputStream();
+        // IO读取
+        byte[] buffer = new byte[1024];
+        int readLen = 0;
+        while ((readLen = is.read(buffer)) != -1) {
+            System.out.println("accepted: " + new String(buffer, 0, readLen));
+        }
+        
+        // 关闭流和socket
+        is.close();
+        os.close();
+        s.close();
+    }
+}
+```
 
-public class ImageIOExample {
-    public static void main(String[] args) {
-        try {
-            Image image = ImageIO.read(new File("path/to/image.jpg"));
-        } catch (IOException e) {
-            e.printStackTrace();
+
+
+### UDP 通信
+
+与基于连接的、可靠的 TCP 不同，UDP（User Datagram Protocol，用户数据报协议）是一种无连接、不可靠的传输层协议。Java 通过 `DatagramSocket` (数据报套接字) 和 `DatagramPacket` (数据报包)两个类为其提供了强大的支持。
+
+#### 核心类
+
+##### `DatagramSocket`
+
+此类表示用于发送和接收数据报包的套接字。可以把它想象成**邮局的邮箱或邮递员**。
+
+- **作用**：绑定到一个本地端口，用来“寄出”和“接收”包裹（数据报）。
+- **常用构造方法**：
+    - `DatagramSocket()`: 创建一个套接字并绑定到本地可用端口（通常用于客户端）。
+    - `DatagramSocket(int port)`: 创建一个套接字并绑定到指定的本地端口（通常用于服务器）。
+- **常用方法**：
+    - `void send(DatagramPacket p)`: 发送数据报包。
+    - `void receive(DatagramPacket p)`: 接收数据报包（该方法会**阻塞**，直到收到数据）。
+    - `void close()`: 关闭套接字。
+    - `void setSoTimeout(int timeout)`: 设置接收超时时间（毫秒），超时后会抛 `SocketTimeoutException`，避免无限期阻塞。
+
+##### `DatagramPacket`
+
+此类表示一个数据报包。可以把它想象成**一封信或一个包裹**。
+
+- **作用**：封装数据、目标地址（IP和端口）用于发送；或者提供一个“空包裹”（缓冲区）来接收数据。
+- **常用构造方法**：
+    - **用于接收**：`DatagramPacket(byte[] buf, int length)`
+        - `buf`: 用来存储接收数据的缓冲区。
+        - `length`: 要读取的字节数（通常为 `buf.length`）。
+    - **用于发送**：`DatagramPacket(byte[] buf, int length, InetAddress address, int port)`
+        - `buf`: 包含要发送数据的字节数组。
+        - `length`: 要发送的字节数。
+        - `address`: 目标主机的IP地址（`InetAddress`）。
+        - `port`: 目标主机的端口号。
+
+#### 发送端
+
+```java
+public class UDPSender {
+    public static void main(String[] args) throws IOException {
+        // 在本机9998接收数据
+        DatagramSocket socket = new DatagramSocket(9998);
+        // 封装发送的数据
+        byte[] data = "Hello World".getBytes();
+        DatagramPacket packet =
+                new DatagramPacket(data, data.length, InetAddress.getLocalHost(), 9999);
+
+        socket.send(packet);
+        socket.close();
+    }
+}
+```
+
+#### 接收端
+
+```java
+public class UDPReceiver {
+    public static void main(String[] args) throws IOException {
+        DatagramSocket socket = new DatagramSocket(9999);
+        // 准备数据报包
+        byte[] buf = new byte[1024];
+        DatagramPacket packet = new DatagramPacket(buf, buf.length);
+        // 接收数据，如果没有数据包发送到本机9999，程序就会阻塞
+        socket.receive(packet);
+        // 拆包
+        int length = packet.getLength(); // 实际数据包长度
+        byte[] data = packet.getData();
+        // 打印传来的信息
+        String s = new String(data, 0, length);
+        System.out.println(s);
+
+        socket.close();
+    }
+}
+```
+
+
+
+# 反射
+
+**反射**可以让你获取任意一个类的所有属性和方法，你还可以调用这些方法和属性。
+
+这样的需求在学习框架时特别多，即通过外部文件配置，在不修改源码情况下，来控制程序，也符合设计模式的 `ocp` 原则 (开闭原则：不修改源码，开扩容功能) 。像 `Spring/Spring Boot`、`MyBatis` 等等框架中都大量使用了反射机制。**这些框架中也大量使用了动态代理，而动态代理的实现也依赖反射。**另外，像 Java 中的一大利器 **注解** 的实现也用到了反射。
+
+
+
+![](images/2175311-20211117183211977-95412853.jpg)
+
+
+
+## Class 类
+
+### 获取 Class 对象
+
+如果我们动态获取到这些信息，我们需要依靠 Class 对象。Class 类对象将一个类的方法、变量等信息告诉运行的程序。
+
+#### 知道具体类的情况下可以使用`obj.class`
+
+```java
+Class cls1 = Person.class;
+```
+
+这多用于参数的传递，比如通过反射得到对应的构造器对象
+
+但是我们一般是不知道具体类的，基本都是通过遍历包下面的类来获取 Class 对象，通过此方式获取 Class 对象不会进行初始化
+
+#### `Class.forName()`传入类的全路径获取
+
+```java
+Class cls2 = Class.forName("com.reflection.Person");
+```
+
+多用于配置文件，读取全路径加载类
+
+#### 对象实例`instance.getClass()`获取
+
+```java
+Person person = new Person();
+Class cls3 = person.getClass();
+```
+
+#### 类加载器`xxxClassLoader.loadClass()`传入类路径获取
+
+```java
+Class cls4 = ClassLoader.getSystemClassLoader().loadClass("com.reflection.Person");
+```
+
+通过类加载器获取 Class 对象不会进行初始化，意味着不进行包括初始化等一系列步骤，静态代码块和静态对象不会得到执行
+
+#### `.TYPE`得到基本数据类型的包装类的Class对象
+
+```java
+Class<Integer> cls = Integer.TYPE;
+Class<Integer> cls_ = int.class;
+// cls 与 cls_ 对象的hashCode一样
+```
+
+### 有Class对象的类型
+
+1. 外部类，成员内部类，静态内部类，局部内部类，匿名内部类
+2. interface：接口
+3. 数组
+4. enum：枚举
+5. annotation：注解
+6. 基本数据类型
+7. void
+
+### 常用方法
+
+```java
+public class Class_ {
+    public static void main(String[] args) throws Exception {
+        String classPath = "com.reflection.Person";
+
+        Class<?> cls = Class.forName(classPath);
+
+        // 类名
+        System.out.println(cls); // class com.reflection.Example
+        System.out.println(cls.getName()); // com.reflection.Example
+        System.out.println(cls.getClass()); // class java.lang.Class
+
+        // 包名
+        System.out.println(cls.getPackage()); // package com.reflection
+        System.out.println(cls.getPackage().getName()); // com.reflection
+
+        // 通过cls创建对象实例
+        Person person = (Person) cls.getDeclaredConstructor().newInstance();
+        System.out.println(person);
+
+        // 获取单个字段(public), 修改值
+        Field name = cls.getField("name");
+        System.out.println(name.get(person));
+        name.set(person, "Webb");
+        System.out.println(name.get(person));
+
+        // 获取方法, 并调用
+        Method hi = cls.getMethod("hi");
+        hi.invoke(person);
+
+        // 获取构造器(public)
+        Constructor<?>[] constructors = cls.getDeclaredConstructors();
+        for (Constructor<?> constructor : constructors) {
+            System.out.println("构造器: " + constructor);
         }
     }
 }
 ```
+
+
+
+## 类的加载
+
+### 静态加载 v.s. 动态加载
+
+静态加载是指在**编译期间**就确定需要加载的类，如果类不存在，编译就会失败。
+
+动态加载是指在**运行期间**根据需要加载类，使用反射机制实现。
+
+```java
+public class ClassLoad {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter key: ");
+        String key = scanner.nextLine();
+
+        switch (key) {
+            // 没有 class Dog 静态加载不通过
+            case "1":
+                Dog d = new Dog();
+                d.bark();
+                break;
+            // 没有 class Cat 动态加载不通过
+            case "2":
+                Class cls = Class.forName("Cat");
+                Object o = cls.getDeclaredConstructor().newInstance();
+                cls.getMethod("meow").invoke(o);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+class Dog {
+    public void bark() {
+        System.out.println("Bark");
+    }
+}
+class Cat {
+    public void meow() {
+        System.out.println("Meow");
+    }
+}
+```
+
+### 类的生命周期
+
+类从被加载到虚拟机内存中开始到卸载出内存为止，它的整个生命周期可以简单概括为 7 个阶段：加载（Loading）、验证（Verification）、准备（Preparation）、解析（Resolution）、初始化（Initialization）、使用（Using）和卸载（Unloading）。其中，验证、准备和解析这三个阶段可以统称为连接（Linking）。
+
+这 7 个阶段的顺序如下图所示：
+
+![一个类的完整生命周期](https://oss.javaguide.cn/github/javaguide/java/jvm/lifecycle-of-a-class.png)
+
+### 加载过程
+
+**Class 文件需要加载到虚拟机中之后才能运行和使用，那么虚拟机是如何加载这些 Class 文件呢？**
+
+系统加载 Class 类型的文件主要三步：**加载->连接->初始化**。连接过程又可分为三步：**验证->准备->解析**。
+
+![一个类的完整生命周期](images/class-loading-procedure.png)
+
+#### 加载
+
+类加载过程的第一步，主要完成下面 3 件事情：
+
+1. 通过全类名获取定义此类的二进制字节流。
+2. 将字节流所代表的静态存储结构转换为方法区的运行时数据结构。
+3. 在内存中生成一个代表该类的 `Class` 对象，作为方法区这些数据的访问入口。
+
+虚拟机规范上面这 3 点并不具体，因此是非常灵活的。比如："通过全类名获取定义此类的二进制字节流" 并没有指明具体从哪里获取（ `ZIP`、 `JAR`、`EAR`、`WAR`、网络、动态代理技术运行时动态生成、其他文件生成比如 `JSP`...）、怎样获取。
+
+加载这一步主要是通过我们后面要讲到的 **类加载器** 完成的。类加载器有很多种，当我们想要加载一个类的时候，具体是哪个类加载器加载由 **双亲委派模型** 决定（不过，我们也能打破双亲委派模型）。
+
+> 类加载器、双亲委派模型也是非常重要的知识点，这部分内容在[类加载器详解](https://javaguide.cn/java/jvm/classloader.html)这篇文章中有详细介绍到。阅读本篇文章的时候，大家知道有这么个东西就可以了。
+
+每个 Java 类都有一个引用指向加载它的 `ClassLoader`。不过，数组类不是通过 `ClassLoader` 创建的，而是 JVM 在需要的时候自动创建的，数组类通过`getClassLoader()`方法获取 `ClassLoader` 的时候和该数组的元素类型的 `ClassLoader` 是一致的。
+
+一个非数组类的加载阶段（加载阶段获取类的二进制字节流的动作）是可控性最强的阶段，这一步我们可以去完成还可以自定义类加载器去控制字节流的获取方式（重写一个类加载器的 `loadClass()` 方法）。
+
+加载阶段与连接阶段的部分动作(如一部分字节码文件格式验证动作)是交叉进行的，加载阶段尚未结束，连接阶段可能就已经开始了。
+
+#### 验证
+
+**验证是连接阶段的第一步，这一阶段的目的是确保 Class 文件的字节流中包含的信息符合《Java 虚拟机规范》的全部约束要求，保证这些信息被当作代码运行后不会危害虚拟机自身的安全。**
+
+验证阶段这一步在整个类加载过程中耗费的资源还是相对较多的，但很有必要，可以有效防止恶意代码的执行。任何时候，程序安全都是第一位。
+
+不过，验证阶段也不是必须要执行的阶段。如果程序运行的全部代码(包括自己编写的、第三方包中的、从外部加载的、动态生成的等所有代码)都已经被反复使用和验证过，在生产环境的实施阶段就可以考虑使用 `-Xverify:none` 参数来关闭大部分的类验证措施，以缩短虚拟机类加载的时间。但是需要注意的是 `-Xverify:none` 和 `-noverify` 在 JDK 13 中被标记为 deprecated ，在未来版本的 JDK 中可能会被移除。
+
+验证阶段主要由四个检验阶段组成：
+
+1. 文件格式验证（Class 文件格式检查）
+2. 元数据验证（字节码语义检查）
+3. 字节码验证（程序语义检查）
+4. 符号引用验证（类的正确性检查）
+
+![一个类的完整生命周期](images/class-loading-process-verification.png)
+
+文件格式验证这一阶段是基于该类的二进制字节流进行的，主要目的是保证输入的字节流能正确地解析并存储于方法区之内，格式上符合描述一个 Java 类型信息的要求。除了这一阶段之外，其余三个验证阶段都是基于方法区的存储结构上进行的，不会再直接读取、操作字节流了。
+
+> 方法区属于是 JVM 运行时数据区域的一块逻辑区域，是各个线程共享的内存区域。当虚拟机要使用一个类时，它需要读取并解析 Class 文件获取相关信息，再将信息存入到方法区。方法区会存储已被虚拟机加载的 **类信息、字段信息、方法信息、常量、静态变量、即时编译器编译后的代码缓存等数据**。
+>
+> 关于方法区的详细介绍，推荐阅读 [Java 内存区域详解](https://javaguide.cn/java/jvm/memory-area.html) 这篇文章。
+
+符号引用验证发生在类加载过程中的解析阶段，具体点说是 JVM 将符号引用转化为直接引用的时候（解析阶段会介绍符号引用和直接引用）。
+
+符号引用验证的主要目的是确保解析阶段能正常执行，如果无法通过符号引用验证，JVM 会抛出异常，比如：
+
+- `java.lang.IllegalAccessError`：当类试图访问或修改它没有权限访问的字段，或调用它没有权限访问的方法时，抛出该异常。
+- `java.lang.NoSuchFieldError`：当类试图访问或修改一个指定的对象字段，而该对象不再包含该字段时，抛出该异常。
+- `java.lang.NoSuchMethodError`：当类试图访问一个指定的方法，而该方法不存在时，抛出该异常。
+- ……
+
+#### 准备
+
+**准备阶段是正式为类变量分配内存并设置类变量初始值的阶段**，这些内存都将在方法区中分配。对于该阶段有以下几点需要注意：
+
+1. 这时候进行内存分配的仅包括类变量（ Class Variables ，即静态变量，被 `static` 关键字修饰的变量，只与类相关，因此被称为类变量），而不包括实例变量。实例变量会在对象实例化时随着对象一块分配在 Java 堆中。
+2. 从概念上讲，类变量所使用的内存都应当在 **方法区** 中进行分配。不过有一点需要注意的是：JDK 7 之前，HotSpot 使用永久代来实现方法区的时候，实现是完全符合这种逻辑概念的。 而在 JDK 7 及之后，HotSpot 已经把原本放在永久代的字符串常量池、静态变量等移动到堆中，这个时候类变量则会随着 Class 对象一起存放在 Java 堆中。相关阅读：[《深入理解 Java 虚拟机（第 3 版）》勘误#75](https://github.com/fenixsoft/jvm_book/issues/75)
+3. 这里所设置的初始值"通常情况"下是数据类型默认的零值（如 0、0L、null、false 等），比如我们定义了`public static int value=111` ，那么 value 变量在准备阶段的初始值就是 0 而不是 111（初始化阶段才会赋值）。特殊情况：比如给 value 变量加上了 final 关键字`public static final int value=111` ，那么准备阶段 value 的值就被赋值为 111。
+
+**基本数据类型的零值**：(图片来自《深入理解 Java 虚拟机》第 3 版 7.3.3 )
+
+![基本数据类型的零值](https://oss.javaguide.cn/github/javaguide/java/基本数据类型的零值.png)
+
+#### 解析
+
+**解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程。** 解析动作主要针对类或接口、字段、类方法、接口方法、方法类型、方法句柄和调用限定符 7 类符号引用进行。
+
+《深入理解 Java 虚拟机》7.3.4 节第三版对符号引用和直接引用的解释如下：
+
+![符号引用和直接引用](https://oss.javaguide.cn/github/javaguide/java/jvm/symbol-reference-and-direct-reference.png)
+
+举个例子：在程序执行方法时，系统需要明确知道这个方法所在的位置。Java 虚拟机为每个类都准备了一张方法表来存放类中所有的方法。当需要调用一个类的方法的时候，只要知道这个方法在方法表中的偏移量就可以直接调用该方法了。通过解析操作符号引用就可以直接转变为目标方法在类中方法表的位置，从而使得方法可以被调用。
+
+综上，解析阶段是虚拟机将常量池内的符号引用替换为直接引用的过程，也就是得到类或者字段、方法在内存中的指针或者偏移量。
+
+#### 初始化
+
+**初始化阶段是执行初始化方法 `<clinit> ()`方法的过程，是类加载的最后一步，这一步 JVM 才开始真正执行类中定义的 Java 程序代码(字节码)。**
+
+> 说明：`<clinit> ()`方法是编译之后自动生成的。
+
+对于`<clinit> ()` 方法的调用，虚拟机会自己确保其在多线程环境中的安全性。因为 `<clinit> ()` 方法是带锁线程安全，所以在多线程环境下进行类初始化的话可能会引起多个线程阻塞，并且这种阻塞很难被发现。**这个机制保证了一个类在内存中只有一个Class类对象。**
+
+对于初始化阶段，虚拟机严格规范了有且只有 6 种情况下，必须对类进行初始化(只有主动去使用类才会初始化类)：
+
+1. 遇到 `new`、`getstatic`、`putstatic` 或 `invokestatic` 这 4 条字节码指令时： 
+    - `new`: 创建一个类的实例对象。
+    - `getstatic`、`putstatic`: 读取或设置一个类型的静态字段（被 `final` 修饰、已在编译期把结果放入常量池的静态字段除外）。
+    - `invokestatic`: 调用类的静态方法。
+
+2. 使用 `java.lang.reflect` 包的方法对类进行反射调用时如 `Class.forName("...")`, `newInstance()` 等等。如果类没初始化，需要触发其初始化。
+
+3. 初始化一个类，如果其父类还未初始化，则先触发该父类的初始化。
+
+4. 当虚拟机启动时，用户需要定义一个要执行的主类 (包含 `main` 方法的那个类)，虚拟机会先初始化这个类。
+
+5. `MethodHandle` 和 `VarHandle` 可以看作是轻量级的反射调用机制，而要想使用这 2 个调用，就必须先使用 `findStaticVarHandle` 来初始化要调用的类。
+
+6. **「补充，来自[issue745](https://github.com/Snailclimb/JavaGuide/issues/745)」** 当一个接口中定义了 JDK8 新加入的默认方法（被 default 关键字修饰的接口方法）时，如果有这个接口的实现类发生了初始化，那该接口要在其之前被初始化。
+
+
+
+## 类的结构信息
+
+### `Class`
+
+```java
+public class ClassStructInfo {
+    public static void main(String[] args) throws Exception {
+        Class<?> aClass = Class.forName("com.reflection.Person");
+        // getName:获取全类名
+        System.out.println(aClass.getName());
+        // getSimpleName:获取简单类名
+        System.out.println(aClass.getSimpleName());
+        // getFields:获取所有public修饰的属性，包含本类以及父类的
+        Field[] fields = aClass.getFields();
+        for (Field field : fields) {
+            System.out.println(field.getName());
+        }
+        // getDeclaredFields:获取本类中所有属性
+        Field[] declaredFields = aClass.getDeclaredFields();
+        for (Field field : declaredFields) {
+            System.out.println(field.getName());
+        }
+        // getMethods:获取所有public修饰的方法，包含本类以及父类的
+        Method[] methods = aClass.getMethods();
+        for (Method method : methods) {
+            System.out.println(method.getName());
+        }
+        // getDeclaredMethods:获取本类中所有方法
+        Method[] declaredMethods = aClass.getDeclaredMethods();
+        for (Method method : declaredMethods) {
+            System.out.println(method.getName());
+        }
+        // getConstructors:获取所有public修饰的构造器，不包含父类的
+        Constructor<?>[] constructors = aClass.getConstructors();
+        for (Constructor<?> constructor : constructors) {
+            System.out.println(constructor.getName()); // 只输出了名字吗，形参也可以打出来
+        }
+        // getDeclaredConstructors:获取本类中所有构造器
+        Constructor<?>[] declaredConstructors = aClass.getDeclaredConstructors();
+        for (Constructor<?> constructor : declaredConstructors) {
+            System.out.println(constructor.getName());
+        }
+        // getPackage:以Package形式返回 包信息
+        Package aPackage = aClass.getPackage();
+        System.out.println(aPackage.getName());
+        // getSuperClass:以Class形式返回父类信息
+        // getInterfaces:以Class[]形式返回接口信息
+        // getAnnotations:以Annotation[] 形式返回注释信息
+    }
+}
+```
+
+### `Field`
+
+```java
+// getName:返回属性名
+// getModifiers:以lnt形式返回修饰符
+// [说明: 默认修饰符是0，public 是1，private 是2，protected 是4，static 是8，final 是16]
+// getType:以Class形式返回类型
+System.out.println("// Field");
+for (Field declaredField : declaredFields) {
+    System.out.print(declaredField.getName() + " : ");
+    System.out.print(declaredField.getModifiers() + " : ");
+    System.out.println(declaredField.getType());
+}
+```
+
+### `Method`
+
+```java
+// getName:返回方法名
+// getModifiers:以Int形式返回修饰符
+// [说明: 默认修饰符是0，public 是1，private 是2，protected 是4, static 是8，final 是16]
+// getReturnType:以Class形式获取 返回类型
+// getParameterTypes:以Class[]返回参数类型数组
+for (Method declaredMethod : declaredMethods) {
+	System.out.print(declaredMethod.getName() + " : ");
+	System.out.print(declaredMethod.getModifiers() + " : ");
+	System.out.print(declaredMethod.getReturnType() + " : ");
+	Class<?>[] parameterTypes = declaredMethod.getParameterTypes();
+	for (Class<?> parameterType : parameterTypes) {
+		System.out.print(parameterType + ", ");
+	}
+}
+```
+
+### `Constructor`
+
+```java
+// getName: 返回构造器名（全类名）
+// getModifiers: 以int形式返回修饰符
+// getParameterTypes: 以Class[]返回参数类型数组
+System.out.println("// Constructor");
+for (Constructor<?> declaredConstructor : declaredConstructors) {
+    System.out.print(declaredConstructor.getName() + " : ");
+    System.out.print(declaredConstructor.getModifiers() + " : ");
+    Class<?>[] parameterTypes = declaredConstructor.getParameterTypes();
+    for (Class<?> parameterType : parameterTypes) {
+        System.out.print(parameterType + ", ");
+    }
+    System.out.println();
+}
+```
+
+
+
+## 反射爆破
+
+**反射爆破**（reflection bomb/breaking encapsulation）就是**用反射 API 把本来不允许访问的私有成员“炸开”**，强行读写或调用。
+
+核心只有两步：
+
+1. 拿到目标成员（`Field` / `Method` / `Constructor`）。
+2. 用 `setAccessible(true)` 关闭 Java 访问检查。
+
+拿 `Animal` 为例，想从外部调用它的私有方法 `internal()` 就可以这样“爆”掉封装：
+
+```java
+Animal a = new Dog();          // 运行类型 Dog
+Class<?> clazz = a.getClass(); // 得到真正运行时类 Dog.class
+
+// 1. 拿到私有方法
+Method m = clazz.getSuperclass()   // Animal.class
+                .getDeclaredMethod("internal");
+
+// 2. 爆破
+m.setAccessible(true);
+
+// 3. 调用
+m.invoke(a);   // 输出：动物内部方法
+```
+
+如果想把父类 `Animal` 的私有字段也“爆”出来，只需把 `getDeclaredMethod` 换成 `getDeclaredField`，再 `setAccessible(true)` 即可。
+
+一句话：**反射爆破 = 反射 + setAccessible(true)**，它能让你在运行时绕过 `private/protected/package` 的访问限制，但也会带来安全与维护风险，生产环境慎用。
+
+
 
 
 

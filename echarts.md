@@ -16,7 +16,7 @@ ECharts 兼容当前绝大部分浏览器（IE8/9/10/11，Chrome，Firefox，Saf
 
 
 
-# 1.配置示例
+# 配置示例
 
 **index.html**
 
@@ -76,7 +76,7 @@ myChart.dispose
 
 
 
-# 2.初始化
+# 初始化
 
 `echarts.init` 是 ECharts 的一个方法，用于初始化图表实例。它的基本语法如下：
 
@@ -92,7 +92,7 @@ var chart = echarts.init(dom, theme, opts);
 
 
 
-## 2.1.dom
+## dom
 
 ### 父容器大小
 
@@ -157,7 +157,7 @@ var chart = echarts.init(dom, theme, opts);
 
 
 
-## 2.2.theme
+## theme
 
 最简单的更改全局样式的方式，是直接采用颜色主题（theme）。例如，在 [示例集合](https://echarts.apache.org/examples) 中，可以通过切换深色模式，直接看到采用主题的效果。
 
@@ -197,7 +197,7 @@ var chart = echarts.init(dom, 'vintage');
 
 
 
-## 2.3.opts
+## opts
 
 https://echarts.apache.org/zh/option.html
 
@@ -2580,16 +2580,16 @@ Object
 
 
 
-# 3.进阶
+# 进阶
 
-## 3.1.异步数据加载与更新
+## 异步数据加载与更新
 
 ECharts 的异步数据加载与更新是动态可视化开发的核心功能之一，以下从基础到进阶的详细指南，包含代码示例和关键注意事项：
 
 ---
 
-### **一、异步数据加载基础**
-#### 1. 数据获取
+### 异步数据加载基础
+#### 数据获取
 使用 JavaScript 的 `fetch`、`axios` 或 `XMLHttpRequest` 获取远程数据：
 ```javascript
 // 使用 fetch 示例
@@ -2600,7 +2600,7 @@ fetch('https://api.example.com/data')
   });
 ```
 
-#### 2. 数据格式处理
+#### 数据格式处理
 将数据转换为 ECharts 所需的格式：
 ```javascript
 function processData(rawData) {
@@ -2613,7 +2613,7 @@ function processData(rawData) {
 }
 ```
 
-#### 3. 图表更新
+#### 图表更新
 通过 `setOption` 动态更新配置：
 ```javascript
 let chart = echarts.init(document.getElementById('chart'));
@@ -2631,8 +2631,8 @@ function updateChart(data) {
 
 ---
 
-### **二、实时数据更新**
-#### 1. 定时轮询（Polling）
+### 实时数据更新
+#### 定时轮询（Polling）
 ```javascript
 // 每 5 秒更新一次数据
 setInterval(() => {
@@ -2642,7 +2642,7 @@ setInterval(() => {
 }, 5000);
 ```
 
-#### 2. WebSocket 实时推送
+#### WebSocket 实时推送
 ```javascript
 const ws = new WebSocket('wss://api.example.com/ws');
 ws.onmessage = (event) => {
@@ -2653,8 +2653,8 @@ ws.onmessage = (event) => {
 
 ---
 
-### **三、ECharts API 进阶技巧**
-#### 1. 增量更新与性能优化
+### ECharts API 进阶技巧
+#### 增量更新与性能优化
 - **部分更新**：仅传递变化的数据部分，减少渲染开销。
   ```javascript
   chart.setOption({
@@ -2670,7 +2670,7 @@ ws.onmessage = (event) => {
   }]
   ```
 
-#### 2. 加载状态提示
+#### 加载状态提示
 ```javascript
 chart.showLoading('default', { 
   text: '疯狂加载中...',
@@ -2683,7 +2683,7 @@ fetchData().then(() => chart.hideLoading());
 
 ---
 
-### **四、完整示例：动态折线图**
+### 完整示例：动态折线图
 ```html
 <div id="chart" style="width: 600px; height: 400px;"></div>
 <script>
@@ -2719,7 +2719,7 @@ fetchData().then(() => chart.hideLoading());
 
 ---
 
-### **五、注意事项**
+### 注意事项
 1. **内存管理**：在 SPA（如 Vue/React）中，组件卸载时调用 `chart.dispose()` 释放资源。
 2. **错误处理**：网络请求添加 `catch` 逻辑，避免静默失败。
 3. **节流与防抖**：高频更新时限制渲染频率（如 Lodash 的 `throttle`）。
@@ -2731,18 +2731,18 @@ fetchData().then(() => chart.hideLoading());
 
 
 
-## 3.2.事件处理
+## 事件处理
 
 ECharts 提供了丰富的事件处理机制，可以实现用户与图表的交互。以下是关于 ECharts 事件处理的详细介绍：
 
-### 一、事件分类
+### 事件分类
 
 ECharts 的事件分为两类：
 
 1. **鼠标事件**：如 `click`、`dblclick`、`mouseover`、`mouseout` 等。
 2. **组件交互事件**：如 `legendselectchanged`（图例选中状态改变）、`datazoom`（数据区域缩放）、`brushselected`（刷选区域）等。
 
-### 二、绑定事件
+### 绑定事件
 
 ECharts 使用 `on` 方法绑定事件，格式如下：
 
@@ -2781,7 +2781,7 @@ myChart.on('click', function(params) {
 
 当用户点击柱状图时，会弹出对应的数据值。
 
-### 三、事件参数
+### 事件参数
 
 事件回调函数中会传入一个 `params` 对象，包含以下常用属性：
 
@@ -2791,7 +2791,7 @@ myChart.on('click', function(params) {
 - `value`：数据值。
 - `dataIndex`：数据索引。
 
-### 四、高级用法
+### 高级用法
 
 1. **指定组件绑定事件**
    可以通过 `query` 参数指定绑定事件的组件，例如：
@@ -2821,7 +2821,7 @@ myChart.on('click', function(params) {
 
    这可以用于高亮指定的数据。
 
-### 五、常见事件示例
+### 常见事件示例
 
 1. **图例选中状态改变**：
 
