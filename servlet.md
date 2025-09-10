@@ -533,7 +533,9 @@ http://localhost:8080/demo?name=张三&age=25&city=北京
 
 **Request 域**指的是在一次 HTTP 请求范围内有效的数据存储空间。从客户端发起请求开始，到服务器返回响应结束，在这个过程中存储的数据可以在整个请求处理链中共享。
 
-下面的方法是在**Request 域**中才能使用，也就是两个通信的 Servlet对象 (请求转发)
+下面的方法是在**Request 域**中才能使用，也就是两个通信的 Servlet对象 (请求转发)。
+
+除此以外，在**Context 域**里也能使用。
 
 | 方法                                    | 返回类型              | 描述           | 作用范围     |
 | :-------------------------------------- | :-------------------- | :------------- | :----------- |
@@ -679,3 +681,109 @@ http://localhost:8080/demo?name=张三&age=25&city=北京
 | :------------------------------- | :------- | :----------------- | :----------------------------------- |
 | `setContentLength(int len)`      | `void`   | 设置内容长度       | `setContentLength(content.length())` |
 | `setContentLengthLong(long len)` | `void`   | 设置内容长度(long) | `setContentLengthLarge(filesize)`    |
+
+
+
+# ServletContext 对象
+
+**ServletContext** 是一个**全局的储存信息**的空间，服务器开始就存在，服务器关闭才释放。为了方便大家理解，我们将ServletContext和Cookie、Session做一个简单对比，如下图：
+
+![](images/1524881565403839.png)
+
+我们可以把ServletContext当成一个公用的空间，可以被所有的客户访问，如上图，A、B、C三个客户端都可以访问。
+
+WEB容器在启动时，它会为每个Web应用程序都创建一个对应的 ServletContext，它代表当前Web应用，并且它被所有客户端共享。
+
+由于一个WEB应用中的所有Servlet共享同一个ServletContext对象，因此Servlet对象之间可以通过ServletContext对象来实现通讯。ServletContext对象通常也被称之为context域对象。公共聊天室就会用到它。
+
+当web应用关闭、Tomcat关闭或者Web应用reload的时候，ServletContext对象会被销毁。
+
+## 如何获取
+
+```java
+protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    ServletContext context = this.getServletContext(); // 直接从HttpServlet继承
+    context.log("在Servlet中获取Context");
+}
+```
+
+## 常用方法
+
+**ServletContext** 是 Java Web 应用中最重要的**接口**之一，代表整个 Web 应用的**上下文环境**。
+
+### 属性操作方法（Application 域）
+
+| 方法                                       | 返回类型              | 描述           | 示例                               |
+| :----------------------------------------- | :-------------------- | :------------- | :--------------------------------- |
+| `setAttribute(String name, Object object)` | `void`                | 设置应用域属性 | `setAttribute("appName", "MyApp")` |
+| `getAttribute(String name)`                | `Object`              | 获取应用域属性 | `getAttribute("appName")`          |
+| `removeAttribute(String name)`             | `void`                | 移除应用域属性 | `removeAttribute("appName")`       |
+| `getAttributeNames()`                      | `Enumeration<String>` | 获取所有属性名 | `getAttributeNames()`              |
+
+### 初始化参数方法
+
+| 方法                            | 返回类型              | 描述                 | 示例                        |
+| :------------------------------ | :-------------------- | :------------------- | :-------------------------- |
+| `getInitParameter(String name)` | `String`              | 获取初始化参数值     | `getInitParameter("dbUrl")` |
+| `getInitParameterNames()`       | `Enumeration<String>` | 获取所有初始化参数名 | `getInitParameterNames()`   |
+
+### 路径和资源相关方法
+
+| 方法                               | 返回类型      | 描述                         | 示例                                        |
+| :--------------------------------- | :------------ | :--------------------------- | :------------------------------------------ |
+| `getContextPath()`                 | `String`      | 获取上下文路径               | `getContextPath()`                          |
+| `getRealPath(String path)`         | `String`      | 获取资源真实路径             | `getRealPath("/WEB-INF/web.xml")`           |
+| `getResource(String path)`         | `URL`         | 获取资源URL                  | `getResource("/index.html")`                |
+| `getResourceAsStream(String path)` | `InputStream` | 获取资源输入流               | `getResourceAsStream("/config.properties")` |
+| `getResourcePaths(String path)`    | `Set<String>` | 获取指定路径下的所有资源路径 | `getResourcePaths("/WEB-INF/")`             |
+
+### 请求分发方法
+
+| 方法                                | 返回类型            | 描述                   | 示例                                |
+| :---------------------------------- | :------------------ | :--------------------- | :---------------------------------- |
+| `getRequestDispatcher(String path)` | `RequestDispatcher` | 获取请求分发器         | `getRequestDispatcher("/home.jsp")` |
+| `getNamedDispatcher(String name)`   | `RequestDispatcher` | 通过名称获取请求分发器 | `getNamedDispatcher("homeServlet")` |
+
+### 日志记录方法
+
+| 方法                                       | 返回类型 | 描述             | 示例                               |
+| :----------------------------------------- | :------- | :--------------- | :--------------------------------- |
+| `log(String msg)`                          | `void`   | 记录日志消息     | `log("Application started")`       |
+| `log(String message, Throwable throwable)` | `void`   | 记录带异常的日志 | `log("Error occurred", exception)` |
+
+### 服务器和信息方法
+
+| 方法                         | 返回类型 | 描述                    | 示例                         |
+| :--------------------------- | :------- | :---------------------- | :--------------------------- |
+| `getServerInfo()`            | `String` | 获取服务器信息          | `getServerInfo()`            |
+| `getMajorVersion()`          | `int`    | 获取Servlet主版本       | `getMajorVersion()`          |
+| `getMinorVersion()`          | `int`    | 获取Servlet次版本       | `getMinorVersion()`          |
+| `getEffectiveMajorVersion()` | `int`    | 获取有效的Servlet主版本 | `getEffectiveMajorVersion()` |
+| `getEffectiveMinorVersion()` | `int`    | 获取有效的Servlet次版本 | `getEffectiveMinorVersion()` |
+
+### MIME类型方法
+
+| 方法                       | 返回类型 | 描述               | 示例                       |
+| :------------------------- | :------- | :----------------- | :------------------------- |
+| `getMimeType(String file)` | `String` | 获取文件的MIME类型 | `getMimeType("image.jpg")` |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
