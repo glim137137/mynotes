@@ -135,9 +135,7 @@ Maven 的依赖范围如下：
 
 你可以通过以下命令清晰地看到整个依赖树：
 
-bash
-
-```
+```bash
 mvn dependency:tree
 ```
 
@@ -161,7 +159,7 @@ mvn dependency:tree
 </dependency>
 ```
 
-若相同类型但版本不同的依赖存在于同一个 pom 文件，只会引入后一个声明的依赖。
+若相同类型但版本不同的依赖存在于同一个 pom 文件，**只会引入后一个声明的依赖**。
 
 **2、项目的两个依赖同时引入了某个依赖。**
 
@@ -465,6 +463,232 @@ Maven 插件被分为下面两种类型：
 
 
 
+# 属性
+
+Maven 属性是 Maven POM 和配置文件中的**占位符**，它们类似于编程语言中的变量。通过使用属性，你可以避免在 POM 文件中重复硬编码相同的值，从而使 POM 更易于维护、更清晰，并且支持根据不同的环境（如开发、测试、生产）进行动态配置。
+
+## 为什么要使用属性？一个简单的例子
+
+**没有属性的 POM（难以维护）:**
+```xml
+<version>1.2.3</version>
+...
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <version>2.7.0</version> <!-- 版本号硬编码 -->
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <version>2.7.0</version> <!-- 重复的版本号 -->
+</dependency>
+```
+如果想升级 Spring Boot 版本，你需要修改多个地方，容易出错。
+
+**使用属性的 POM（易于维护）:**
+```xml
+<properties>
+    <spring-boot.version>2.7.0</spring-boot.version> <!-- 定义属性 -->
+</properties>
+
+<version>1.2.3</version>
+...
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+    <version>${spring-boot.version}</version> <!-- 引用属性 -->
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-test</artifactId>
+    <version>${spring-boot.version}</version> <!-- 引用同一个属性 -->
+</dependency>
+```
+现在，只需修改 `<spring-boot.version>` 属性的值，所有依赖的版本都会自动更新。
+
+## 语法
+
+属性的语法非常简单，遵循 `${property.name}` 的模式。
+
+*   **定义属性**：在 `<properties>` 元素内定义。
+    ```xml
+    <properties>
+        <my.property>value</my.property>
+    </properties>
+    ```
+*   **引用属性**：在任何支持的地方使用 `${property.name}` 来引用它的值。
+    ```xml
+    <version>${my.property}</version>
+    ```
+
+## Maven 属性的类型（来源）
+
+Maven 属性有多种来源，了解它们至关重要。
+
+### 内置属性（Built-in Properties）
+Maven 自带的内置属性，主要用于访问 POM 和环境的信息。
+
+| 属性                                   | 描述                                                         | 示例                          |
+| :------------------------------------- | :----------------------------------------------------------- | :---------------------------- |
+| **`${project.groupId}`**               | 当前项目的 `groupId`                                         | `com.mycompany.app`           |
+| **`${project.artifactId}`**            | 当前项目的 `artifactId`                                      | `my-project`                  |
+| **`${project.version}`**               | 当前项目的 `version`                                         | `1.0.0`                       |
+| **`${project.name}`**                  | 当前项目的 `name`                                            | `My Application`              |
+| **`${project.basedir}`**               | 当前项目根目录的绝对路径                                     | `/Users/name/code/my-project` |
+| **`${project.build.directory}`**       | `project.build.directory` 的值，通常是 `target`              | `target`                      |
+| **`${project.build.outputDirectory}`** | 编译输出的目录，通常是 `target/classes`                      | `target/classes`              |
+| **`${maven.build.timestamp}`**         | 构建开始的时间戳。格式可通过 `maven.build.timestamp.format` 自定义 | `20231025-2210`               |
+
+**示例：**
+```xml
+<build>
+  <finalName>${project.artifactId}-${project.version}</finalName>
+  <outputDirectory>${project.build.directory}/classes</outputDirectory>
+</build>
+```
+
+### 自定义属性（Custom POM Properties）
+在 POM 文件的 `<properties>` 部分自定义的属性。这是最常用的属性类型。
+
+```xml
+<properties>
+    <!-- 用于统一管理依赖版本 -->
+    <junit.version>5.9.1</junit.version>
+    <mysql.version>8.0.33</mysql.version>
+    
+    <!-- 用于定义项目相关配置 -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>17</java.version>
+    
+    <!-- 自定义任何属性 -->
+    <my.custom.config>value</my.custom.config>
+</properties>
+```
+
+### Settings 属性（Settings Properties）
+来自 Maven 的 `settings.xml` 文件的属性。主要用于访问用户特定的配置。
+
+| 属性                              | 描述           |
+| :-------------------------------- | :------------- |
+| **`${settings.localRepository}`** | 本地仓库的路径 |
+
+### Java 系统属性（Java System Properties）
+所有通过 `java -DpropertyName=propertyValue` 设置的 Java 系统属性，或者 `System.getProperties()` 返回的所有属性都可以被访问。
+
+| 属性                  | 描述            |
+| :-------------------- | :-------------- |
+| **`${java.version}`** | Java 运行时版本 |
+| **`${user.home}`**    | 用户家目录      |
+
+**示例：在命令行设置系统属性**
+
+```bash
+mvn clean install -DskipTests=true
+```
+然后在 POM 中引用：
+```xml
+<skipTests>${skipTests}</skipTests>
+```
+
+### 环境变量属性（Environment Variables）
+所有操作系统环境变量都可以通过 `env.` 前缀来访问。
+
+| 属性                   | 描述                     |
+| :--------------------- | :----------------------- |
+| **`${env.JAVA_HOME}`** | `JAVA_HOME` 环境变量的值 |
+| **`${env.PATH}`**      | `PATH` 环境变量的值      |
+| **`${env.USER}`**      | 当前用户名（Linux/Mac）  |
+
+**示例：**
+```xml
+<reporting>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-report-plugin</artifactId>
+            <version>3.0.0-M7</version>
+            <configuration>
+                <!-- 将报告输出到以用户名命名的目录 -->
+                <outputDirectory>${project.build.directory}/reports/${env.USER}</outputDirectory>
+            </configuration>
+        </plugin>
+    </plugins>
+</reporting>
+```
+
+### 资源过滤（Resource Filtering）与配置文件属性
+这是 Maven 属性最强大的用法之一。它允许你将 POM 属性或外部文件（`.properties`）中的值注入到项目的资源文件（如 `.properties`, `.xml`, `.yml` 文件）中。
+
+**步骤 1：在 POM 中启用资源过滤**
+```xml
+<build>
+    <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering> <!-- 关键：开启过滤 -->
+        </resource>
+    </resources>
+</build>
+```
+
+**步骤 2：创建资源文件（如 `src/main/resources/application.properties`）**
+```properties
+# 使用属性占位符
+application.name=${project.name}
+application.version=${project.version}
+database.url=jdbc:mysql://${db.host}:${db.port}/${db.name}
+welcome.message=${custom.message}
+```
+
+**步骤 3：在 POM 的 `<properties>` 或外部配置文件中定义值**
+```xml
+<properties>
+    <db.host>localhost</db.host>
+    <db.port>3306</db.port>
+    <db.name>myapp_db</db.name>
+    <custom.message>Hello from Maven!</custom.message>
+</properties>
+```
+
+**步骤 4：执行构建**
+运行 `mvn process-resources`（`package` 或 `install` 也会触发），Maven 会将 `target/classes/application.properties` 中的占位符替换为实际的值：
+```properties
+application.name=My Application
+application.version=1.0.0
+database.url=jdbc:mysql://localhost:3306/myapp_db
+welcome.message=Hello from Maven!
+```
+
+**使用不同的配置文件（Profiles）**
+你可以结合 Maven Profiles 为不同环境（dev, test, prod）设置不同的属性值。
+
+```xml
+<profiles>
+    <profile>
+        <id>dev</id>
+        <properties>
+            <db.host>localhost</db.host>
+            <custom.message>Hello from DEV!</custom.message>
+        </properties>
+    </profile>
+    <profile>
+        <id>prod</id>
+        <properties>
+            <db.host>prod-db.mycompany.com</db.host>
+            <custom.message>Hello from PROD!</custom.message>
+        </properties>
+    </profile>
+</profiles>
+```
+使用 `-P` 参数激活特定 profile：
+```bash
+mvn clean package -P prod
+```
+
+
+
 # 多模块管理
 
 多模块管理简单地来说就是将一个项目分为多个模块，每个模块只负责单一的功能实现。直观的表现就是一个 Maven 项目中不止有一个 `pom.xml` 文件，会在不同的目录中有多个 `pom.xml` 文件，进而实现多模块管理。
@@ -481,6 +705,113 @@ Maven 插件被分为下面两种类型：
 如下图所示，Dubbo 项目就被分成了多个子模块比如 dubbo-common（公共逻辑模块）、dubbo-remoting（远程通讯模块）、dubbo-rpc（远程调用模块）。
 
 ![](https://oss.javaguide.cn/github/javaguide/tools/maven/dubbo-maven-multi-module.png)
+
+
+
+## 聚合与继承
+
+Maven聚合（Maven Aggregation）是一种机制，用于将多个模块（子项目）组合到一个父项目中，方便统一构建和管理。以下是关于Maven聚合的详细介绍：
+
+### 聚合的作用
+- **统一构建**：可以一次性构建多个模块，而不需要单独构建每个模块。
+- **依赖管理**：在父项目中统一管理依赖版本，避免子项目中依赖版本冲突。
+- **生命周期管理**：父项目可以统一管理子项目的生命周期，例如统一执行测试、打包等操作。
+
+### 聚合项目结构
+一个典型的聚合项目结构如下：
+```
+my-parent-project
+├── pom.xml
+├── module1
+│   └── pom.xml
+├── module2
+│   └── pom.xml
+└── module3
+    └── pom.xml
+```
+- **父项目（my-parent-project）**：包含所有子模块的聚合配置。
+- **子模块（module1、module2、module3）**：独立的Maven项目，可以有自己的依赖和配置。
+
+### 父项目的`pom.xml`配置
+父项目的`pom.xml`文件需要配置`<modules>`标签来指定子模块：
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>my-parent-project</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging> <!-- 父项目必须是pom类型 -->
+
+    <!-- 定义子模块 -->
+    <modules>
+        <module>module1</module>
+        <module>module2</module>
+        <module>module3</module>
+    </modules>
+
+    <!-- 子项目公共依赖定义在这里 -->
+    <dependencies>
+        <dependency>
+      		<groupId>org.springframework</groupId>
+      		<artifactId>spring-webmvc</artifactId>
+      		<version>6.2.10</version>
+    	</dependency>
+    </dependencies>
+    
+    <!-- 父项目依赖管理，定义子项目特有依赖 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- 统一管理依赖版本 -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.2</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
+```
+
+### 子模块的`pom.xml`配置
+每个子模块的`pom.xml`文件需要继承父项目，并可以添加自己的依赖和配置：
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 继承父项目 -->
+    <parent>
+        <groupId>com.example</groupId>
+        <artifactId>my-parent-project</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <!-- 子模块的坐标 -->
+    <groupId>com.example</groupId>
+    <artifactId>module1</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    
+    <dependencies>
+        <!-- 子模块特有的依赖，不加<version>，版本由父工程管理 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
+```
+
+
+
+
 
 # 文章推荐
 

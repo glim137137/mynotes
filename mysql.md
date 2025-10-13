@@ -4339,3 +4339,8 @@ mysql> SHOW DATABASES;
         mysqlcheck -u root -p --optimize mydb     # 优化 mydb 所有表
         mysqlcheck -u root -p --auto-repair mydb  # 自动修复 mydb 所有表
         ```
+
+
+
+
+
