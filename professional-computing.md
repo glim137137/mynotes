@@ -1077,7 +1077,7 @@ The Unified Modeling Language (UML) is a language for specifying, visualizing,  
 
 
 
-### 4.Sequence Diagrams 
+### 4.Sequence Diagrams
 
 
 
@@ -1099,7 +1099,7 @@ The Unified Modeling Language (UML) is a language for specifying, visualizing,  
 
 
 
-### 7.Activity Diagrams 
+### 7.Activity Diagrams
 
 ![image-20250104171635296](images/image-20250104171635296.png)
 
@@ -1111,7 +1111,7 @@ The Unified Modeling Language (UML) is a language for specifying, visualizing,  
 
 
 
-### 8.Component Diagrams 
+### 8.Component Diagrams
 
 ![image-20250104171844714](images/image-20250104171844714.png)
 

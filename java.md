@@ -3207,6 +3207,190 @@ List<Object> l = new ArrayList<String>(); // 报错,必须一样
 
 
 
+## Lambda 表达式
+
+**Lambda 表达式**是一个匿名函数，它提供了一种清晰简洁的方式来表示一个方法接口。这是 Java 8 最重要的特性之一。
+
+### 基本语法
+
+```java
+(parameters) -> expression
+```
+
+```java
+(parameters) -> { statements; }
+```
+
+`parameters` 是参数列表，`expression` 或 `{ statements; }` 是Lambda 表达式的主体。如果只有一个参数，可以省略括号；如果没有参数，也需要空括号。
+
+### 简单示例
+
+```java
+// 使用 Lambda 表达式计算两个数的和
+MathOperation addition = (a, b) -> a + b;
+
+// 调用 Lambda 表达式
+int result = addition.operation(5, 3);
+System.out.println("5 + 3 = " + result);
+```
+
+在上面的例子中，`MathOperation` 是一个**函数式接口**（只有一个抽象方法的接口），它包含一个抽象方法 `operation`，Lambda 表达式 **`(a, b) -> a + b`** 实现了这个抽象方法，表示对两个参数进行相加操作。
+
+### 各种参数形式的 Lambda
+
+```java
+import java.util.function.*;
+
+public class LambdaBasicForms {
+    public static void main(String[] args) {
+        // 1. 无参数
+        Runnable noArgs = () -> System.out.println("Hello Lambda!");
+        noArgs.run(); // Hello Lambda!
+
+        // 2. 一个参数 (可省略括号)
+        Function<String, Integer> oneArg = s -> s.length();
+        System.out.println(oneArg.apply("Hello")); // 5
+
+        // 3. 多个参数
+        BiFunction<Integer, Integer, Integer> twoArgs = (a, b) -> a + b;
+        System.out.println(twoArgs.apply(10, 20)); // 30
+
+        // 4. 显式参数类型
+        BiFunction<Integer, Integer, Integer> withTypes = (Integer a, Integer b) -> a * b;
+        System.out.println(withTypes.apply(5, 6)); // 30
+
+        // 5. 多行代码 (使用花括号)
+        Function<String, String> multiLine = s -> {
+            String trimmed = s.trim();
+            return trimmed.toUpperCase();
+        };
+        System.out.println(multiLine.apply("  hello world  ")); // HELLO WORLD
+    }
+}
+```
+
+### 函数式接口
+
+Lambda 表达式需要**函数式接口**（只有一个抽象方法的接口）。
+
+#### 内置函数式接口
+
+```java
+import java.util.function.*;
+import java.util.*;
+
+public class FunctionalInterfaces {
+    public static void main(String[] args) {
+        // 1. Function<T, R> - 接受一个参数，返回一个结果
+        Function<String, Integer> stringToInt = s -> Integer.parseInt(s);
+        System.out.println(stringToInt.apply("123")); // 123
+
+        // 2. Consumer<T> - 接受一个参数，没有返回值
+        Consumer<String> printer = s -> System.out.println("消费: " + s);
+        printer.accept("Hello"); // 消费: Hello
+
+        // 3. Supplier<T> - 没有参数，返回一个结果
+        Supplier<Double> randomSupplier = () -> Math.random();
+        System.out.println("随机数: " + randomSupplier.get());
+
+        // 4. Predicate<T> - 接受一个参数，返回boolean
+        Predicate<String> isLong = s -> s.length() > 5;
+        System.out.println(isLong.test("Hello")); // false
+        System.out.println(isLong.test("Hello World")); // true
+
+        // 5. BiFunction<T, U, R> - 接受两个参数，返回一个结果
+        BiFunction<Integer, Integer, Integer> adder = (a, b) -> a + b;
+        System.out.println(adder.apply(10, 20)); // 30
+    }
+}
+```
+
+#### 自定义函数式接口
+
+```java
+// 自定义函数式接口
+@FunctionalInterface
+interface StringProcessor {
+    String process(String input);
+    
+    // 可以有默认方法
+    default String defaultProcess(String input) {
+        return process(input) + " (processed)";
+    }
+    
+    // 可以有静态方法
+    static StringProcessor createUpperCaseProcessor() {
+        return s -> s.toUpperCase();
+    }
+}
+
+public class CustomFunctionalInterface {
+    public static void main(String[] args) {
+        // 使用自定义函数式接口
+        StringProcessor toUpper = s -> s.toUpperCase();
+        StringProcessor toLower = s -> s.toLowerCase();
+        StringProcessor repeater = s -> s.repeat(3);
+        
+        System.out.println(toUpper.process("hello")); // HELLO
+        System.out.println(toLower.process("WORLD")); // world
+        System.out.println(repeater.process("Java")); // JavaJavaJava
+        
+        // 使用默认方法
+        System.out.println(toUpper.defaultProcess("test")); // TEST (processed)
+        
+        // 使用静态方法
+        StringProcessor upper = StringProcessor.createUpperCaseProcessor();
+        System.out.println(upper.process("lambda")); // LAMBDA
+    }
+}
+```
+
+### 方法引用
+
+**方法引用**是 Lambda 表达式的一种简写形式，用于直接引用已有的方法。
+
+```java
+className::methodName
+```
+
+**方法引用的四种类型**：
+
+| 类型                       | 语法                       | 等价 Lambda                               |
+| :------------------------- | :------------------------- | :---------------------------------------- |
+| 静态方法引用               | `Class::staticMethod`      | `(args) -> Class.staticMethod(args)`      |
+| 实例方法引用               | `instance::instanceMethod` | `(args) -> instance.instanceMethod(args)` |
+| 特定类型的任意对象方法引用 | `Class::instanceMethod`    | `(obj, args) -> obj.instanceMethod(args)` |
+| 构造方法引用               | `Class::new`               | `() -> new Class()`                       |
+
+```java
+// 静态方法引用
+Function<String, Integer> parser1 = Integer::parseInt;
+System.out.println(parser1.apply("123")); // 123
+
+// 实例方法引用
+String prefix = "Hello, ";
+
+Function<String, String> greeter = prefix::concat;
+System.out.println(greeter.apply("World")); // Hello, World
+
+// 特定类型的任意对象方法引用
+List<String> names = Arrays.asList("Alice", "Bob", "Charlie");
+Function<String, Integer> lengthGetter = String::length; // 任意字符串的 length() 方法
+names.stream()
+    .map(String::length)
+    .forEach(len -> System.out.print(len + " ")); // 5 3 7
+
+// 构造方法引用
+Supplier<List<String>> listSupplier = ArrayList::new;
+List<String> list = listSupplier.get();
+list.add("Hello");
+System.out.println(list); // [Hello]
+```
+
+
+
+
+
 # 内置类
 
 
@@ -5208,7 +5392,10 @@ for (String obj : col) {
 
 ### List 接口特点
 
-
+1. 有序性
+2. 索引访问
+3. 允许重复元素
+4. 允许null
 
 ### List 接口方法
 
@@ -6147,6 +6334,14 @@ public class MapMethodsExample {
         System.out.println("Replace 'Bob' 30 with 31: " + replaced);
         System.out.println("After replace: " + map);
     }
+    	
+    	// 18. merge(K key, V value, BiFunction remappingFunction)
+    	map.put("Alice", 25);
+    	map.put("Bob", 30);
+    	map.merge("Alice", 5, Integer::sum); // key存在 - 合并值；若key不存在 - 直接插入
+    	System.out.println(map.get("Alice")); // 30
+    	map.merge("Bob", 50, Math::max);  // 取最大值: max(30, 50) = 50
+    	System.out.println(map.get("Bob")); // 50
 }
 ```
 
@@ -6219,6 +6414,16 @@ map.forEach((key, value) -> {
     System.out.println("Key: " + key + ", Value: " + value);
 });
 ```
+
+### 常用实现类
+
+| 实现类                | 线程安全 | 有序性               | 允许null          | 底层结构         | 时间复杂度 |
+| :-------------------- | :------- | :------------------- | :---------------- | :--------------- | :--------- |
+| **HashMap**           | 否       | 无顺序               | key/value都允许   | 数组+链表/红黑树 | O(1)       |
+| **LinkedHashMap**     | 否       | 插入顺序/访问顺序    | key/value都允许   | 哈希表+双向链表  | O(1)       |
+| **TreeMap**           | 否       | key自然顺序/定制顺序 | key不允许         | 红黑树           | O(log n)   |
+| **Hashtable**         | 是       | 无顺序               | key/value都不允许 | 数组+链表        | O(1)       |
+| **ConcurrentHashMap** | 是       | 无顺序               | key/value都不允许 | 分段锁/CAS       | O(1)       |
 
 
 
@@ -6522,6 +6727,12 @@ System.out.println(map); // {1=1, 222=33}
 
 
 
+
+
+
+
+
+
 ## Collections 工具类
 
 `Collections` 是 `java.util` 包中的一个工具类，提供了许多静态方法，用于操作和处理集合（如 `List`、`Set`、`Map` 等）。
@@ -6662,6 +6873,311 @@ public class CollectionsMethodsExample {
         System.out.println("Replaced: " + replacedInSet); // 输出: true
 }
 ```
+
+
+
+## Queue 接口
+
+`Queue` 接口是 Java 集合框架中的一部分，位于 `java.util` 包中，用于处理遵循先进先出（FIFO）原则的元素集合。
+
+在前面的 `Stack` 类中，虽然也是线性结构，但遵循后进先出（LIFO）原则，而 Queue 则是先进先出。
+
+```java
+// LinkedList 实现了 Queue 接口
+Queue<String> queue = new LinkedList<>();
+```
+
+### Queue 接口特点
+
+- **先进先出**：Queue 遵循**先进先出（FIFO）**原则，最先添加的元素最先被移除。
+
+- **队尾插入**：新元素总是添加到队列的末尾。
+
+- **队头移除**：元素总是从队列的头部被移除。
+
+- **不允许空元素**：大多数 Queue 实现**不允许 null 元素**，但 LinkedList 等实现允许。
+
+- **线程安全选项**：某些实现如 `ArrayBlockingQueue` 提供线程安全特性。
+
+- **容量限制**：某些队列实现可能有容量限制。
+
+### 底层原理
+
+`LinkedList` 中，Queue 操作基于双向链表实现：
+
+```java
+// LinkedList.java
+transient Node<E> first;
+transient Node<E> last;
+
+private static class Node<E> {
+    E item;
+    Node<E> next;
+    Node<E> prev;
+
+    Node(Node<E> prev, E element, Node<E> next) {
+        this.item = element;
+        this.next = next;
+        this.prev = prev;
+    }
+}
+```
+
+### Queue 接口方法
+
+```java
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.PriorityQueue;
+import java.util.ArrayDeque;
+
+public class QueueMethodsExample {
+    public static void main(String[] args) {
+        Queue<String> queue = new LinkedList<>();
+        
+        // 1. add(E e) - 添加元素到队列尾部
+        queue.add("Alice");  // 添加元素，如果队列已满则抛出异常
+        queue.add("Bob");
+        queue.add("Charlie");
+        System.out.println("After add: " + queue);  // [Alice, Bob, Charlie]
+
+        // 2. offer(E e) - 添加元素到队列尾部
+        boolean offered = queue.offer("Dave");  // 添加元素，返回是否成功
+        System.out.println("Offer 'Dave': " + offered);  // true
+        System.out.println("After offer: " + queue);  // [Alice, Bob, Charlie, Dave]
+
+        // 3. remove() - 移除并返回队列头部元素
+        String removed = queue.remove();  // 移除头部元素，如果队列为空则抛出异常
+        System.out.println("Removed: " + removed);  // Alice
+        System.out.println("After remove: " + queue);  // [Bob, Charlie, Dave]
+
+        // 4. poll() - 移除并返回队列头部元素
+        String polled = queue.poll();  // 移除头部元素，队列为空时返回null
+        System.out.println("Polled: " + polled);  // Bob
+        System.out.println("After poll: " + queue);  // [Charlie, Dave]
+
+        // 5. element() - 查看队列头部元素但不移除
+        String head = queue.element();  // 返回头部元素，如果队列为空则抛出异常
+        System.out.println("Head element: " + head);  // Charlie
+
+        // 6. peek() - 查看队列头部元素但不移除
+        String peeked = queue.peek();  // 返回头部元素，队列为空时返回null
+        System.out.println("Peeked: " + peeked);  // Charlie
+
+        // 7. size() - 返回队列中元素数量
+        int size = queue.size();  // 返回队列大小
+        System.out.println("Queue size: " + size);  // 2
+
+        // 8. isEmpty() - 检查队列是否为空
+        boolean empty = queue.isEmpty();  // 检查队列是否为空
+        System.out.println("Is empty: " + empty);  // false
+
+        // 9. clear() - 清空队列
+        Queue<String> tempQueue = new LinkedList<>(queue);
+        tempQueue.clear();  // 清空队列中的所有元素
+        System.out.println("After clear: " + tempQueue);  // []
+
+        // 10. contains(Object o) - 检查是否包含指定元素
+        boolean containsCharlie = queue.contains("Charlie");  // 检查是否包含元素
+        System.out.println("Contains 'Charlie': " + containsCharlie);  // true
+}
+```
+
+### 队列操作对比
+
+| 操作     | 抛出异常的方法 | 返回特殊值的方法 |
+| -------- | -------------- | ---------------- |
+| **插入** | `add(e)`       | `offer(e)`       |
+| **移除** | `remove()`     | `poll()`         |
+| **检查** | `element()`    | `peek()`         |
+
+### 常用实现类
+
+| 实现类                  | 特点                 | 适用场景         |
+| ----------------------- | -------------------- | ---------------- |
+| **LinkedList**          | 基于链表，无容量限制 | 通用队列需求     |
+| **ArrayDeque**          | 基于数组，性能较好   | 高频插入删除     |
+| **PriorityQueue**       | 优先级队列，元素排序 | 任务调度         |
+| **ArrayBlockingQueue**  | 线程安全，容量固定   | 生产者消费者模式 |
+| **LinkedBlockingQueue** | 线程安全，可选容量   | 高并发场景       |
+
+
+
+## ArrayDeque
+
+![集合框架之ArrayDeque类详解-CSDN博客](images/19570e6609b880d77f0353cda85ee0b8.png)
+
+### 概述
+
+`ArrayDeque` 是 Java 集合框架中的一个双端队列实现，基于可调整大小的数组。它既可以用作队列（FIFO），也可以用作栈（LIFO），性能优于 `LinkedList`。
+
+```java
+// ArrayDeque 的基本使用
+ArrayDeque<String> deque = new ArrayDeque<>();
+```
+
+### 核心特性
+
+- **双端操作**：支持在队列两端进行高效的插入和删除操作
+- **数组实现**：基于可动态扩容的循环数组
+- **无容量限制**：自动扩容（2的幂次方）
+- **非线程安全**：需要外部同步
+- **性能优异**：比 LinkedList 更快的随机访问
+- **不允许 null 元素**：会抛出 NullPointerException
+
+### `ArrayDeque` 私有方法
+
+```java
+import java.util.ArrayDeque;
+import java.util.Iterator;
+
+public class ArrayDequePrivateMethodsExample {
+    public static void main(String[] args) {
+        // 创建初始容量为 4 的 ArrayDeque
+        ArrayDeque<String> deque = new ArrayDeque<>(4);
+        
+        System.out.println("初始 ArrayDeque，容量: 4");
+        
+        // 1. addFirst(E e) - 头部添加元素
+        deque.addFirst("First");
+        deque.addFirst("Head");
+        System.out.println("After addFirst: " + deque); // [Head, First]
+        
+        // 2. addLast(E e) - 尾部添加元素
+        deque.addLast("Last");
+        deque.addLast("Tail");
+        System.out.println("After addLast: " + deque); // [Head, First, Last, Tail]
+        
+        // 3. 触发扩容 - doubleCapacity()
+        deque.addLast("New Element"); // 触发扩容，容量翻倍为 8
+        System.out.println("After doubleCapacity: " + deque); 
+        // [Head, First, Last, Tail, New Element]
+        
+        // 4. pollFirst() - 头部移除元素
+        String first = deque.pollFirst();
+        System.out.println("pollFirst: " + first); // Head
+        System.out.println("After pollFirst: " + deque); // [First, Last, Tail, New Element]
+        
+        // 5. pollLast() - 尾部移除元素
+        String last = deque.pollLast();
+        System.out.println("pollLast: " + last); // New Element
+        System.out.println("After pollLast: " + deque); // [First, Last, Tail]
+        
+        // 6. getFirst() 和 getLast() - 查看元素
+        System.out.println("getFirst: " + deque.getFirst()); // First
+        System.out.println("getLast: " + deque.getLast());   // Tail
+        
+        // 7. offerFirst(E e) 和 offerLast(E e) - 推荐使用的添加方法
+        boolean offeredFirst = deque.offerFirst("New Head");
+        boolean offeredLast = deque.offerLast("New Tail");
+        System.out.println("After offer: " + deque); 
+        // [New Head, First, Last, Tail, New Tail]
+        
+        // 8. peekFirst() 和 peekLast() - 安全查看元素
+        System.out.println("peekFirst: " + deque.peekFirst()); // New Head
+        System.out.println("peekLast: " + deque.peekLast());   // New Tail
+        
+        // 9. removeFirstOccurrence(Object o) - 删除第一次出现的元素
+        deque.addLast("First"); // 添加重复元素
+        boolean removed = deque.removeFirstOccurrence("First");
+        System.out.println("removeFirstOccurrence 'First': " + removed); // true
+        System.out.println("After removeFirstOccurrence: " + deque);
+        // [New Head, Last, Tail, New Tail, First]
+        
+        // 10. removeLastOccurrence(Object o) - 删除最后一次出现的元素
+        boolean removedLast = deque.removeLastOccurrence("First");
+        System.out.println("removeLastOccurrence 'First': " + removedLast); // true
+        System.out.println("After removeLastOccurrence: " + deque);
+        // [New Head, Last, Tail, New Tail]
+        
+        // 11. size() 和 isEmpty()
+        System.out.println("Size: " + deque.size()); // 4
+        System.out.println("isEmpty: " + deque.isEmpty()); // false
+        
+        // 12. contains(Object o)
+        System.out.println("Contains 'Last': " + deque.contains("Last")); // true
+        
+        // 13. toArray() - 转换为数组
+        Object[] array = deque.toArray();
+        System.out.print("toArray: ");
+        for (Object obj : array) {
+            System.out.print(obj + " ");
+        }
+        System.out.println();
+        
+        // 14. clear() - 清空队列
+        deque.clear();
+        System.out.println("After clear - Size: " + deque.size()); // 0
+        System.out.println("After clear - isEmpty: " + deque.isEmpty()); // true
+        
+        // 15. 迭代器使用
+        deque.addLast("A");
+        deque.addLast("B");
+        deque.addLast("C");
+        
+        System.out.print("Iterator: ");
+        Iterator<String> iterator = deque.iterator();
+        while (iterator.hasNext()) {
+            System.out.print(iterator.next() + " "); // A B C
+        }
+        System.out.println();
+        
+        System.out.print("Descending Iterator: ");
+        Iterator<String> descIterator = deque.descendingIterator();
+        while (descIterator.hasNext()) {
+            System.out.print(descIterator.next() + " "); // C B A
+        }
+        System.out.println();
+    }
+}
+```
+
+### 扩容机制
+
+**底层数据结构**
+
+```java
+// ArrayDeque 内部结构
+transient Object[] elements;  // 存储元素的数组
+transient int head;           // 头部指针
+transient int tail;           // 尾部指针
+private static final int MIN_INITIAL_CAPACITY = 8;
+```
+
+`ArrayDeque` 维护了一个 `Object` 类型的数组 `elements`，采用循环数组的方式实现。
+
+```java
+// 扩容核心方法
+private void doubleCapacity() {
+    assert head == tail;
+    int p = head;
+    int n = elements.length;
+    int r = n - p; // number of elements to the right of p
+    
+    // 新容量是原容量的2倍
+    int newCapacity = n << 1;
+    if (newCapacity < 0)
+        throw new IllegalStateException("Sorry, deque too big");
+    
+    Object[] a = new Object[newCapacity];
+    
+    // 复制元素到新数组
+    System.arraycopy(elements, p, a, 0, r);
+    System.arraycopy(elements, 0, a, r, p);
+    
+    elements = a;
+    head = 0;
+    tail = n;
+}
+```
+
+**扩容规则：**
+- **初始容量**：如果未指定，默认最小容量为 8
+- **指定容量**：如果指定初始容量，会调整为大于等于该值的最小的 2 的幂次方
+- **扩容时机**：当数组满时，容量翻倍（变为原来的 2 倍）
+- **循环数组**：使用 `head` 和 `tail` 指针实现循环数组，提高空间利用率
+
+
 
 
 
